@@ -20,7 +20,7 @@ export class LocationService extends BaseService {
   public getLocations (): Observable<Location[]> {
     return this.http.get<Location[]>(this.API_URL + '/location/')
       .pipe(
-        tap(heroes => this.log(`fetched locations`)),
+        tap(locations => this.log(`fetched locations`)),
         catchError(this.handleError('getLocations', []))
       );
   }
