@@ -9,7 +9,7 @@ const routes: Routes = [
     path: '', component: PhotographerComponent,
     children: [
       {path: 'dashboard', component: DashboardComponent},
-      {path: 'venues', component: VenueListComponent}
+      {path: 'locations/:id/venues', component: VenueListComponent}
     ]
   }
 ];

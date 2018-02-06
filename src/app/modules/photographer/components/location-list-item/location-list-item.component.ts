@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {Location} from '../../../../datamodel/location';
 
 @Component({
   selector: 'app-location-list-item',
@@ -6,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./location-list-item.component.css']
 })
 export class LocationListItemComponent implements OnInit {
+
+  @Input()
+  location: Location;
 
   constructor() { }
 

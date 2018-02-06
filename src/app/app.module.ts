@@ -8,6 +8,9 @@ import { LoginComponent } from './components/login/login.component';
 import {OnlyLoggedInUsersGuard} from './guard';
 import {PhotographerLoginService} from './services/photographer-login.service';
 import * as $ from 'jquery';
+import {HttpClientModule} from '@angular/common/http';
+import {HttpModule} from '@angular/http';
+import {CommonModule} from '@angular/common';
 
 
 
@@ -19,7 +22,9 @@ import * as $ from 'jquery';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    CommonModule
   ],
   providers: [PhotographerLoginService, OnlyLoggedInUsersGuard],
   bootstrap: [AppComponent]

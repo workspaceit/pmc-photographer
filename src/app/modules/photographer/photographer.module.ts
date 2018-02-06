@@ -14,6 +14,7 @@ import { VenueListItemComponent } from './components/venue-list-item/venue-list-
     CommonModule,
     PhotographerRoutingModule
   ],
-  declarations: [PhotographerComponent, DashboardComponent, TopDockComponent, LocationListItemComponent, VenueListComponent, VenueListItemComponent]
+  declarations: [PhotographerComponent, DashboardComponent, TopDockComponent, LocationListItemComponent, VenueListComponent,
+    VenueListItemComponent]
 })
 export class PhotographerModule { }
