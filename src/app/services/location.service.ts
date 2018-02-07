@@ -19,10 +19,13 @@ export class LocationService extends BaseService {
 
   // API: GET /locations
   public getLocations (limit: number, offset: number): Observable<LocationListResponse> {
+    /*
     return this.http.get<LocationListResponse>(this.API_URL + '/location/' + limit + '/' + offset + '/')
       .pipe(
         tap(locationListResponse => this.log(`fetched locations`)),
         catchError(this.handleError('getLocations', []))
-      );
+      );*/
+
+    return this.http.get<LocationListResponse>(this.API_URL + '/location/' + limit + '/' + offset + '/');
   }
 }
