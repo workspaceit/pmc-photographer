@@ -3,9 +3,14 @@
     <div class="form-group panel-right-block" style="padding-top:20px;">
       <h3 class="text-capitalize">Locations</h3><br />
       <div class="row clearfix">
-        <app-location-list-item *ngFor="let location of locations" [location]="location"
-                                routerLink="/photographer-panel/locations/{{location.id}}/venues">
-        </app-location-list-item>
+
+          <app-location-list-item *ngFor="let location of locationListResponse.locations | paginate: { itemsPerPage: limit, currentPage: currentPage, totalItems: locationListResponse.count}"
+                                   [location]="location" routerLink="/photographer-panel/locations/{{location.id}}/venues">
+          </app-location-list-item>
+          <div>
+            <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+          </div>
+
       </div>
     </div>
   </div>

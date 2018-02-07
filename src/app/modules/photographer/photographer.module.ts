@@ -8,11 +8,13 @@ import { TopDockComponent } from './components/top-dock/top-dock.component';
 import { LocationListItemComponent } from './components/location-list-item/location-list-item.component';
 import { VenueListComponent } from './components/venue-list/venue-list.component';
 import { VenueListItemComponent } from './components/venue-list-item/venue-list-item.component';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 @NgModule({
   imports: [
     CommonModule,
-    PhotographerRoutingModule
+    PhotographerRoutingModule,
+    NgxPaginationModule
   ],
   declarations: [PhotographerComponent, DashboardComponent, TopDockComponent, LocationListItemComponent, VenueListComponent,
     VenueListItemComponent]
