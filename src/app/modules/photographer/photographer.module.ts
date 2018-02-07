@@ -8,6 +8,8 @@ import { TopDockComponent } from './components/top-dock/top-dock.component';
 import { LocationListItemComponent } from './components/location-list-item/location-list-item.component';
 import { VenueListComponent } from './components/venue-list/venue-list.component';
 import { VenueListItemComponent } from './components/venue-list-item/venue-list-item.component';
+import { EventListComponent } from './components/event-list/event-list.component';
+import { EventListItemComponent } from './components/event-list-item/event-list-item.component';
 
 @NgModule({
   imports: [
@@ -15,6 +17,8 @@ import { VenueListItemComponent } from './components/venue-list-item/venue-list-
     PhotographerRoutingModule
   ],
   declarations: [PhotographerComponent, DashboardComponent, TopDockComponent, LocationListItemComponent, VenueListComponent,
-    VenueListItemComponent]
+    VenueListItemComponent,
+    EventListComponent,
+    EventListItemComponent]
 })
 export class PhotographerModule { }

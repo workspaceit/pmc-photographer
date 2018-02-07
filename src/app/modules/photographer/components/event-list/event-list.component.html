@@ -1,0 +1,44 @@
+<div class="content-wrapper">
+  <div class="col-md-12 icon_bg" style="text-align: right;">
+    <div class="col-md-4 text-left">
+      <div class="filter">
+        <button class="btn">Newest</button>
+        <div class="datepicker-div">
+          <input id="datepicker" width="270" />
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8 mb-fix-text">
+
+    </div>
+  </div>
+  <div class="form-group panel-right-block ">
+    <div class="event-gallery">
+      <div class="desc-div row">
+        <div class="container-fluid">
+          <ol class="breadcrumb breadcrumb-arrow">
+            <li><a href="album-list.html">Locations</a></li>
+            <li><a href="venue-list-01.html">Miami</a></li>
+            <li class="active"><a href="event-list-01.html">Elysium Lounge</a></li>
+          </ol>
+        </div>
+        <div class="noteditable-desc ">
+          <div class="col-lg-6">
+            <h3 class="event-name event-other" style="color:#fff;">Elysium events<small>( 10 Events )</small></h3>
+          </div>
+        </div>
+        <!-- <div class="editable-desc toggler">
+          <input type="text" class="event-name" value="Beach party 2015" />
+          <input type="text" class="e-date" value="Date: 12 July,2017" />
+          <input type="text" class="e-image-no" value="768 Images" />
+        </div> -->
+      </div>
+
+      <app-event-list-item *ngFor="let event of events" [pmcEvent]="event">
+
+      </app-event-list-item>
+
+
+    </div>
+  </div>
+</div>
