@@ -10,6 +10,7 @@ import {PhotographerLoginService} from './services/photographer-login.service';
 import * as $ from 'jquery';
 import {HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 
 
@@ -23,7 +24,8 @@ import {CommonModule} from '@angular/common';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    CommonModule
+    CommonModule,
+    NgxPaginationModule
   ],
   providers: [PhotographerLoginService, OnlyLoggedInUsersGuard],
   bootstrap: [AppComponent]

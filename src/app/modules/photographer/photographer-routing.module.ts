@@ -10,8 +10,9 @@ const routes: Routes = [
     path: '', component: PhotographerComponent,
     children: [
       {path: 'dashboard', component: DashboardComponent},
-      {path: 'locations/:id/venues', component: VenueListComponent},
-      {path: 'event', component: EventListComponent}
+      {path: 'dashboard/locations/page/:page', component: DashboardComponent},
+      {path: 'locations/:locationId/venues', component: VenueListComponent},
+      {path: 'event', component: EventListComponent},
     ]
   }
 ];

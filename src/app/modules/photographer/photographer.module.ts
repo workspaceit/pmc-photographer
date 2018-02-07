@@ -10,11 +10,13 @@ import { VenueListComponent } from './components/venue-list/venue-list.component
 import { VenueListItemComponent } from './components/venue-list-item/venue-list-item.component';
 import { EventListComponent } from './components/event-list/event-list.component';
 import { EventListItemComponent } from './components/event-list-item/event-list-item.component';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 @NgModule({
   imports: [
     CommonModule,
-    PhotographerRoutingModule
+    PhotographerRoutingModule,
+    NgxPaginationModule
   ],
   declarations: [PhotographerComponent, DashboardComponent, TopDockComponent, LocationListItemComponent, VenueListComponent,
     VenueListItemComponent,
