@@ -8,11 +8,17 @@
           paginate: { itemsPerPage: limit, currentPage: currentPage, totalItems: locationListResponseData.count}"
                                   [location]="location"
                                   routerLink="/photographer-panel/locations/{{location.id}}/venues">
-          </app-location-list-item>
-          <div>
-            <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
-          </div>
+            <div class="row clearfix arnab">
 
+            </div>
+          </app-location-list-item>
+
+
+      </div>
+      <div class="row clearfix">
+        <div>
+          <pagination-controls  class="pg-pagination" (pageChange)="pageChanged($event)"></pagination-controls>
+        </div>
       </div>
     </div>
   </div>

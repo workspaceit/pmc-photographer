@@ -2220,3 +2220,29 @@ color: #fff;
         }
 
     }
+
+.pg-pagination .ngx-pagination {
+  text-align: center;
+}
+.pg-pagination .pagination-next a {
+  color: #fff;
+}
+.pg-pagination .pagination-previous {
+  color: #fff;
+}
+.pg-pagination .ngx-pagination li a:hover {
+  background: #7112fd;
+}
+.pg-pagination .ngx-pagination li a{
+  color: #fff;
+  padding: 5px 10px;
+}
+.pg-pagination .ngx-pagination li{
+  color: #fff;
+}
+.pg-pagination .ngx-pagination .current {
+  background: #721cf7;
+  color: #fefefe;
+  padding: 5px 10px;
+  margin: 0px 10px;
+}

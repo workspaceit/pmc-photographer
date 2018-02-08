@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Location} from '../../../../datamodel/location';
+import {environment} from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-location-list-item',
@@ -10,7 +11,7 @@ export class LocationListItemComponent implements OnInit {
 
   @Input()
   location: Location;
-
+  imgPath = environment.pictureUrl;
   constructor() { }
 
   ngOnInit() {
