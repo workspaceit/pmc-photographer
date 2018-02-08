@@ -1,6 +1,6 @@
 import {Location} from '../datamodel/location';
 
-export class LocationListResponse {
+export class LocationListResponseData {
   locations: Location[] = [];
   count =  0;
 

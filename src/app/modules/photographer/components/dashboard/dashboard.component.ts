@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {LocationService} from '../../../../services/location.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {LocationListResponse} from '../../../../response/location-list-response';
+import {LocationListResponseData} from '../../../../response-data-model/location-list-response-data';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +13,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(private locationService: LocationService, private route: ActivatedRoute, private router: Router, ) { }
 
-  locationListResponse: LocationListResponse = new LocationListResponse();
+  locationListResponseData: LocationListResponseData = new LocationListResponseData();
   limit = 3;
   offset = 0;
   currentPage = 1;
@@ -31,8 +31,8 @@ export class DashboardComponent implements OnInit {
   getLocations() {
     this.locationService.getLocations(this.limit, this.offset)
       .subscribe(
-        (locationListResponse) => {
-          this.locationListResponse = locationListResponse;
+        (locationListResponseData) => {
+          this.locationListResponseData = locationListResponseData;
           this.responseArrived = true;
         });
   }
