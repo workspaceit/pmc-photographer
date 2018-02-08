@@ -24,7 +24,7 @@
         </div>
         <div class="noteditable-desc ">
           <div class="col-lg-6">
-            <h3 class="event-name event-other" style="color:#fff;">Elysium events<small>( 10 Events )</small></h3>
+            <h3 class="event-name event-other" style="color:#fff;">Elysium events<small>( {{totalEventCount}} Events )</small></h3>
           </div>
         </div>
         <!-- <div class="editable-desc toggler">
@@ -34,10 +34,12 @@
         </div> -->
       </div>
 
-      <app-event-list-item *ngFor="let event of events" [pmcEvent]="event">
+      <app-event-list-item *ngFor="let event of eventListResponse.events | paginate: { itemsPerPage: limit, currentPage: currentPage, totalItems: eventListResponse.count}" [pmcEvent]="event" >
 
       </app-event-list-item>
-
+      <div>
+        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+      </div>
 
     </div>
   </div>

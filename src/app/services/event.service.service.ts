@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import {BaseService} from './base.service';
 import {HttpClient} from '@angular/common/http';
-import {Event} from '../datamodel/event';
 import {Observable} from 'rxjs/Observable';
+import {EventListResponse} from '../response/event-list-response';
 
 @Injectable()
 export class EventServiceService extends BaseService{
@@ -11,7 +11,10 @@ export class EventServiceService extends BaseService{
   constructor(private http: HttpClient ){
       super();
   }
-  public getAll(limit: number , offset: number): Observable<Event[]> {
-    return this.http.get<Event[]>(this.API_URL + this.uri + '/get-all/' + limit + '/' + offset);
+  public getAll(limit: number , offset: number): Observable<EventListResponse> {
+    return this.http.get<EventListResponse>(this.API_URL + this.uri + '/get-all/' + limit + '/' + offset);
+  }
+  public getCount(): Observable<EventListResponse> {
+    return this.http.get<EventListResponse>(this.API_URL + this.uri + '/get-count');
   }
 }

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {Event} from '../../../../datamodel/event';
 import {EventServiceService} from '../../../../services/event.service.service';
+import {EventListResponse} from '../../../../response/event-list-response';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-event-list',
@@ -11,11 +13,30 @@ import {EventServiceService} from '../../../../services/event.service.service';
 export class EventListComponent implements OnInit {
 
   events: Event[] = [];
-  constructor(private eventServiceService: EventServiceService) { }
+  eventListResponse: EventListResponse = new EventListResponse();
+  limit = 3;
+  offset = 0;
+  currentPage = 1;
+  sub: any;
+  responseArrived = false;
+  totalEventCount = 0;
+  constructor(private eventServiceService: EventServiceService,private route: ActivatedRoute, private router: Router) { }
+
   ngOnInit() {
 
+    this.eventServiceService.getCount().subscribe((responseData) => {this.totalEventCount = responseData.count });
 
-    this.eventServiceService.getAll(2,0).subscribe(events => this.events = events);
+    this.route.params.subscribe(params => {
+        this.currentPage = +params['page'];
+        this.offset = this.currentPage - 1;
+          this.eventServiceService.getAll(this.limit,this.offset).subscribe((responseData)=>{
+            this.eventListResponse = responseData;
+            this.responseArrived = true;
+          });
+        });
+  }
 
+  pageChanged(pageNumber) {
+    this.router.navigate(['photographer-panel/dashboard/event/page/', pageNumber]);
   }
 }

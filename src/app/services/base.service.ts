@@ -5,7 +5,7 @@ import {of} from 'rxjs/observable/of';
 
 @Injectable()
 export class BaseService {
-
+  API_BASEURL= environment.apiBaseUrl;
   API_URL = environment.apiUrl;
 
   constructor() { }
