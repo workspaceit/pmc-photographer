@@ -11,8 +11,9 @@ import * as $ from 'jquery';
 import {HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
 import {NgxPaginationModule} from 'ngx-pagination';
-
-
+import {LoadingBarHttpClientModule} from '@ngx-loading-bar/http-client';
+import {LoadingBarRouterModule} from '@ngx-loading-bar/router';
+import {LoadingBarModule} from '@ngx-loading-bar/core';
 
 
 @NgModule({
@@ -25,7 +26,10 @@ import {NgxPaginationModule} from 'ngx-pagination';
     AppRoutingModule,
     HttpClientModule,
     CommonModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    LoadingBarRouterModule,
+    LoadingBarHttpClientModule,
+    LoadingBarModule.forRoot(),
   ],
   providers: [PhotographerLoginService, OnlyLoggedInUsersGuard],
   bootstrap: [AppComponent]

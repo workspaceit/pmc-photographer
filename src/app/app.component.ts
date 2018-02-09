@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-
-
-var datepicker: any
+import {LoadingBarService} from '@ngx-loading-bar/core';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +7,8 @@ var datepicker: any
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+
+  constructor(public loader: LoadingBarService) {}
   title = 'app';
+  loadingBarColor = '#27cc73';
 }

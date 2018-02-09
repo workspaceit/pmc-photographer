@@ -14,9 +14,9 @@ export class VenueListItemComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    // $('#datepicker').datepicker({
-    //   uiLibrary: 'bootstrap'
-    // });
+    (<any>$('#datepicker')).datepicker({
+      uiLibrary: 'bootstrap'
+    });
     $('.folder').height($('.folder').width());
   }
 

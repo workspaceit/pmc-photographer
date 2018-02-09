@@ -29,11 +29,11 @@
           </div>
           <div class="row clearfix">
             <app-venue-list-item *ngFor="let venue of venueListResponseData.venues | paginate: { itemsPerPage: limit,
-          currentPage: currentPage, totalItems: venueListResponseData.count}" [venue]="venue"></app-venue-list-item>
+              currentPage: currentPage, totalItems: venueListResponseData.count}" [venue]="venue"></app-venue-list-item>
           </div>
           <div class="row clearfix">
             <div>
-              <pagination-controls  class="pg-pagination" (pageChange)="pageChanged($event)"></pagination-controls>
+              <pagination-controls class="pg-pagination" (pageChange)="pageChanged($event)"></pagination-controls>
             </div>
           </div>
         </div>
