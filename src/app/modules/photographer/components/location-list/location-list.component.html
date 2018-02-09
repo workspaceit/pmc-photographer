@@ -1,0 +1,21 @@
+<div class="container-fluid bg-new">
+  <div class="row clearfix">
+    <div class="form-group panel-right-block" style="padding-top:20px;">
+      <h3 class="text-capitalize">Locations</h3><br />
+      <div class="row clearfix">
+        <app-location-list-item *ngFor="let location of locationListResponseData.locations |
+          paginate: { itemsPerPage: limit, currentPage: currentPage, totalItems: locationListResponseData.count}"
+                                [location]="location" routerLink="/photographer-panel/locations/{{location.id}}/venues">
+          <div class="row clearfix arnab">
+          </div>
+        </app-location-list-item>
+      </div>
+      <div class="row clearfix">
+        <div>
+          <pagination-controls  class="pg-pagination" (pageChange)="pageChanged($event)"></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
