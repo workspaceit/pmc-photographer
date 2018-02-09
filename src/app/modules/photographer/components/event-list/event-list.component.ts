@@ -24,6 +24,10 @@ export class EventListComponent implements OnInit {
 
   ngOnInit() {
 
+    (<any>$('#datepicker')).datepicker({
+      uiLibrary: 'bootstrap'
+    });
+
     this.eventServiceService.getCount().subscribe((responseData) => {this.totalEventCount = responseData.count });
 
     this.route.params.subscribe(params => {
