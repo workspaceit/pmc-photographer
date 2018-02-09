@@ -14,7 +14,7 @@ export class LocationListComponent implements OnInit {
   constructor(private locationService: LocationService, private route: ActivatedRoute, private router: Router, ) { }
 
   locationListResponseData: LocationListResponseData = new LocationListResponseData();
-  limit = 3;
+  limit = 6;
   offset = 0;
   currentPage = 1;
   sub: any;

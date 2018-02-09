@@ -19,7 +19,7 @@ export class VenueListComponent implements OnInit {
   sub: any;
   locationId: number;
 
-  limit = 3;
+  limit = 6;
   offset = 0;
   currentPage = 1;
   responseArrived = false;
@@ -28,6 +28,11 @@ export class VenueListComponent implements OnInit {
               private locationService: LocationService) { }
 
   ngOnInit() {
+
+    (<any>$('#datepicker')).datepicker({
+      uiLibrary: 'bootstrap'
+    });
+
     this.sub = this.route.params.subscribe(params => {
       this.locationId = params['locationId'];
       console.log(this.locationId);

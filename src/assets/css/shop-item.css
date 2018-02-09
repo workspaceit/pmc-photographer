@@ -2221,6 +2221,11 @@ color: #fff;
 
     }
 
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .pg-pagination .ngx-pagination {
   text-align: center;
 }
