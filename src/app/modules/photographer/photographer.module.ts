@@ -13,7 +13,6 @@ import { EventListItemComponent } from './components/event-list-item/event-list-
 import {NgxPaginationModule} from 'ngx-pagination';
 import {LocationListComponent} from './components/location-list/location-list.component';
 
-
 @NgModule({
   imports: [
     CommonModule,
