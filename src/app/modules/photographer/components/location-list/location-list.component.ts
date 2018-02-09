@@ -39,7 +39,7 @@ export class LocationListComponent implements OnInit {
 
   pageChanged(pageNumber) {
     console.log(pageNumber);
-    this.router.navigate(['photographer-panel/dashboard/locations/page', pageNumber]);
+    this.router.navigate(['photographer-panel/locations/page', pageNumber]);
   }
 
 }

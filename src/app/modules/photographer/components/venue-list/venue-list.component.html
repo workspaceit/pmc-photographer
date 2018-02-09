@@ -16,18 +16,26 @@
           <div class="desc-div row">
             <div class="container-fluid">
               <ol class="breadcrumb breadcrumb-arrow">
-                <li><a href="album-list.html">Locations</a></li>
-                <li class="active"><a href="venue-list-01.html">Miami</a></li>
+                <li><a routerLink="/photographer-panel/locations/page/1">Locations</a></li>
+                <li class="active"><a>{{location.name}}</a></li>
               </ol>
             </div>
             <div class="noteditable-desc ">
               <div class="col-lg-6">
-                <h3 class="event-name event-other" style="color:#fff;">Miami Venues<small>( 10 Venue )</small></h3>
+                <h3 class="event-name event-other" style="color:#fff;">{{location.name}}
+                  Venues<small> ({{ venueListResponseData.count }} venues)</small></h3>
               </div>
             </div>
           </div>
-          <app-venue-list-item *ngFor="let venue of venues" [venue]="venue"></app-venue-list-item>
-
+          <div class="row clearfix">
+            <app-venue-list-item *ngFor="let venue of venueListResponseData.venues | paginate: { itemsPerPage: limit,
+          currentPage: currentPage, totalItems: venueListResponseData.count}" [venue]="venue"></app-venue-list-item>
+          </div>
+          <div class="row clearfix">
+            <div>
+              <pagination-controls  class="pg-pagination" (pageChange)="pageChanged($event)"></pagination-controls>
+            </div>
+          </div>
         </div>
       </div>
     </div>

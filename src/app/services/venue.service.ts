@@ -3,7 +3,8 @@ import {BaseService} from './base.service';
 import {Observable} from 'rxjs/Observable';
 import {catchError, tap} from 'rxjs/operators';
 import {Venue} from '../datamodel/venue';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {VenueListResponseData} from '../response-data-model/venue-list-response-data';
 
 @Injectable()
 export class VenueService extends BaseService {
@@ -13,11 +14,12 @@ export class VenueService extends BaseService {
   }
 
   // API: GET /venues
-  public getVenuesByLocation (locationId: number): Observable<Venue[]> {
-    return this.http.get<Venue[]>(this.API_URL + '/venue/?locationId=' + locationId)
+  public getVenuesByLocation (locationId: number, limit: number, offset: number): Observable<VenueListResponseData> {
+    const params = new HttpParams().set('locationId', String(locationId));
+    return this.http.get<VenueListResponseData>(this.API_URL + '/venues/' + limit + '/' + offset + '/', {params: params})
       .pipe(
         tap(venues => this.log('fetched venues')),
-        catchError(this.handleError('getVenues', []))
+        catchError(this.handleError('getVenues', null))
       );
   }
 
