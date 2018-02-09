@@ -14,7 +14,7 @@ export class EventListComponent implements OnInit {
 
   events: Event[] = [];
   eventListResponse: EventListResponse = new EventListResponse();
-  limit = 3;
+  limit = 5;
   offset = 0;
   currentPage = 1;
   sub: any;
@@ -37,6 +37,6 @@ export class EventListComponent implements OnInit {
   }
 
   pageChanged(pageNumber) {
-    this.router.navigate(['photographer-panel/dashboard/event/page/', pageNumber]);
+    this.router.navigate(['photographer-panel/event/page/', pageNumber]);
   }
 }

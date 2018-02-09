@@ -1,5 +1,5 @@
 <div class="content-wrapper">
-  <div class="col-md-12 icon_bg" style="text-align: right;">
+ <!-- <div class="col-md-12 icon_bg" style="text-align: right;">
     <div class="col-md-4 text-left">
       <div class="filter">
         <button class="btn">Newest</button>
@@ -11,20 +11,20 @@
     <div class="col-md-8 mb-fix-text">
 
     </div>
-  </div>
+  </div>-->
   <div class="form-group panel-right-block ">
     <div class="event-gallery">
       <div class="desc-div row">
         <div class="container-fluid">
           <ol class="breadcrumb breadcrumb-arrow">
-            <li><a href="album-list.html">Locations</a></li>
-            <li><a href="venue-list-01.html">Miami</a></li>
-            <li class="active"><a href="event-list-01.html">Elysium Lounge</a></li>
+            <li><a href="/photographer-panel/locations/page/1">Locations</a></li>
+            <li><a href="/photographer-panel/event/page/1">Events</a></li>
+           <!-- <li class="active"><a href="event-list-01.html">Elysium Lounge</a></li>-->
           </ol>
         </div>
         <div class="noteditable-desc ">
           <div class="col-lg-6">
-            <h3 class="event-name event-other" style="color:#fff;">Elysium events<small>( {{totalEventCount}} Events )</small></h3>
+            <h3 class="event-name event-other" style="color:#fff;">Events <small>( {{totalEventCount}} Events )</small></h3>
           </div>
         </div>
         <!-- <div class="editable-desc toggler">
@@ -33,12 +33,15 @@
           <input type="text" class="e-image-no" value="768 Images" />
         </div> -->
       </div>
+      <div class="row clearfix">
+        <app-event-list-item *ngFor="let event of eventListResponse.events | paginate: { itemsPerPage: limit, currentPage: currentPage, totalItems: eventListResponse.count}" [pmcEvent]="event" >
 
-      <app-event-list-item *ngFor="let event of eventListResponse.events | paginate: { itemsPerPage: limit, currentPage: currentPage, totalItems: eventListResponse.count}" [pmcEvent]="event" >
-
-      </app-event-list-item>
-      <div>
-        <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+        </app-event-list-item>
+      </div>
+      <div class="row clearfix">
+        <div>
+          <pagination-controls  class="pg-pagination" (pageChange)="pageChanged($event)"></pagination-controls>
+        </div>
       </div>
 
     </div>
