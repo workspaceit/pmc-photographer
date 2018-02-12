@@ -17,7 +17,7 @@
         <div class="container-fluid">
           <ol class="breadcrumb breadcrumb-arrow">
             <li><a routerLink="/photographer-panel/locations/page/1">Locations</a></li>
-            <li><a href="/photographer-panel/event/page/1">{{location.name}}</a></li>
+            <li><a>{{location.name}}</a></li>
           </ol>
         </div>
         <div class="noteditable-desc ">
@@ -34,7 +34,7 @@
       <div class="row clearfix">
         <app-event-list-item *ngFor="let event of eventListResponseData.events |
                     paginate: { itemsPerPage: limit, currentPage: currentPage, totalItems: eventListResponseData.count}"
-                             [pmcEvent]="event" >
+                             [pmcEvent]="event">
         </app-event-list-item>
       </div>
       <div class="row clearfix">
