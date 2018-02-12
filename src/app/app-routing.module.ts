@@ -8,7 +8,10 @@ const routes: Routes = [
   {
     path: 'login', component: LoginComponent, data: {}
   },
-  { path: 'photographer-panel', loadChildren: () => PhotographerModule, canActivate: [OnlyLoggedInUsersGuard]},
+  // { path: 'photographer-panel', loadChildren: () => PhotographerModule, canActivate: [OnlyLoggedInUsersGuard]},
+  { path: 'photographer-panel', loadChildren: './modules/photographer/photographer.module#PhotographerModule',
+    canActivate: [OnlyLoggedInUsersGuard]
+  },
 ];
 
 @NgModule({

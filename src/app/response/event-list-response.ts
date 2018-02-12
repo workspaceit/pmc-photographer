@@ -1,6 +1,6 @@
 import {Event} from '../datamodel/event';
 
-export class EventListResponse {
+export class EventListResponseData {
   events: Event[] = [];
   count = 0;
 

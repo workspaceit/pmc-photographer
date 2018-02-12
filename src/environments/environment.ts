@@ -6,7 +6,9 @@
 export const environment = {
   production: false,
   // URL of development API
-  apiBaseUrl: 'http://localhost:8080',
-  apiUrl: 'http://localhost:8080/test/api',
+  // apiBaseUrl: 'http://localhost:8080',
+  apiBaseUrl: 'http://163.53.151.3:8080',
+  // apiUrl: 'http://localhost:8080/test/api',
+  apiUrl: 'http://163.53.151.3:8080/test/api',
   pictureUrl: 'http://localhost:8080/common/',
 };

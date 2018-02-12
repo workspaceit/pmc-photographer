@@ -1,26 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import {Event} from '../../../../datamodel/event';
-import {EventServiceService} from '../../../../services/event.service.service';
-import {EventListResponse} from '../../../../response/event-list-response';
+import {EventService} from '../../../../services/event.service';
+import {EventListResponseData} from '../../../../response/event-list-response';
 import {ActivatedRoute, Router} from '@angular/router';
+import {LocationService} from '../../../../services/location.service';
+import {Location} from '../../../../datamodel/location';
 
 @Component({
   selector: 'app-event-list',
   templateUrl: './event-list.component.html',
   styleUrls: ['./event-list.component.css'],
-  providers: [EventServiceService]
+  providers: [EventService, LocationService]
 })
 export class EventListComponent implements OnInit {
 
   events: Event[] = [];
-  eventListResponse: EventListResponse = new EventListResponse();
-  limit = 5;
+  locationId: number;
+  location: Location = new Location();
+  eventListResponseData: EventListResponseData = new EventListResponseData();
+  limit = 3;
   offset = 0;
   currentPage = 1;
-  sub: any;
   responseArrived = false;
   totalEventCount = 0;
-  constructor(private eventServiceService: EventServiceService,private route: ActivatedRoute, private router: Router) { }
+  constructor( private route: ActivatedRoute, private router: Router, private eventService: EventService,
+               private locationService: LocationService) { }
 
   ngOnInit() {
 
@@ -28,19 +32,26 @@ export class EventListComponent implements OnInit {
       uiLibrary: 'bootstrap'
     });
 
-    this.eventServiceService.getCount().subscribe((responseData) => {this.totalEventCount = responseData.count });
-
     this.route.params.subscribe(params => {
-        this.currentPage = +params['page'];
-        this.offset = this.currentPage - 1;
-          this.eventServiceService.getAll(this.limit,this.offset).subscribe((responseData)=>{
-            this.eventListResponse = responseData;
-            this.responseArrived = true;
-          });
+      this.locationId = params['locationId'];
+      this.currentPage = +params['page'];
+      this.offset = (this.currentPage * this.limit) - this.limit;
+      this.eventService.getAll(this.locationId, this.limit, this.offset).subscribe((responseData) => {
+        this.eventListResponseData = responseData;
+        this.responseArrived = true;
         });
+        this.getLocationById();
+    });
   }
+
+  getLocationById(): void {
+    this.locationService.getLocationById(this.locationId)
+      .subscribe(location => this.location = location);
+  }
+
 
   pageChanged(pageNumber) {
-    this.router.navigate(['photographer-panel/event/page/', pageNumber]);
+    this.router.navigate(['photographer-panel/locations/' + this.locationId + '/events/page/', pageNumber]);
   }
+
 }

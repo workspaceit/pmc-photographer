@@ -5,7 +5,7 @@
       <div class="row clearfix">
         <app-location-list-item *ngFor="let location of locationListResponseData.locations |
           paginate: { itemsPerPage: limit, currentPage: currentPage, totalItems: locationListResponseData.count}"
-                                [location]="location" routerLink="/photographer-panel/locations/{{location.id}}/venues">
+                                [location]="location" routerLink="/photographer-panel/locations/{{location.id}}/events/page/1">
           <div class="row clearfix arnab">
           </div>
         </app-location-list-item>

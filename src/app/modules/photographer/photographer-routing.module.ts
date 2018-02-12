@@ -13,7 +13,8 @@ const routes: Routes = [
       {path: 'dashboard', component: DashboardComponent},
         {path: 'locations/page/:page', component: LocationListComponent},
       {path: 'locations/:locationId/venues', component: VenueListComponent},
-      {path: 'event/page/:page', component: EventListComponent},
+      {path: 'locations/:locationId/events/page/:page', component: EventListComponent},
+      // {path: 'events/page/:page', component: EventListComponent},
     ]
   }
 ];
