@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
       if(loginSuccess){
         console.log(this.loginService.getLocalUserDetails());
         console.log(this.loginService.getLocalOauthCredential());
-        //this.router.navigateByUrl('/photographer-panel/locations/page/1');
+        this.router.navigateByUrl('/photographer-panel/locations/page/1');
       }
 
     });
