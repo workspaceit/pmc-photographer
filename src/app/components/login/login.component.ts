@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
 
   authCredential: OauthCredential;
   photographer: Photographer;
-  loginErrorMsg = "";
+  loginMsg = "";
   constructor(private router: Router,private loginService: LoginService) {
 
   }
@@ -31,23 +31,22 @@ export class LoginComponent implements OnInit {
 
       result => {
         this.authCredential = result;
-
-        this.loginService.getUserDetails(this.authCredential.access_token).subscribe((photographer) => {
-          this.photographer = photographer;
-
-          loginCallBack(true,'Login success');
+        this.loginService.getUserDetailsAndStoreInLocal( this.authCredential.access_token).subscribe(data=>{
+          loginCallBack(true, 'Login success');
         });
       },
       error => {
         console.log(error);
-        loginCallBack(false,error.error.error_description);
+        loginCallBack(false, error.error.error_description);
       });
   }
 
   public loginBtnClick(emailOrUsername: string, password: string){
-    this.authenticate(emailOrUsername, password, ( loginSuccess: boolean,errorMsg: string): void => {
-      this.loginErrorMsg = errorMsg;
+    this.authenticate(emailOrUsername, password, ( loginSuccess: boolean,msg: string): void => {
+      this.loginMsg = msg;
       if(loginSuccess){
+        console.log(this.loginService.getLocalUserDetails());
+        console.log(this.loginService.getLocalOauthCredential());
         this.router.navigateByUrl('/photographer-panel/locations/page/1');
       }
 
@@ -57,5 +56,5 @@ export class LoginComponent implements OnInit {
 }
 
 interface LoginCallBack {
-  (loginSuccess: boolean, errorMsg: string): void;
+  (loginSuccess: boolean, msg: string): void;
 }
