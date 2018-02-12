@@ -14,8 +14,8 @@ export class LoginComponent implements OnInit {
 
   authCredential: OauthCredential;
   photographer: Photographer;
-  loginMsg = "";
-  constructor(private router: Router,private loginService: LoginService) {
+  loginMsg = '';
+  constructor(private router: Router, private loginService: LoginService) {
 
   }
 

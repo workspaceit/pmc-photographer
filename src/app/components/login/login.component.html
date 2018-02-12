@@ -167,7 +167,7 @@
 
 
     <h1 style="margin-top: 3px">Login</h1>
-    <div class="text-danger" *ngIf="loginErrorMsg !== ''">{{loginMsg}}</div>
+    <div class="text-danger" *ngIf="loginMsg !== ''">{{loginMsg}}</div>
     <form method="post" onsubmit="return false;">
       <input type="text" #emailOrUsernameField name="u" placeholder="Email" required="required" />
       <input type="password" #passwordField name="p" placeholder="Password" required="required" />
