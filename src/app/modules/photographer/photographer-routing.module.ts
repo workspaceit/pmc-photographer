@@ -11,10 +11,9 @@ const routes: Routes = [
     path: '', component: PhotographerComponent,
     children: [
       {path: 'dashboard', component: DashboardComponent},
-        {path: 'locations/page/:page', component: LocationListComponent},
+      {path: 'locations', component: LocationListComponent},
       {path: 'locations/:locationId/venues', component: VenueListComponent},
-      {path: 'locations/:locationId/events/page/:page', component: EventListComponent},
-      // {path: 'events/page/:page', component: EventListComponent},
+      {path: 'locations/:locationId/events', component: EventListComponent},
     ]
   }
 ];

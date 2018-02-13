@@ -14,18 +14,14 @@ export class LocationListComponent implements OnInit {
   constructor(private locationService: LocationService, private route: ActivatedRoute, private router: Router, ) { }
 
   locationListResponseData: LocationListResponseData = new LocationListResponseData();
-  limit = 6;
+  limit = 3;
   offset = 0;
   currentPage = 1;
-  sub: any;
   responseArrived = false;
 
   ngOnInit() {
-    this.sub = this.route.params.subscribe(params => {
-      this.currentPage = +params['page'];
-      this.offset = (this.currentPage * this.limit) - this.limit;
-      this.getLocations();
-    });
+    this.offset = (this.currentPage * this.limit) - this.limit;
+    this.getLocations();
   }
 
   getLocations() {
@@ -38,8 +34,9 @@ export class LocationListComponent implements OnInit {
   }
 
   pageChanged(pageNumber) {
-    console.log(pageNumber);
-    this.router.navigate(['photographer-panel/locations/page', pageNumber]);
+    this.offset = (pageNumber * this.limit) - this.limit;
+    this.getLocations();
+    this.currentPage = pageNumber;
   }
 
 }
