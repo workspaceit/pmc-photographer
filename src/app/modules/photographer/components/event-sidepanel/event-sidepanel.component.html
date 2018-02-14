@@ -1,0 +1,19 @@
+<div class="sidepanel" >
+  <div class="collapse-btn">
+    <i class="fa fa-chevron-right"></i>
+  </div>
+  <div class="collapse-btn2">
+    <i class="fa fa-chevron-left"></i>
+  </div>
+  <h3 class="text-uppercase event-head">Event List</h3>
+  <div class="content content-scroll" id="content-1">
+    <ul class="event-list">
+      <li class="active cursor-pointer" *ngFor="let event of eventListResponseData.events"
+        routerLink="/photographer-panel/locations/{{locationId}}/events/{{event.id}}">
+        <div class="event-img" [ngStyle]="{'background-image': 'url(' + imgPath + event.eventPhoto + ')'}"></div>
+        <p class="scroll_text_location">{{event.name}}</p>
+        <p class="scroll_text_date">{{event.startsAt | date:'dd MMM, yyyy'}}</p>
+      </li>
+    </ul>
+  </div>
+</div>

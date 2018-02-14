@@ -1,10 +1,7 @@
-
-<div class="col-lg-2 col-md-2 col-xs-12 thumb">
-  <a href="dashboard.html">
-    <div class="folder"  [ngStyle]="{'background-image': 'url(' + imgPath + pmcEvent.eventPhoto + ')'}">
-      <div class="folder-overlay">
-        <p><strong>{{pmcEvent.name}} </strong></p>
-      </div>
+<div class="col-lg-2 col-md-2 col-xs-12 thumb cursor-pointer">
+  <div class="folder"  [ngStyle]="{'background-image': 'url(' + imgPath + pmcEvent.eventPhoto + ')'}">
+    <div class="folder-overlay">
+      <p><strong>{{pmcEvent.name}} </strong></p>
     </div>
-  </a>
+  </div>
 </div>

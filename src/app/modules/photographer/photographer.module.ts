@@ -12,6 +12,8 @@ import { EventListComponent } from './components/event-list/event-list.component
 import { EventListItemComponent } from './components/event-list-item/event-list-item.component';
 import {NgxPaginationModule} from 'ngx-pagination';
 import {LocationListComponent} from './components/location-list/location-list.component';
+import { EventDashboardComponent } from './components/event-dashboard/event-dashboard.component';
+import { EventSidepanelComponent } from './components/event-sidepanel/event-sidepanel.component';
 
 @NgModule({
   imports: [
@@ -23,6 +25,8 @@ import {LocationListComponent} from './components/location-list/location-list.co
     VenueListItemComponent,
     EventListComponent,
     EventListItemComponent,
-    LocationListComponent]
+    LocationListComponent,
+    EventDashboardComponent,
+    EventSidepanelComponent]
 })
 export class PhotographerModule { }

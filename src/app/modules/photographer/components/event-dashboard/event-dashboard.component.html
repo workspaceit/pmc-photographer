@@ -1,0 +1,85 @@
+<div class="container-fluid">
+  <div class="row clearfix">
+    <app-event-sidepanel></app-event-sidepanel>
+    <div class="content-wrapper">
+      <div class="col-md-12 icon_bg" style="text-align: right;">
+        <div class="container-fluid">
+          <div class="col-md-4">
+            <div class="desc-div row desc-non">
+              <div class="noteditable-desc ">
+                <div class="col-lg-12 text-left">
+                  <h3 class="event-name">Black Party <small>( 16 images )</small></h3>
+                  <p class="e-date" style="color:#fff;">
+                    Date: 12 July,2017
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-8 mb-fix-text">
+            <select class="watermark-select">
+              <option value="">Choose Watermark</option>
+              <option value="">Default Watermark</option>
+            </select>
+            <a href="#" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Select Photos Photos">
+              <img src="assets/images/select.png" class="icon_style"></a>
+            <a href="#" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Deselect Photos">
+              <img src="assets/images/deselect.png" class="icon_style"></a>
+            <a href="#" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Remove Watermark">
+              <img src="assets/images/remove watermark.png" class="icon_style"></a>
+            <a href="#" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Edit Photos" id="editEvent">
+              <img src="assets/images/edit.png" class="icon_style"></a>
+            <a href="#" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Delete Photos" id="doneEdit">
+              <img src="assets/images/garbage.png" class="icon_style"></a>
+            <a href="form-user.html" target="_blank" class="action-icon" data-toggle="tooltip" data-placement="bottom"
+               title="Send Via SMS"><img src="assets/images/11.png" class="icon_style"></a>
+            <a href="form-user.html" target="_blank"class="action-icon" data-toggle="tooltip" data-placement="bottom"
+               title="Send Via Email"><img src="assets/images/22.png" class="icon_style"></a>
+            <div class="upload" upload-image="">
+              <input data-toggle="tooltip" data-placement="bottom" title="Upload Image" type="file" id="files" name="files"
+                     class="input-file ng-pristine ng-valid ng-touched" files-model="" ng-model="project.fileList">
+              <label for="files">
+                <output id="list"></output>
+              </label>
+            </div>
+            <a href="form-user.html" target="_blank" class="action-icon" data-toggle="tooltip" data-placement="bottom"
+               title="Send To Printer"><img src="assets/images/44.png" class="icon_style"></a>
+            <a href="form-user.html" target="_blank" class="action-icon" data-toggle="tooltip" data-placement="bottom"
+               title="Send To Slideshow"><img src="assets/images/55.png" class="icon_style"></a>
+            <a href="swiper_01.html" target="_blank" class="action-icon-preview" style="color:#fff;text-transform:uppercase"
+               data-toggle="tooltip" data-placement="bottom" title="Show Preview" target="_blank">Preview</a>
+          </div>
+        </div>
+      </div>
+      <div class="form-group panel-right-block content" id="content-2">
+        <div class="event-gallery thumb-container">
+          <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 thumb" style="background:url('assets/images/img_01.jpg') no-repeat;">
+            <div class="chk-div toggler">
+              <div class="checkboxFive">-
+                <input type="checkbox" value="1" id="checkboxFiveInput1" name=""/>
+                <label for="checkboxFiveInput1">
+                </label>
+              </div>
+            </div>
+            <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="This is my title"
+               data-caption="Some lovely red flowers" data-image="images/img_01.jpg" data-target="#image-gallery">
+            </a>
+          </div>
+          <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 thumb" style="background:url('assets/images/img_01.jpg') no-repeat;">
+            <div class="chk-div toggler">
+              <div class="checkboxFive">
+                <input type="checkbox" value="1" id="checkboxFiveInput17" name=""/>
+                <label>
+                </label>
+              </div>
+            </div>
+            <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Im so nice"
+               data-caption="And if there is money left, my girlfriend will receive this car" data-image="images/img_03.jpg"
+               data-target="#image-gallery">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

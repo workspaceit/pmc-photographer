@@ -29,12 +29,12 @@
       <div class="row clearfix">
         <app-event-list-item *ngFor="let event of eventListResponseData.events |
                     paginate: { itemsPerPage: limit, currentPage: currentPage, totalItems: eventListResponseData.count}"
-                             [pmcEvent]="event">
+                             [pmcEvent]="event" routerLink="/photographer-panel/locations/{{location.id}}/events/{{event.id}}">
         </app-event-list-item>
       </div>
       <div class="row clearfix">
         <div>
-          <pagination-controls  class="pg-pagination" (pageChange)="pageChanged($event)"></pagination-controls>
+          <pagination-controls  class="pg-pagination" autoHide="true" (pageChange)="pageChanged($event)"></pagination-controls>
         </div>
       </div>
     </div>
