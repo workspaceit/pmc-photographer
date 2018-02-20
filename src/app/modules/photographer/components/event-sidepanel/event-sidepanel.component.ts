@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {EventListResponseData} from '../../../../response/event-list-response';
+import {EventListResponseData} from '../../../../response-data-model/event-list-response-data';
 import {EventService} from '../../../../services/event.service';
 import {Event} from '../../../../datamodel/event';
 import {ActivatedRoute, Router} from '@angular/router';

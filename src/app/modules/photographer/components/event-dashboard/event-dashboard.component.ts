@@ -1,33 +1,87 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import { Swiper, Navigation, Pagination, Scrollbar } from 'swiper/dist/js/swiper.esm.js';
+import {EventImageService} from '../../../../services/event-image.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {environment} from '../../../../../environments/environment';
+import {EventImage} from '../../../../datamodel/event-image';
+import {EventDetailsResponseData} from '../../../../response-data-model/event-details-response-data';
+import {EventService} from '../../../../services/event.service';
 @Component({
   selector: 'app-event-dashboard',
   templateUrl: './event-dashboard.component.html',
-  styleUrls: ['./event-dashboard.component.css']
+  styleUrls: ['./event-dashboard.component.css'],
+  providers: [EventImageService, EventService]
 })
-export class EventDashboardComponent implements OnInit {
+export class EventDashboardComponent implements OnInit, AfterViewInit {
 
-  constructor() { }
+  eventId: number;
+  eventDetailsResponseData: EventDetailsResponseData = new EventDetailsResponseData();
+  eventImages: EventImage[] = [];
+
+  limit = 6;
+  offset = 0;
+  responseArrived = false;
+  imgPath = environment.pictureUrl;
+
+  constructor(private route: ActivatedRoute, private router: Router, private eventImageService: EventImageService,
+              private eventService: EventService) { }
 
   ngOnInit() {
+    this.route.params.subscribe(params => {
+      this.eventId = params['eventId'];
+      this.getEventImages();
+      this.getEventDetails();
+    });
     this.initialize();
   }
 
-  initialize() {
-    this.loadGallery(true, 'a.thumbnail');
-    $('.count').each(function () {
-      $(this).prop('Counter',0).animate({
-        Counter: $(this).text()
-      }, {
-        duration: 4000,
-        easing: 'swing',
-        step: function (now) {
-          $(this).text(Math.ceil(now));
-        }
-      });
-    });
+  ngAfterViewInit() {
+    const  thisComponent = this;
+    console.log('something changed');
+    setTimeout(function() {
+      thisComponent.adjustHeight();
+    }, 0);
+  }
 
-    $(".img-check").click(function(){
+  adjustHeight() {
+    $('.thumb').height($('.thumb').width());
+  }
+
+  test() {
+    this.getEventImages();
+  }
+
+  getEventDetails() {
+    this.eventService.getEventDetails(this.eventId).subscribe((data) => {
+      this.eventDetailsResponseData = data;
+    });
+  }
+
+  getEventImages() {
+    const  thisComponent = this;
+    this.eventImageService.getEventImages(this.eventId, this.limit, this.offset).subscribe((data) => {
+      this.eventImages = data;
+      setTimeout(function() {
+        thisComponent.adjustHeight();
+      }, 0);
+    });
+  }
+
+  initialize() {
+    // this.loadGallery(true, 'a.thumbnail');
+    // $('.count').each(function () {
+    //   $(this).prop('Counter',0).animate({
+    //     Counter: $(this).text()
+    //   }, {
+    //     duration: 4000,
+    //     easing: 'swing',
+    //     step: function (now) {
+    //       $(this).text(Math.ceil(now));
+    //     }
+    //   });
+    // });
+
+    $(".img-check").click(function() {
       $(this).toggleClass("check");
     });
 
@@ -37,21 +91,6 @@ export class EventDashboardComponent implements OnInit {
 
     (<any>$('[data-toggle="tooltip"]')).tooltip();
 
-    const swiper = new Swiper('.swiper-container', {
-      pagination: '.swiper-pagination',
-      effect: 'coverflow',
-      grabCursor: true,
-      centeredSlides: true,
-      slidesPerView: 'auto',
-      coverflow: {
-        rotate: 50,
-        stretch: 0,
-        depth: 100,
-        modifier: 1,
-        slideShadows : true
-      }
-    });
-
     $("#doneEdit").hide();
     $("#editEvent").click(function(){
       $(this).hide();
@@ -60,7 +99,7 @@ export class EventDashboardComponent implements OnInit {
       $("#doneEdit").show();
       $("#deleteTrash").show();
     });
-    $("#doneEdit").click(function(){
+    $("#doneEdit").click(function() {
       $(this).hide();
       $(".toggler").hide();
       $(".togglerFace").show();
@@ -71,9 +110,9 @@ export class EventDashboardComponent implements OnInit {
   }
 
   // This function disables buttons when needed
-  disableButtons(counter_max, counter_current){
+  disableButtons(counter_max, counter_current) {
     $('#show-previous-image, #show-next-image').show();
-    if (counter_max === counter_current){
+    if (counter_max === counter_current) {
       $('#show-next-image').hide();
     } else if (counter_current === 1) {
       $('#show-previous-image').hide();
@@ -87,7 +126,7 @@ export class EventDashboardComponent implements OnInit {
       counter = 0;
 
     $('#show-next-image, #show-previous-image').click(function(){
-      if($(this).attr('id') === 'show-previous-image'){
+      if($(this).attr('id') === 'show-previous-image') {
         current_image--;
       } else {
         current_image++;

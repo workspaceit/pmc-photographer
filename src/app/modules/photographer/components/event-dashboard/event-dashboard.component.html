@@ -8,9 +8,10 @@
             <div class="desc-div row desc-non">
               <div class="noteditable-desc ">
                 <div class="col-lg-12 text-left">
-                  <h3 class="event-name">Black Party <small>( 16 images )</small></h3>
+                  <h3 class="event-name">{{eventDetailsResponseData.event.name}}
+                    <small>( {{eventDetailsResponseData.imageCount}} Images )</small></h3>
                   <p class="e-date" style="color:#fff;">
-                    Date: 12 July,2017
+                    Date: {{eventDetailsResponseData.event.startsAt | date:'dd MMM, yyyy'}}
                   </p>
                 </div>
               </div>
@@ -21,7 +22,7 @@
               <option value="">Choose Watermark</option>
               <option value="">Default Watermark</option>
             </select>
-            <a href="#" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Select Photos Photos">
+            <a (click)="test()" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Select Photos Photos">
               <img src="assets/images/select.png" class="icon_style"></a>
             <a href="#" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Deselect Photos">
               <img src="assets/images/deselect.png" class="icon_style"></a>
@@ -53,7 +54,9 @@
       </div>
       <div class="form-group panel-right-block content" id="content-2">
         <div class="event-gallery thumb-container">
-          <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 thumb" style="background:url('assets/images/img_01.jpg') no-repeat;">
+
+          <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 thumb" *ngFor="let eventImage of eventImages"
+               [ngStyle]="{'background-image': 'url(' + imgPath + eventImage.image + ')', 'background-repeat': 'no-repeat'}">
             <div class="chk-div toggler">
               <div class="checkboxFive">-
                 <input type="checkbox" value="1" id="checkboxFiveInput1" name=""/>
@@ -62,22 +65,10 @@
               </div>
             </div>
             <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="This is my title"
-               data-caption="Some lovely red flowers" data-image="images/img_01.jpg" data-target="#image-gallery">
+               data-caption="Some lovely red flowers" attr.data-image="{{imgPath}} {{eventImage.image}}" data-target="#image-gallery">
             </a>
           </div>
-          <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 thumb" style="background:url('assets/images/img_01.jpg') no-repeat;">
-            <div class="chk-div toggler">
-              <div class="checkboxFive">
-                <input type="checkbox" value="1" id="checkboxFiveInput17" name=""/>
-                <label>
-                </label>
-              </div>
-            </div>
-            <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="Im so nice"
-               data-caption="And if there is money left, my girlfriend will receive this car" data-image="images/img_03.jpg"
-               data-target="#image-gallery">
-            </a>
-          </div>
+
         </div>
       </div>
     </div>

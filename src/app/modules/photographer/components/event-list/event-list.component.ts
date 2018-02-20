@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Event} from '../../../../datamodel/event';
 import {EventService} from '../../../../services/event.service';
-import {EventListResponseData} from '../../../../response/event-list-response';
+import {EventListResponseData} from '../../../../response-data-model/event-list-response-data';
 import {ActivatedRoute, Router} from '@angular/router';
 import {LocationService} from '../../../../services/location.service';
 import {Location} from '../../../../datamodel/location';

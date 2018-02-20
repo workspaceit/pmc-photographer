@@ -6,8 +6,6 @@ import { PhotographerComponent } from './components/photographer/photographer.co
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TopDockComponent } from './components/top-dock/top-dock.component';
 import { LocationListItemComponent } from './components/location-list-item/location-list-item.component';
-import { VenueListComponent } from './components/venue-list/venue-list.component';
-import { VenueListItemComponent } from './components/venue-list-item/venue-list-item.component';
 import { EventListComponent } from './components/event-list/event-list.component';
 import { EventListItemComponent } from './components/event-list-item/event-list-item.component';
 import {NgxPaginationModule} from 'ngx-pagination';
@@ -21,8 +19,10 @@ import { EventSidepanelComponent } from './components/event-sidepanel/event-side
     PhotographerRoutingModule,
     NgxPaginationModule
   ],
-  declarations: [PhotographerComponent, DashboardComponent, TopDockComponent, LocationListItemComponent, VenueListComponent,
-    VenueListItemComponent,
+  declarations: [PhotographerComponent,
+    DashboardComponent,
+    TopDockComponent,
+    LocationListItemComponent,
     EventListComponent,
     EventListItemComponent,
     LocationListComponent,
