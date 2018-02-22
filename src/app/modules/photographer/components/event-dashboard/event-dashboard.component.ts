@@ -6,11 +6,12 @@ import {environment} from '../../../../../environments/environment';
 import {EventImage} from '../../../../datamodel/event-image';
 import {EventDetailsResponseData} from '../../../../response-data-model/event-details-response-data';
 import {EventService} from '../../../../services/event.service';
+import {LoginService} from '../../../../services/login.service';
 @Component({
   selector: 'app-event-dashboard',
   templateUrl: './event-dashboard.component.html',
   styleUrls: ['./event-dashboard.component.css'],
-  providers: [EventImageService, EventService]
+  providers: [EventImageService, EventService, LoginService]
 })
 export class EventDashboardComponent implements OnInit, AfterViewInit {
 

@@ -25,7 +25,7 @@ export class EventListComponent implements OnInit {
   responseArrived = false;
   filterDate = null;
   constructor(private route: ActivatedRoute, private router: Router, private eventService: EventService,
-               private locationService: LocationService) { }
+              private locationService: LocationService) { }
 
   ngOnInit() {
 
