@@ -5,12 +5,13 @@ import {EventListResponseData} from '../../../../response-data-model/event-list-
 import {ActivatedRoute, Router} from '@angular/router';
 import {LocationService} from '../../../../services/location.service';
 import {Location} from '../../../../datamodel/location';
+import {LoginService} from '../../../../services/login.service';
 
 @Component({
   selector: 'app-event-list',
   templateUrl: './event-list.component.html',
   styleUrls: ['./event-list.component.css'],
-  providers: [EventService, LocationService]
+  providers: [EventService, LocationService, LoginService]
 })
 export class EventListComponent implements OnInit {
 
@@ -46,6 +47,7 @@ export class EventListComponent implements OnInit {
       this.locationId = params['locationId'];
       this.offset = (this.currentPage * this.limit) - this.limit;
       this.getEvents();
+      this.getEvents();
       this.getLocationById();
     });
   }
@@ -63,6 +65,7 @@ export class EventListComponent implements OnInit {
 
   getEvents(): void {
     this.eventService.getAll(this.locationId, this.filterDate, this.limit, this.offset).subscribe((responseData) => {
+      console.log("auto");
       this.eventListResponseData = responseData;
       this.responseArrived = true;
     });

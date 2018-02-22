@@ -61,7 +61,7 @@ export class LoginService extends BaseService{
   public getLocalUserDetails(): Photographer{
     return JSON.parse(localStorage.getItem(this.curentUserKey));
   }
-  public getLocalOauthCredential(): Photographer{
+  public getLocalOauthCredential(): OauthCredential{
     return JSON.parse(localStorage.getItem(this.oauthCredentialKey));
   }
 }

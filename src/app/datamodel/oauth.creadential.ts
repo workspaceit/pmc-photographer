@@ -1,7 +1,7 @@
 
 
 
-export class OauthCredential{
+export class OauthCredential {
   access_token: string;
   token_type:string;
   refresh_token:string;
