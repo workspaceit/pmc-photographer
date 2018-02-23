@@ -24,16 +24,17 @@ export class EventService extends BaseService {
     // let data = {'locationId': locationId};
     const data = new FormData();
     console.log(this.loginService.getLocalOauthCredential().access_token);
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + this.loginService.getLocalOauthCredential().access_token
-      })
-    };
+    // const httpOptions = {
+    //   headers: new HttpHeaders({
+    //     'Authorization': 'Bearer ' + this.loginService.getLocalOauthCredential().access_token
+    //   })
+    // };
     data.append('locationId', locationId.toString());
     if (filterDate) {
       data.append('filterDate', filterDate);
     }
-    return this.http.post<EventListResponseData>('http://localhost:8080/auth/api' + this.uri + '/' + limit + '/' + offset, data,
-      httpOptions);
+    // return this.http.post<EventListResponseData>('http://localhost:8080/auth/api' + this.uri + '/' + limit + '/' + offset, data,
+    //   httpOptions);
+    return this.http.post<EventListResponseData>('http://localhost:8080/auth/api' + this.uri + '/' + limit + '/' + offset, data);
   }
 }

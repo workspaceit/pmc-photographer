@@ -12,12 +12,18 @@ import {NgxPaginationModule} from 'ngx-pagination';
 import {LocationListComponent} from './components/location-list/location-list.component';
 import { EventDashboardComponent } from './components/event-dashboard/event-dashboard.component';
 import { EventSidepanelComponent } from './components/event-sidepanel/event-sidepanel.component';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import {AuthInterceptor} from '../../services/interceptor/authinterceptor';
+import {LoginService} from "../../services/login.service";
+import { DropzoneModule } from 'ngx-dropzone-wrapper';
 
 @NgModule({
   imports: [
     CommonModule,
     PhotographerRoutingModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    HttpClientModule,
+    DropzoneModule
   ],
   declarations: [PhotographerComponent,
     DashboardComponent,
@@ -27,6 +33,9 @@ import { EventSidepanelComponent } from './components/event-sidepanel/event-side
     EventListItemComponent,
     LocationListComponent,
     EventDashboardComponent,
-    EventSidepanelComponent]
+    EventSidepanelComponent],
+  providers:[
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },LoginService
+  ]
 })
 export class PhotographerModule { }

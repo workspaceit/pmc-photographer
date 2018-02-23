@@ -4,18 +4,19 @@ import {EventService} from '../../../../services/event.service';
 import {Event} from '../../../../datamodel/event';
 import {ActivatedRoute, Router} from '@angular/router';
 import {environment} from '../../../../../environments/environment';
+import {LoginService} from "../../../../services/login.service";
 
 @Component({
   selector: 'app-event-sidepanel',
   templateUrl: './event-sidepanel.component.html',
   styleUrls: ['./event-sidepanel.component.css'],
-  providers: [EventService]
+  providers: [EventService,LoginService]
 })
 export class EventSidepanelComponent implements OnInit {
 
   eventListResponseData: EventListResponseData = new EventListResponseData();
 
-  limit = 6;
+  limit = 4;
   offset = 0;
   currentPage = 1;
   locationId: number;
@@ -53,7 +54,17 @@ export class EventSidepanelComponent implements OnInit {
   }
 
   getMoreEvents() {
-    console.log('get more events');
+    this.getScrolledEvents();
+  }
+
+  getScrolledEvents() {
+    this.offset += this.limit;
+    this.eventService.getAll(this.locationId, null, this.limit, this.offset).subscribe((responseData) => {
+      this.eventListResponseData.events=this.eventListResponseData.events.concat(responseData.events);
+      console.log(this.eventListResponseData.events.length)
+
+      this.responseArrived = true;
+    });
   }
 
   initialize() {

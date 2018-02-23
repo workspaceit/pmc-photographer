@@ -47,7 +47,6 @@ export class EventListComponent implements OnInit {
       this.locationId = params['locationId'];
       this.offset = (this.currentPage * this.limit) - this.limit;
       this.getEvents();
-      this.getEvents();
       this.getLocationById();
     });
   }

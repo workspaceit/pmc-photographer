@@ -7,6 +7,8 @@ import {EventImage} from '../../../../datamodel/event-image';
 import {EventDetailsResponseData} from '../../../../response-data-model/event-details-response-data';
 import {EventService} from '../../../../services/event.service';
 import {LoginService} from '../../../../services/login.service';
+import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
+
 @Component({
   selector: 'app-event-dashboard',
   templateUrl: './event-dashboard.component.html',
@@ -19,19 +21,32 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   eventDetailsResponseData: EventDetailsResponseData = new EventDetailsResponseData();
   eventImages: EventImage[] = [];
 
-  limit = 6;
+  limit = 18;
   offset = 0;
   responseArrived = false;
-  imgPath = environment.pictureUrl;
-
+  imgPath = environment.eventPhotoUrl;
+  API_URL = environment.apiUrl;
+  public config: DropzoneConfigInterface;
   constructor(private route: ActivatedRoute, private router: Router, private eventImageService: EventImageService,
-              private eventService: EventService) { }
+              private eventService: EventService,private  loginService: LoginService) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.eventId = params['eventId'];
       this.getEventImages();
       this.getEventDetails();
+      this.config = {
+        url: this.API_URL+'/event-images/'+this.eventId,
+        maxFiles: 50,
+        clickable: true,
+        acceptedFiles: 'image/*',
+        createImageThumbnails: true,
+        autoReset:1,
+        errorReset:1,
+        headers:{
+          'Authorization': 'Bearer '+this.loginService.getLocalOauthCredential().access_token
+        }
+      };
     });
     this.initialize();
   }
@@ -45,13 +60,35 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   }
 
   adjustHeight() {
-    $('.thumb').height($('.thumb').width());
+    setTimeout(function() {
+      $('.thumb').height($('.thumb').width());
+    }, 0);
   }
 
   test() {
     this.getEventImages();
   }
 
+  uploadModal() {
+    console.log("clicked to open upload modal");
+    // (<any>$('#uploadModal')).modal({backdrop: 'static', keyboard: false})
+    (<any>$('#uploadModal')).modal('show');
+  }
+  onUploadError(event) {
+    console.log("Error Occured");
+    console.log(event);
+  }
+  onUploadSuccess(event) {
+    console.log("upload success");
+    this.eventImages.unshift(event[1]);
+    this.offset+=1;
+    this.adjustHeight();
+  }
+  onUploadComplete(event,dz) {
+    console.log("ALL upload is done");
+    (<any>$('#uploadModal')).modal('hide');
+    // this.getEventImages();
+  }
   getEventDetails() {
     this.eventService.getEventDetails(this.eventId).subscribe((data) => {
       this.eventDetailsResponseData = data;
@@ -62,9 +99,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     const  thisComponent = this;
     this.eventImageService.getEventImages(this.eventId, this.limit, this.offset).subscribe((data) => {
       this.eventImages = data;
-      setTimeout(function() {
-        thisComponent.adjustHeight();
-      }, 0);
+      this.adjustHeight();
     });
   }
 

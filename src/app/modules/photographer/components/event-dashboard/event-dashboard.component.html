@@ -36,13 +36,16 @@
                title="Send Via SMS"><img src="assets/images/11.png" class="icon_style"></a>
             <a href="form-user.html" target="_blank"class="action-icon" data-toggle="tooltip" data-placement="bottom"
                title="Send Via Email"><img src="assets/images/22.png" class="icon_style"></a>
-            <div class="upload" upload-image="">
-              <input data-toggle="tooltip" data-placement="bottom" title="Upload Image" type="file" id="files" name="files"
-                     class="input-file ng-pristine ng-valid ng-touched" files-model="" ng-model="project.fileList">
-              <label for="files">
-                <output id="list"></output>
-              </label>
-            </div>
+            <!--<div class="upload" upload-image="">-->
+              <!--<input data-toggle="tooltip" data-placement="bottom" title="Upload Image" type="file" id="files" name="files"-->
+                     <!--class="input-file ng-pristine ng-valid ng-touched" files-model="" ng-model="project.fileList">-->
+              <!--<label for="files">-->
+                <!--<output id="list"></output>-->
+              <!--</label>-->
+            <!--</div>-->
+
+            <a (click)="uploadModal()" class="action-icon" data-toggle="tooltip" data-placement="bottom"
+               title="Upload"><img src="assets/images/33.png" class="icon_style"></a>
             <a href="form-user.html" target="_blank" class="action-icon" data-toggle="tooltip" data-placement="bottom"
                title="Send To Printer"><img src="assets/images/44.png" class="icon_style"></a>
             <a href="form-user.html" target="_blank" class="action-icon" data-toggle="tooltip" data-placement="bottom"
@@ -70,6 +73,24 @@
           </div>
 
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Upload Images</h4>
+      </div>
+      <div class="modal-body">
+        <dropzone #dz [config]="config" (complete)="onUploadComplete($event,dz)" [message]="'Click or drag images here to upload'" (error)="onUploadError($event)" (success)="onUploadSuccess($event)"></dropzone>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
