@@ -10,7 +10,7 @@ export const environment = {
   apiBaseUrl: 'http://localhost:8080',
   apiUrl: 'http://localhost:8080/auth/api',
   pictureUrl: 'http://localhost:8080/common/',
-  eventPhotoUrl: 'http://localhost:8080/event-images/',
+  eventPhotoUrl: 'http://localhost:8080/event-images/web/',
 
 /*  apiBaseUrl: 'http://163.53.151.3:8080',
   apiUrl: 'http://163.53.151.3:8080/test/api',

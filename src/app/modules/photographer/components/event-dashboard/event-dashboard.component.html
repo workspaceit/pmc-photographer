@@ -28,7 +28,7 @@
               <img src="assets/images/deselect.png" class="icon_style"></a>
             <a href="#" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Remove Watermark">
               <img src="assets/images/remove watermark.png" class="icon_style"></a>
-            <a href="#" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Edit Photos" id="editEvent">
+            <a (click)="enableEditPhotos()" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Edit Photos" id="editEvent">
               <img src="assets/images/edit.png" class="icon_style"></a>
             <a href="#" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Delete Photos" id="doneEdit">
               <img src="assets/images/garbage.png" class="icon_style"></a>
@@ -60,10 +60,10 @@
 
           <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 thumb" *ngFor="let eventImage of eventImages"
                [ngStyle]="{'background-image': 'url(' + imgPath + eventImage.image + ')', 'background-repeat': 'no-repeat'}">
-            <div class="chk-div toggler">
-              <div class="checkboxFive">-
-                <input type="checkbox" value="1" id="checkboxFiveInput1" name=""/>
-                <label for="checkboxFiveInput1">
+            <div class="chk-div toggler" *ngIf="enableEdit">
+              <div class="checkboxFive">
+                <input type="checkbox" value="1" id="checkboxFiveInput{{eventImage.id}}" name=""/>
+                <label for="checkboxFiveInput{{eventImage.id}}">
                 </label>
               </div>
             </div>

@@ -1209,9 +1209,9 @@ input.file-upload {
   width: 270px;
   padding: 20px;
 }
-.toggler{
-  display: none;
-}
+/*.toggler{*/
+  /*display: none;*/
+/*}*/
 .thumb{
   padding: 3px;
 }

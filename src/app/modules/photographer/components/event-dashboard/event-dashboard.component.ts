@@ -20,10 +20,11 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   eventId: number;
   eventDetailsResponseData: EventDetailsResponseData = new EventDetailsResponseData();
   eventImages: EventImage[] = [];
-
+  enableEdit = false;
   limit = 18;
   offset = 0;
   responseArrived = false;
+  loadMore = true;
   imgPath = environment.eventPhotoUrl;
   API_URL = environment.apiUrl;
   public config: DropzoneConfigInterface;
@@ -102,7 +103,21 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
       this.adjustHeight();
     });
   }
-
+  getMoreEventImages() {
+    const  thisComponent = this;
+    this.offset += this.limit;
+    this.eventImageService.getEventImages(this.eventId, this.limit, this.offset).subscribe((data) => {
+      if(data.length==0) {
+        this.loadMore = false;
+      } else {
+        this.eventImages=this.eventImages.concat(data);
+        this.adjustHeight();
+      }
+    });
+  }
+  enableEditPhotos() {
+    this.enableEdit = !this.enableEdit;
+  }
   initialize() {
     // this.loadGallery(true, 'a.thumbnail');
     // $('.count').each(function () {
@@ -116,6 +131,20 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     //     }
     //   });
     // });
+    const  thisComponent = this;
+    (<any>$("#content-2")).mCustomScrollbar({
+      autoHideScrollbar:true,
+      mouseWheel:{ scrollAmount: 150 },
+      theme:"rounded",
+      callbacks:{
+        onTotalScroll:function() {
+          console.log("scrolling done . . .");
+          if(thisComponent.loadMore) {
+            thisComponent.getMoreEventImages();
+          }
+        }
+      }
+    });
 
     $(".img-check").click(function() {
       $(this).toggleClass("check");
@@ -127,21 +156,21 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
 
     (<any>$('[data-toggle="tooltip"]')).tooltip();
 
-    $("#doneEdit").hide();
-    $("#editEvent").click(function(){
-      $(this).hide();
-      $(".toggler").show();
-      $(".togglerFace").hide();
-      $("#doneEdit").show();
-      $("#deleteTrash").show();
-    });
-    $("#doneEdit").click(function() {
-      $(this).hide();
-      $(".toggler").hide();
-      $(".togglerFace").show();
-      $("#editEvent").show();
-      $("#deleteTrash").hide();
-    });
+    // $("#doneEdit").hide();
+    // $("#editEvent").click(function(){
+    //   $(this).hide();
+    //   $(".toggler").show();
+    //   $(".togglerFace").hide();
+    //   $("#doneEdit").show();
+    //   $("#deleteTrash").show();
+    // });
+    // $("#doneEdit").click(function() {
+    //   $(this).hide();
+    //   $(".toggler").hide();
+    //   $(".togglerFace").show();
+    //   $("#editEvent").show();
+    //   $("#deleteTrash").hide();
+    // });
     $('.thumb').height($('.thumb').width());
   }
 
