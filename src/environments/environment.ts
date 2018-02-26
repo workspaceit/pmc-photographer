@@ -13,7 +13,8 @@ export const environment = {
   eventPhotoUrl: 'http://localhost:8080/event-images/',
 
 /*  apiBaseUrl: 'http://163.53.151.3:8080',
-  apiUrl: 'http://163.53.151.3:8080/test/api',
-  pictureUrl: 'http://163.53.151.3:8080/common/',*/
+  apiUrl: 'http://163.53.151.3:8080/auth/api',
+  pictureUrl: 'http://163.53.151.3:8080/common/',
+  eventPhotoUrl: 'http://163.53.151.3:8080/event-images/',*/
 
 };
