@@ -35,6 +35,6 @@ export class EventService extends BaseService {
     }
     // return this.http.post<EventListResponseData>('http://localhost:8080/auth/api' + this.uri + '/' + limit + '/' + offset, data,
     //   httpOptions);
-    return this.http.post<EventListResponseData>('http://localhost:8080/auth/api' + this.uri + '/' + limit + '/' + offset, data);
+    return this.http.post<EventListResponseData>(this.API_URL + this.uri + '/' + limit + '/' + offset, data);
   }
 }
