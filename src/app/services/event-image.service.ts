@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {BaseService} from './base.service';
 import {Observable} from 'rxjs/Observable';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {EventImage} from '../datamodel/event-image';
 
 @Injectable()
@@ -17,6 +17,13 @@ export class EventImageService extends  BaseService {
     const data = new FormData();
     data.append('eventId', eventId.toString());
     return this.http.post<EventImage[]>(this.API_URL + this.uri + '/' + limit + '/' + offset, data);
+  }
+
+  public deleteEventImages(eventIds) {
+    console.log("in service");
+    const  data = new FormData();
+    data.append('imageIds', eventIds);
+    return this.http.post<EventImage[]>(this.API_URL + this.uri + '/delete',data);
   }
 
 }

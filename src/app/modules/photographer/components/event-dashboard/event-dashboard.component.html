@@ -30,7 +30,7 @@
               <img src="assets/images/remove watermark.png" class="icon_style"></a>
             <a (click)="enableEditPhotos()" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Edit Photos" id="editEvent">
               <img src="assets/images/edit.png" class="icon_style"></a>
-            <a href="#" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Delete Photos" id="doneEdit">
+            <a (click)="deletePhotos()" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Delete Photos" id="doneEdit">
               <img src="assets/images/garbage.png" class="icon_style"></a>
             <a href="form-user.html" target="_blank" class="action-icon" data-toggle="tooltip" data-placement="bottom"
                title="Send Via SMS"><img src="assets/images/11.png" class="icon_style"></a>
@@ -62,7 +62,7 @@
                [ngStyle]="{'background-image': 'url(' + imgPath + eventImage.image + ')', 'background-repeat': 'no-repeat'}">
             <div class="chk-div toggler" *ngIf="enableEdit">
               <div class="checkboxFive">
-                <input type="checkbox" value="1" id="checkboxFiveInput{{eventImage.id}}" name=""/>
+                <input type="checkbox" (change)="checkBoxUpdate(eventImage,$event)" value="1" id="checkboxFiveInput{{eventImage.id}}" name=""/>
                 <label for="checkboxFiveInput{{eventImage.id}}">
                 </label>
               </div>

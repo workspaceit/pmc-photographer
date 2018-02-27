@@ -28,6 +28,8 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   imgPath = environment.eventPhotoUrl;
   API_URL = environment.apiUrl;
   public config: DropzoneConfigInterface;
+  checkedItems:number[]=[];
+
   constructor(private route: ActivatedRoute, private router: Router, private eventImageService: EventImageService,
               private eventService: EventService,private  loginService: LoginService) { }
 
@@ -117,6 +119,43 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   }
   enableEditPhotos() {
     this.enableEdit = !this.enableEdit;
+    if(!this.enableEdit) {
+      this.resetSelected();
+    }
+  }
+  resetSelected() {
+    this.checkedItems = [];
+  }
+  checkBoxUpdate(eventImage,$event) {
+    if($event.target.checked) {
+      const index = this.checkedItems.indexOf(eventImage.id);
+      if(index<0) {
+        this.checkedItems=this.checkedItems.concat(eventImage.id);
+      }
+    } else {
+      const index = this.checkedItems.indexOf(eventImage.id);
+      if (index !== -1) {
+        this.checkedItems.splice(index, 1);
+      }
+    }
+    console.log(this.checkedItems);
+  }
+  deletePhotos() {
+    if(this.checkedItems.length==0) {
+      console.log("No item selected");
+    } else {
+       this.eventImageService.deleteEventImages(this.checkedItems).subscribe((data) => {
+         if(data) {
+            this.removePhotosFromView();
+            this.resetSelected();
+         }
+       });
+    }
+  }
+  removePhotosFromView() {
+    for(const item of this.checkedItems) {
+      this.eventImages = this.eventImages.filter(data=>data.id !== item);
+    }
   }
   initialize() {
     // this.loadGallery(true, 'a.thumbnail');
@@ -190,7 +229,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
       selector,
       counter = 0;
 
-    $('#show-next-image, #show-previous-image').click(function(){
+    $('#show-next-image, #show-previous-image').click(function() {
       if($(this).attr('id') === 'show-previous-image') {
         current_image--;
       } else {
@@ -202,7 +241,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     });
 
     if (setIDs == true) {
-      $('[data-image-id]').each(function(){
+      $('[data-image-id]').each(function() {
         counter++;
         $(this).attr('data-image-id', counter);
       });
@@ -220,5 +259,150 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     $('#image-gallery-image').attr('src', $sel.data('image'));
     this.disableButtons(counter, $sel.data('image-id'));
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //anik
 
 }
