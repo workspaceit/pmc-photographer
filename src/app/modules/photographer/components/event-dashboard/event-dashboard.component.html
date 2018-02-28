@@ -20,7 +20,9 @@
           <div class="col-md-8 mb-fix-text">
             <select class="watermark-select">
               <option value="">Choose Watermark</option>
-              <option value="">Default Watermark</option>
+              <option *ngFor="let watermark of eventDetailsResponseData.event.watermarks" value="{{watermark.id}}">
+                {{ watermark.name }}
+              </option>
             </select>
             <a (click)="test()" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Select Photos Photos">
               <img src="assets/images/select.png" class="icon_style"></a>
