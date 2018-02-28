@@ -29,6 +29,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   API_URL = environment.apiUrl;
   public config: DropzoneConfigInterface;
   checkedItems:number[]=[];
+  selectedWatermarkId = 0;
 
   constructor(private route: ActivatedRoute, private router: Router, private eventImageService: EventImageService,
               private eventService: EventService,private  loginService: LoginService) { }
@@ -183,18 +184,6 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     }
   }
   initialize() {
-    // this.loadGallery(true, 'a.thumbnail');
-    // $('.count').each(function () {
-    //   $(this).prop('Counter',0).animate({
-    //     Counter: $(this).text()
-    //   }, {
-    //     duration: 4000,
-    //     easing: 'swing',
-    //     step: function (now) {
-    //       $(this).text(Math.ceil(now));
-    //     }
-    //   });
-    // });
     const  thisComponent = this;
     (<any>$("#content-2")).mCustomScrollbar({
       autoHideScrollbar:true,
@@ -285,149 +274,36 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     this.disableButtons(counter, $sel.data('image-id'));
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  //anik
+  watermarkedChanged() {
+    if(this.checkedItems.length==0) {
+      (<any>$).growl.warning({ message: 'No photo selected' });
+    } else {
+      if (this.selectedWatermarkId != 0) {
+        this.eventImageService.addWatermark(this.checkedItems, this.selectedWatermarkId).subscribe((data) => {
+            if (data) {
+              for(let j = 0; j < data.length; j++) {
+                for (let i = 0; i < this.eventImages.length; i++) {
+                  if (this.eventImages[i].id == data[j].id) {
+                    this.eventImages[i] = data[j];
+                    break;
+                  }
+                }
+              }
+              (<any>$).growl.notice({title: 'Success!', message: 'Watermark added'});
+              this.adjustHeight();
+              setTimeout(function() {
+                for(let i = 0; i < data.length; i++) {
+                  const  f = $('#checkboxFiveInput' + data[i].id).prop('checked', true);
+                }
+              }, 0);
+            }
+          }, (err) => {
+            console.log(err.error);
+            (<any>$).growl.error({message: err.error});
+          }
+        );
+      }
+    }
+  }
 
 }

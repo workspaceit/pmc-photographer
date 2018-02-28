@@ -519,6 +519,7 @@ a:hover{text-decoration: none;}
   background: transparent;
   color: #000;
   font-weight: 600;
+  cursor: pointer;
 }
 .action-icon:hover{
   opacity: 1;
@@ -716,6 +717,7 @@ input:checked + .slider:before {
   overflow: hidden;
   border: 10px solid transparent;
   border-right: 0px;
+  border-bottom: 0px;
 }
 /*.thumb{
   width:15%;
