@@ -25,5 +25,10 @@ export class EventImageService extends  BaseService {
     data.append('imageIds', eventIds);
     return this.http.post<EventImage[]>(this.API_URL + this.uri + '/delete',data);
   }
+  public sendToSlideShow(eventIds) {
+    const  data = new FormData();
+    data.append('imageIds', eventIds);
+    return this.http.post<EventImage[]>(this.API_URL + this.uri + '/send-to-slideshow',data);
+  }
 
 }

@@ -142,19 +142,44 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   }
   deletePhotos() {
     if(this.checkedItems.length==0) {
-      console.log("No item selected");
+      (<any>$).growl.warning({ message: 'No items selected' });
     } else {
        this.eventImageService.deleteEventImages(this.checkedItems).subscribe((data) => {
          if(data) {
             this.removePhotosFromView();
             this.resetSelected();
+           (<any>$).growl.notice({ message: 'Image removed!' });
          }
-       });
+       },(err)=> {
+          console.log(err.error);
+         (<any>$).growl.error({ message: err.error });
+         }
+       );
     }
   }
   removePhotosFromView() {
     for(const item of this.checkedItems) {
       this.eventImages = this.eventImages.filter(data=>data.id !== item);
+    }
+  }
+
+  sendToSlideShow() {
+    if(this.checkedItems.length==0) {
+      (<any>$).growl.warning({ message: 'No items selected' });
+    } else {
+      this.eventImageService.sendToSlideShow(this.checkedItems).subscribe((data) => {
+          if(data) {
+            for(const item of this.checkedItems) {
+              $('#checkboxFiveInput'+item).prop('checked',false);
+            }
+            this.resetSelected();
+            (<any>$).growl.notice({ message: 'Successfully send to slideshow!' });
+          }
+        },(err)=> {
+          console.log(err.error);
+          (<any>$).growl.error({ message: err.error });
+        }
+      );
     }
   }
   initialize() {
