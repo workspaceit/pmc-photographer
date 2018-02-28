@@ -7,7 +7,7 @@ import {of} from 'rxjs/observable/of';
 export class BaseService {
   API_BASEURL= environment.apiBaseUrl;
   API_URL = environment.apiUrl;
-
+  PUBLIC_API_URL = environment.publicApiBaseUrl;
   constructor() { }
 
 

@@ -12,6 +12,9 @@ const routes: Routes = [
   { path: 'photographer-panel', loadChildren: './modules/photographer/photographer.module#PhotographerModule',
     canActivate: [OnlyLoggedInUsersGuard]
   },
+  { path: 'user-panel', loadChildren: './modules/user/user.module#UserModule',
+    canActivate: [OnlyLoggedInUsersGuard]
+  },
 ];
 
 @NgModule({

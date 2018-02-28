@@ -1,0 +1,7 @@
+export enum SECTION_TYPE{
+  LOGO,
+  TOP_BANNER,
+  BACKGROUND,
+  BOTTOM_BANNER
+
+}
