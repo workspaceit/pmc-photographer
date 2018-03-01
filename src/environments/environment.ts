@@ -17,6 +17,7 @@ export const environment = {
 /*  apiBaseUrl: 'http://163.53.151.3:8080',
   apiUrl: 'http://163.53.151.3:8080/auth/api',
   pictureUrl: 'http://163.53.151.3:8080/common/',
-  eventPhotoUrl: 'http://163.53.151.3:8080/img/images/',*/
+  eventPhotoUrl: 'http://163.53.151.3:8080/img/images/',
+  publicApiBaseUrl: 'http://163.53.151.3:8080/public/api',*/
 
 };

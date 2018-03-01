@@ -306,4 +306,34 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
+  removeWatermark() {
+    if(this.checkedItems.length==0) {
+      (<any>$).growl.warning({ message: 'No photo selected' });
+    } else {
+      this.eventImageService.removeWatermark(this.checkedItems).subscribe((data) => {
+          if (data) {
+            for(let j = 0; j < data.length; j++) {
+              for (let i = 0; i < this.eventImages.length; i++) {
+                if (this.eventImages[i].id == data[j].id) {
+                  this.eventImages[i] = data[j];
+                  break;
+                }
+              }
+            }
+            (<any>$).growl.notice({title: 'Success!', message: 'Watermark removed'});
+            this.adjustHeight();
+            setTimeout(function() {
+              for(let i = 0; i < data.length; i++) {
+                $('#checkboxFiveInput' + data[i].id).prop('checked', true);
+              }
+            }, 0);
+          }
+        }, (err) => {
+          console.log(err.error);
+          (<any>$).growl.error({message: err.error});
+        }
+      );
+    }
+  }
+
 }

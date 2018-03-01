@@ -39,4 +39,10 @@ export class EventImageService extends  BaseService {
     return this.http.post<EventImage[]>(this.API_URL + this.uri + '/add-watermark', data);
   }
 
+  public removeWatermark(imageIds) {
+    const  data = new FormData();
+    data.append('imageIds', imageIds);
+    return this.http.post<EventImage[]>(this.API_URL + this.uri + '/remove-watermark', data);
+  }
+
 }
