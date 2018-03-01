@@ -318,11 +318,15 @@
           <h4 class="modal-title hidden-xs" id="myModalLabel">Please Close If you Don't Like Ad</h4>
         </div>
         <div class="modal-body">
+          <img *ngIf="advertisementOnPage.popUpAd.currentFileType == 'IMAGE'"
+               src="{{advertisementOnPage.popUpAd.currentImage}}"
+                style="height: 400px;width: 570px"
+          >
 
-
-          <video  class="video" id="pmcGalAdVideo" loop autoplay muted style="width: 100%;" >
-            <source *ngIf="advertisementOnPage.video.path!=''"  src="{{advertisementOnPage.video.path}}"
-                    type="{{advertisementOnPage.video.mimeType}}" />
+          <video *ngIf="advertisementOnPage.popUpAd.currentFileType == 'VIDEO'" muted  class="video" id="pmcGalAdVideo" autoplay style="width: 100%;" (ended)="fetchPopUpAdvertisement()" >
+            <source *ngIf="advertisementOnPage.popUpAd.video.ready"
+                    src="{{advertisementOnPage.popUpAd.video.path}}"
+                    type="{{advertisementOnPage.popUpAd.video.mimeType}}" />
           </video>
         </div>
       </div>
