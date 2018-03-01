@@ -38,7 +38,6 @@ export class EventSidepanelComponent implements OnInit {
         this.locationId = params['locationId'];
         this.getEvents();
       }
-      this.getEventPhotos();
     });
   }
 
@@ -47,10 +46,6 @@ export class EventSidepanelComponent implements OnInit {
       this.eventListResponseData = responseData;
       this.responseArrived = true;
     });
-  }
-
-  getEventPhotos() {
-    console.log('fetching event photos . . .');
   }
 
   getMoreEvents() {

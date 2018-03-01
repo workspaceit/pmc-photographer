@@ -20,7 +20,6 @@ export class EventImageService extends  BaseService {
   }
 
   public deleteEventImages(eventIds) {
-    console.log("in service");
     const  data = new FormData();
     data.append('imageIds', eventIds);
     return this.http.post<EventImage[]>(this.API_URL + this.uri + '/delete',data);
@@ -37,6 +36,12 @@ export class EventImageService extends  BaseService {
     data.append('imageIds', imageIds);
     data.append('watermarkId', String(watermarkId));
     return this.http.post<EventImage[]>(this.API_URL + this.uri + '/add-watermark', data);
+  }
+
+  public removeWatermark(imageIds) {
+    const  data = new FormData();
+    data.append('imageIds', imageIds);
+    return this.http.post<EventImage[]>(this.API_URL + this.uri + '/remove-watermark', data);
   }
 
 }

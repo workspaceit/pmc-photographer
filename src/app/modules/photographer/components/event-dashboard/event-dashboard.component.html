@@ -24,7 +24,7 @@
                 {{ watermark.name }}
               </option>
             </select>
-            <a href="#" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Remove Watermark">
+            <a (click)="removeWatermark()" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Remove Watermark">
               <img src="assets/images/remove watermark.png" class="icon_style">
             </a>
             <a (click)="enableEditPhotos()" class="action-icon" data-toggle="tooltip" data-placement="bottom"
@@ -47,8 +47,8 @@
             <a href="form-user.html" target="_blank" class="action-icon" data-toggle="tooltip" data-placement="bottom"
                title="Send To Printer"><img src="assets/images/44.png" class="icon_style">
             </a>
-            <a (click)="sendToSlideShow()" target="_blank" class="action-icon" data-toggle="tooltip" data-placement="bottom"
-               title="Send To Slideshow"><img src="assets/images/55.png" class="icon_style">
+            <a (click)="sendToSlideShow()" target="_blank" class="action-icon" data-toggle="tooltip"
+               data-placement="bottom" title="Send To Slideshow"><img src="assets/images/55.png" class="icon_style">
             </a>
             <a href="swiper_01.html" target="_blank" class="action-icon-preview" style="color:#fff;text-transform:uppercase"
                data-toggle="tooltip" data-placement="bottom" title="Show Preview" target="_blank">Preview
@@ -58,7 +58,6 @@
       </div>
       <div class="form-group panel-right-block content" id="content-2">
         <div class="event-gallery thumb-container">
-
           <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 thumb" *ngFor="let eventImage of eventImages"
                [ngStyle]="{'background-image': 'url(' + imgPath + eventImage.image + ')', 'background-repeat': 'no-repeat'}">
             <div class="chk-div toggler" *ngIf="enableEdit">
@@ -69,10 +68,9 @@
               </div>
             </div>
             <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="This is my title"
-               data-caption="Some lovely red flowers" attr.data-image="{{imgPath}}{{eventImage.image}}" data-target="#image-gallery">
+               data-caption="Some lovely red flowers" [attr.data-image]="imgPath + eventImage.image" data-target="#image-gallery">
             </a>
           </div>
-
         </div>
       </div>
     </div>
@@ -84,14 +82,73 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
         <h4 class="modal-title" id="myModalLabel">Upload Images</h4>
       </div>
       <div class="modal-body">
-        <dropzone #dz [config]="config" (complete)="onUploadComplete($event,dz)" [message]="'Click or drag images here to upload'" (error)="onUploadError($event)" (success)="onUploadSuccess($event)"></dropzone>
+        <dropzone #dz [config]="config" (complete)="onUploadComplete($event,dz)"
+                  [message]="'Click or drag images here to upload'" (error)="onUploadError($event)"
+                  (success)="onUploadSuccess($event)">
+        </dropzone>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade modal-gallery" id="image-gallery" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="image-gallery-title"></h4>
+      </div>
+      <div class="modal-body clearfix">
+        <div class="social-foot">
+          <a href="#"><img src="assets/images/social/facebook.png" width="30"></a>
+          <a href="#"><img src="assets/images/social/gplus.png" width="30"></a>
+          <a href="#"><img src="assets/images/social/twitter.png" width="30"></a>
+          <a href="#"><img src="assets/images/social/instagram.png" width="30"></a>
+          <a href="#" style="float:right;background:transparent;color:red !important;"><i class="fa fa-2x fa-warning"></i></a>
+        </div>
+        <div class="col-md-12" style="padding:0px;">
+          <img id="image-gallery-image" class="img-responsive" src="">
+        </div>
+        <div class="desc-div-foot">
+          <h5>This is the title pic</h5>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum dolor urna, consequat fermentum orci convallis eget. Aenean ac nulla at est porta malesuada. Aliquam at lobortis enim, ornare laoreet sem. Aliquam blandit lacus augue, quis feugiat sapien imperdiet eget.
+          </p>
+          <span class="image-number">Image 4578A</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="col-md-2 text-left">
+          <button type="button" class="btn btn-primary btn-action" id="show-previous-image"><i class="fa fa-chevron-left"></i></button>
+        </div>
+
+        <!-- <div class="col-md-8 text-center">
+          <div class="action-container">
+            <a href="#"><img src="./images/garbage.png" /></a>
+            <a href="#"><img src="./images/11.png" /></a>
+            <a href="#"><img src="./images/22.png" /></a>
+            <a href="#"><img src="./images/33.png" /></a>
+            <a href="#"><img src="./images/44.png" /></a>
+            <a href="#"><img src="./images/55.png" /></a>
+          </div>
+        </div> -->
+        <div class="col-md-8 text-center">
+
+        </div>
+
+        <div class="col-md-2">
+          <button type="button" id="show-next-image" class="btn btn-default btn-action"><i class="fa fa-chevron-right"></i></button>
+        </div>
       </div>
     </div>
   </div>
