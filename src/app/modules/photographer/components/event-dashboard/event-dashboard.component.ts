@@ -57,7 +57,6 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     const  thisComponent = this;
-    console.log('something changed');
     setTimeout(function() {
       thisComponent.adjustHeight();
     }, 0);
@@ -74,7 +73,6 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   }
 
   uploadModal() {
-    console.log("clicked to open upload modal");
     // (<any>$('#uploadModal')).modal({backdrop: 'static', keyboard: false})
     (<any>$('#uploadModal')).modal('show');
   }

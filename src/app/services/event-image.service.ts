@@ -20,7 +20,6 @@ export class EventImageService extends  BaseService {
   }
 
   public deleteEventImages(eventIds) {
-    console.log("in service");
     const  data = new FormData();
     data.append('imageIds', eventIds);
     return this.http.post<EventImage[]>(this.API_URL + this.uri + '/delete',data);
