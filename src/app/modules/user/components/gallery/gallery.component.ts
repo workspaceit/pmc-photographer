@@ -4,6 +4,7 @@ import {environment} from '../../../../../environments/environment';
 import {SectionResource} from '../../../../datamodel/section-resource';
 import {FILE_TYPE} from '../../../../constant/file.type';
 import {AdvertisementDetails} from '../../../../datamodel/advertisement.details';
+import {delay} from 'q';
 
 @Component({
   selector: 'app-gallery',
@@ -19,11 +20,16 @@ export class GalleryComponent implements OnInit {
   globalPopUpAdSection = [];
   advertisementConfig={
     gallery:{
+      id:0,
       isEndOfAd:false,
       limit:1,
       selfLoop:true,
       apiOffset:0,
-      delay:10000,
+      delay:{
+        global:5000,
+        topBanner:1000,
+        bottomBanner:1000,
+      },
       arrayOffset:0
     },
     popUpAd:{
@@ -32,13 +38,14 @@ export class GalleryComponent implements OnInit {
       selfLoop:true,
       apiOffset:0,
       arrayOffset:0,
-      showCrossDelay:10000,
+      showCrossDelay:0,
+      showClosePopUp:false,
       video:{},
-      image:{delay:500}
+      image:{delay:2000},
+      rotateSwitchedOff:false
     }};
   eventId = 3;
   resourcePath = environment.pictureUrl;
-  showClosePopUp = false;
   advertisementOnPage = {
     popUpAd: {
       video:{ready:false,path:"",mimeType:""},
@@ -53,12 +60,13 @@ export class GalleryComponent implements OnInit {
   };
   fileType: FILE_TYPE;
 
+
   constructor(private advertisementService: AdvertisementService) {
     this.currentAdvertisementDetails = null;
   }
 
   ngOnInit() {
-    console.log(this.advertisementOnPage);
+
     (<any>$("#content-1")).mCustomScrollbar({
       autoHideScrollbar:true,
       mouseWheel:{ scrollAmount: 150 },
@@ -73,20 +81,26 @@ export class GalleryComponent implements OnInit {
 
     (<any>$('.thumb')).height($('.thumb').width());
 
-    (<any>$('#myModal')).modal({  backdrop: 'static',
+    (<any>$('#popUpModal')).modal({  backdrop: 'static',
       keyboard: false});
+
 
     this.fetchGalleryAdvertisement();
     this.fetchPopUpAdvertisement();
 
-
-    this.delay(this.advertisementConfig.popUpAd.showCrossDelay).then(()=>{
-      this.showClosePopUp = true;
-    });
+    this.rotateGalleryAdTopBanner(1).then();
+    this.rotateGalleryAdBottomBanner(1).then();
 
   }
 
-  fetchGalleryAdvertisement() {
+
+
+  public fetchGalleryAdvertisement() {
+    if(this.advertisementConfig.gallery.isEndOfAd){
+      this.rotationGalleryAd().then(()=>console.log("ROTATION CALLED"));
+      return;
+    }
+
     const offset = this.advertisementConfig.gallery.apiOffset++;
     const limit = this.advertisementConfig.gallery.limit;
     this.advertisementService.getByEventIdAndType(this.eventId,
@@ -94,18 +108,24 @@ export class GalleryComponent implements OnInit {
                                                   ,limit
                                                   ,offset).subscribe((data)=>{
 
-                                                    if(data.length==0){
-                                                      this.advertisementConfig.gallery.isEndOfAd = true;
-                                                    } else {
-                                                      this.advertisements = this.advertisements.concat(data);
-                                                    }
-                                                    this.rotationGalleryAd().then(()=>console.log("ROTATION CALLED"));
-                                                });
+                                                      if(data.length==0){
+                                                        this.advertisementConfig.gallery.isEndOfAd = true;
+                                                      } else {
+                                                        this.advertisements = this.advertisements.concat(data);
+                                                      }
+                                                      this.rotationGalleryAd().then(()=>console.log("ROTATION CALLED"));
+                                                  });
 
   }
-  fetchPopUpAdvertisement() {
+  public fetchPopUpAdvertisement() {
+    if(this.advertisementConfig.popUpAd.isEndOfAd){
+      this.changePupUpAdd();
+      return;
+    }
+
     const offset = this.advertisementConfig.popUpAd.apiOffset++;
     const limit = this.advertisementConfig.popUpAd.limit;
+
     this.advertisementService.getByEventIdAndType(this.eventId,
       AdvertisementService.advTypeReqParamenter.POPUP_EMAIL
       ,limit
@@ -118,7 +138,22 @@ export class GalleryComponent implements OnInit {
         this.preparePopUpAd();
       }
       this.changePupUpAdd();
+
     });
+  }
+
+  private delayPopUpCloseIconShow(){
+    if(this.advertisementConfig.popUpAd.showCrossDelay==0){
+
+      if(this.globalPopUpAdSection.length>0){
+        this.advertisementConfig.popUpAd.showCrossDelay = this.globalPopUpAdSection[0].duration*1000;
+      }
+
+      delay(this.advertisementConfig.popUpAd.showCrossDelay).then(()=>{
+        this.advertisementConfig.popUpAd.showClosePopUp = true;
+      });
+    }
+
   }
   private preparePopUpAd(){
     this.globalPopUpAdSection = [];
@@ -132,10 +167,10 @@ export class GalleryComponent implements OnInit {
     for(let i = startIndex;i<this.advertisements.length;i++){
 
       this.currentAdvertisementDetails = new AdvertisementDetails( this.advertisements[i] );
-      this.prepareAdvertisementForPage();
+      this.prepareGalleryAdForPage();
 
 
-     await this.delay(this.advertisementConfig.gallery.delay);
+     await delay(this.advertisementConfig.gallery.delay.global);
     }
     if(!this.advertisementConfig.gallery.isEndOfAd){
       this.fetchGalleryAdvertisement();
@@ -147,8 +182,10 @@ export class GalleryComponent implements OnInit {
   }
   private getRotationStarIndex():number{
     let i = 0;
-    if(!this.advertisementConfig.gallery.isEndOfAd){
-      i =  this.advertisementConfig.gallery.arrayOffset*this.advertisementConfig.gallery.limit;
+    if(this.advertisementConfig.gallery.arrayOffset<this.advertisements.length){
+      i =  this.advertisementConfig.gallery.arrayOffset++;
+    }else{
+      this.advertisementConfig.gallery.arrayOffset=0;
     }
     return i;
   }
@@ -167,45 +204,22 @@ export class GalleryComponent implements OnInit {
     this.advertisementConfig.popUpAd.arrayOffset++;
     return i;
   }
-  private async delay(ms) {
+ /* private async delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
-  }
-  private prepareAdvertisementForPage(){
-
-    const galleryAds = this.currentAdvertisementDetails;
-
-    const logoSecRes = galleryAds.sections.LOGO.sectionResource;
-    const bgSecRes = galleryAds.sections.BACKGROUND.sectionResource;
-    const tbSecRes = galleryAds.sections.TOP_BANNER.sectionResource;
-    const bbSecRes = galleryAds.sections.BOTTOM_BANNER.sectionResource;
-
-
-
-    for( const i in logoSecRes){
-      this.advertisementOnPage.logo = this.resourcePath+logoSecRes[i].fileName;
-    }
-
-    for( const i in bgSecRes){
-      this.advertisementOnPage.background = this.resourcePath+bgSecRes[i].fileName;
-    }
-
-    for( const i in tbSecRes){
-      this.advertisementOnPage.topBanner = this.resourcePath+tbSecRes[i].fileName;
-    }
-
-    for( const i in bbSecRes){
-      this.advertisementOnPage.bottomBanner = this.resourcePath+bbSecRes[i].fileName;
-    }
-
-
-  }
+  }*/
   private changePupUpAdd(){
+    this.delayPopUpCloseIconShow();
+    if(this.advertisementConfig.popUpAd.rotateSwitchedOff){
+      console.log('Switched OFF');
+      return;
+    }
+
     this.resetPopUpAdSettings();
     let i= this.getPopUpRotationStarIndex();
     console.log('Index '+i);
 
     if(this.globalPopUpAdSection[i]==undefined){
-      this.delay(3000).then(()=>{
+      delay(3000).then(()=>{
         this.changePupUpAdd();
         console.log('No advertisement found');
       });
@@ -230,14 +244,98 @@ export class GalleryComponent implements OnInit {
     }
 
   }
+  public switchedOffRotation(){
+    console.log("rotateSwitchedOff");
+    this.advertisementConfig.popUpAd.rotateSwitchedOff = true;
+  }
+
+
+
   private async rotatePopUpImages(){
     const images = this.advertisementOnPage.popUpAd.images;
     for(const i in images){
       this.advertisementOnPage.popUpAd.currentImage =this.resourcePath+images[i];
-      await this.delay(this.advertisementConfig.popUpAd.image.delay);
+      await delay(this.advertisementConfig.popUpAd.image.delay);
     }
     this.fetchPopUpAdvertisement();
   }
+  private async rotateGalleryAdTopBanner(startIndex?:number){
+    let readyFlag =  this.checkNullUndefiend(this.currentAdvertisementDetails);
+    if(readyFlag){
+      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections);
+    }
+
+    if(!readyFlag){
+      delay(this.advertisementConfig.gallery.delay.topBanner).then(()=>{
+        this.rotateGalleryAdTopBanner().then();
+      });
+      return;
+    }
+
+    if(startIndex==undefined || startIndex==null){
+      startIndex = 0;
+    }
+    const galleryAds = this.currentAdvertisementDetails;
+    const tbSecRes = galleryAds.sections.TOP_BANNER.sectionResource;
+    const id = galleryAds.id;
+    try{
+      for( let i=startIndex ;i< tbSecRes.length;i++){
+        this.advertisementOnPage.topBanner = this.resourcePath+tbSecRes[i].fileName;
+        await delay(this.advertisementConfig.gallery.delay.topBanner);
+        console.log("id",id,this.currentAdvertisementDetails.id);
+        if(id !== this.currentAdvertisementDetails.id){
+          /**
+           * rotate to next advertiser's Gallery Add
+           * */
+          this.rotateGalleryAdTopBanner(1).then();
+          return;
+        }
+      }
+    }catch(e) {
+      console.log(e);
+    }
+    this.rotateGalleryAdTopBanner().then();
+    console.log("End of function");
+  }
+  private async rotateGalleryAdBottomBanner(startIndex?:number){
+    let readyFlag =  this.checkNullUndefiend(this.currentAdvertisementDetails);
+    if(readyFlag){
+      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections);
+    }
+
+    if(!readyFlag){
+      delay(this.advertisementConfig.gallery.delay.topBanner).then(()=>{
+        this.rotateGalleryAdBottomBanner().then();
+      });
+      return;
+    }
+
+    if(startIndex==undefined || startIndex==null){
+      startIndex=0;
+    }
+
+    let galleryAds = this.currentAdvertisementDetails;
+    let bbSecRes = galleryAds.sections.BOTTOM_BANNER.sectionResource;
+    let id = galleryAds.id;
+    try{
+      for( let i=startIndex;i<bbSecRes.length;i++){
+        this.advertisementOnPage.bottomBanner = this.resourcePath+bbSecRes[i].fileName;
+        await delay(this.advertisementConfig.gallery.delay.bottomBanner);
+        if(id !== this.currentAdvertisementDetails.id){
+          /**
+           * rotate to next advertiser's Gallery Add
+           * */
+          this.rotateGalleryAdBottomBanner(1).then();
+          continue;
+        }
+      }
+    }catch(e) {
+      console.log(e);
+    }
+    this.rotateGalleryAdBottomBanner().then();
+
+  }
+
   private preparePopUpAdImage(secRes: SectionResource[]){
     this.advertisementOnPage.popUpAd.currentFileType = FILE_TYPE.IMAGE;
     this.advertisementOnPage.popUpAd.images = [];
@@ -252,11 +350,57 @@ export class GalleryComponent implements OnInit {
       this.advertisementOnPage.popUpAd.video.mimeType = secRes[0].mimeType;
       this.advertisementOnPage.popUpAd.video.ready = true;
 
-      this.delay(300).then(()=>{
-         (<any>$("#pmcGalAdVideo")).load();
+      delay(300).then(()=>{
+        const galleryComponent = this;
+
+        (<any>$("#pmcGalAdVideo")).load();
+        (<any>$("#pmcGalAdVideo")).on("ended",function(){
+          galleryComponent.fetchPopUpAdvertisement();
+        });
+
       });
   }
+  private prepareGalleryAdForPage(){
+
+    const galleryAds = this.currentAdvertisementDetails;
+
+    const logoSecRes = galleryAds.sections.LOGO.sectionResource;
+    const bgSecRes = galleryAds.sections.BACKGROUND.sectionResource;
+    const tbSecRes = galleryAds.sections.TOP_BANNER.sectionResource;
+    const bbSecRes = galleryAds.sections.BOTTOM_BANNER.sectionResource;
+
+    /**
+     * Single Logo
+     * */
+    if(logoSecRes.length>0){
+      this.advertisementOnPage.logo = this.resourcePath+logoSecRes[0].fileName;
+    }
+    /**
+     * Single Background
+     * */
+    if(bgSecRes.length>0){
+      this.advertisementOnPage.background = this.resourcePath+bgSecRes[0].fileName;
+    }
+
+    /**
+     * First Top banner
+     * */
+    if(tbSecRes.length>0){
+       this.advertisementOnPage.topBanner = this.resourcePath+tbSecRes[0].fileName;
+    }
+    /**
+     * First Bottom banner
+     * */
+    if(bbSecRes.length>0){
+      this.advertisementOnPage.bottomBanner = this.resourcePath+bbSecRes[0].fileName;
+    }
+  }
+
   private resetPopUpAdSettings(){
     this.advertisementOnPage.popUpAd.video.ready = false;
   }
+  private checkNullUndefiend(data):boolean{
+    return (data==undefined || data==null)?false:true;
+  }
+
 }

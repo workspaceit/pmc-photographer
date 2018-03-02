@@ -8,6 +8,7 @@ export class Section {
   rotation: string;
   sectionType: SECTION_TYPE;
   sectionResource: SectionResource[];
+  duration:number;
   createdAt: string;
 
   constructor(values: Object = {}) {
