@@ -204,7 +204,7 @@ export class GalleryComponent implements OnInit {
     this.advertisementConfig.popUpAd.arrayOffset++;
     return i;
   }
- /* private async delay(ms) {
+ mi123/* private async delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }*/
   private changePupUpAdd(){
@@ -288,6 +288,7 @@ export class GalleryComponent implements OnInit {
            * rotate to next advertiser's Gallery Add
            * */
           this.rotateGalleryAdTopBanner(1).then();
+          console.log("End of function from IF");
           return;
         }
       }
@@ -326,7 +327,7 @@ export class GalleryComponent implements OnInit {
            * rotate to next advertiser's Gallery Add
            * */
           this.rotateGalleryAdBottomBanner(1).then();
-          continue;
+          return;
         }
       }
     }catch(e) {
