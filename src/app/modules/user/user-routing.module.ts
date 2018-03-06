@@ -9,7 +9,7 @@ const routes: Routes = [{
   component:UserComponent,
   children:[
     {
-      path:'gallery',
+      path:'gallery/:popUpType/:eventId',
       component:GalleryComponent
     },
     {

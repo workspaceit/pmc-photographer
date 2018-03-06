@@ -5,6 +5,7 @@ import {SectionResource} from '../../../../datamodel/section-resource';
 import {FILE_TYPE} from '../../../../constant/file.type';
 import {AdvertisementDetails} from '../../../../datamodel/advertisement.details';
 import {delay} from 'q';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-gallery',
@@ -45,6 +46,7 @@ export class GalleryComponent implements OnInit {
       rotateSwitchedOff:false
     }};
   eventId = 3;
+  popUpType='';
   resourcePath = environment.pictureUrl;
   advertisementOnPage = {
     popUpAd: {
@@ -61,8 +63,10 @@ export class GalleryComponent implements OnInit {
   fileType: FILE_TYPE;
 
 
-  constructor(private advertisementService: AdvertisementService) {
+  constructor(private rout: ActivatedRoute,private advertisementService: AdvertisementService) {
     this.currentAdvertisementDetails = null;
+    this.eventId = Number( this.rout.snapshot.paramMap.get('eventId') );
+    this.popUpType = this.rout.snapshot.paramMap.get('popUpType');
   }
 
   ngOnInit() {
@@ -125,9 +129,16 @@ export class GalleryComponent implements OnInit {
 
     const offset = this.advertisementConfig.popUpAd.apiOffset++;
     const limit = this.advertisementConfig.popUpAd.limit;
-
+    let popUpTypeReqParam ='';
+    switch(this.popUpType){
+      case 'email':
+        popUpTypeReqParam = AdvertisementService.advTypeReqParamenter.POPUP_EMAIL;
+        break;
+      case 'sms':
+        popUpTypeReqParam = AdvertisementService.advTypeReqParamenter.POPUP_SMS;
+    }
     this.advertisementService.getByEventIdAndType(this.eventId,
-      AdvertisementService.advTypeReqParamenter.POPUP_EMAIL
+      popUpTypeReqParam
       ,limit
       ,offset).subscribe((data)=>{
 
@@ -216,7 +227,7 @@ export class GalleryComponent implements OnInit {
 
     this.resetPopUpAdSettings();
     let i= this.getPopUpRotationStarIndex();
-    console.log('Index '+i);
+    console.log('POPUP Index '+i);
 
     if(this.globalPopUpAdSection[i]==undefined){
       delay(3000).then(()=>{
@@ -356,7 +367,10 @@ export class GalleryComponent implements OnInit {
 
         (<any>$("#pmcGalAdVideo")).load();
         (<any>$("#pmcGalAdVideo")).on("ended",function(){
+          this.pause();
+          this.currentTime = 0;
           galleryComponent.fetchPopUpAdvertisement();
+
         });
 
       });

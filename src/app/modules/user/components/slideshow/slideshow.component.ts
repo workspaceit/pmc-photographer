@@ -67,27 +67,24 @@ export class SlideshowComponent implements  AfterViewInit  {
 
     });
 
-    delay(2000).then(()=>{
       console.log("Before Init");
-      /*new WOW({
+      new WOW({
         live: false
       }).init();
-*/
-      let wow = new WOW()(
+      /*let wow = new WOW()(
         {
           animateClass: 'animated',
           offset:       100,
-          live: false,
           callback:     function(box) {
             console.log("WOW: animating <" + box.tagName.toLowerCase() + ">");
           }
         }
       );
-     wow.init();
+     wow.init();*/
 
 
       console.log("After Init");
-    });
+
     (<any>$('#moar')).on("click", function() {
       var section = document.createElement('section');
       section.className = 'section--purple wow fadeInDown';
