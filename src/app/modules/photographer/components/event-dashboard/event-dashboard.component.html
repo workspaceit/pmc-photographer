@@ -67,8 +67,8 @@
                 </label>
               </div>
             </div>
-            <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="This is my title"
-               data-caption="Some lovely red flowers" [attr.data-image]="imgPath + eventImage.image" data-target="#image-gallery">
+            <a class="thumbnail" (click)="openImageModal(eventImage)" href="#" data-image-id="" data-toggle="modal" data-title="This is my title"
+               data-caption="Some lovely red flowers" [attr.data-image]="imgPath + eventImage.image">
             </a>
           </div>
         </div>
@@ -128,8 +128,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <div class="col-md-2 text-left">
-          <button type="button" class="btn btn-primary btn-action" id="show-previous-image"><i class="fa fa-chevron-left"></i></button>
+        <div class="col-md-2 text-left" >
+          <button type="button" *ngIf="prevBtn" class="btn btn-primary btn-action" (click)="showPreviousImage()" id="show-previous-image"><i class="fa fa-chevron-left"></i></button>
         </div>
 
         <!-- <div class="col-md-8 text-center">
@@ -146,8 +146,8 @@
 
         </div>
 
-        <div class="col-md-2">
-          <button type="button" id="show-next-image" class="btn btn-default btn-action"><i class="fa fa-chevron-right"></i></button>
+        <div class="col-md-2" >
+          <button type="button" *ngIf="nextBtn" (click)="showNextImage()" id="show-next-image" class="btn btn-default btn-action"><i class="fa fa-chevron-right"></i></button>
         </div>
       </div>
     </div>

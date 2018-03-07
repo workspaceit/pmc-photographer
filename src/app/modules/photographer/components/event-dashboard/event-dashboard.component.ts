@@ -30,7 +30,9 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   public config: DropzoneConfigInterface;
   checkedItems:number[]=[];
   selectedWatermarkId = 0;
-
+  currentImage:EventImage=null;
+  nextBtn = true;
+  prevBtn = true;
   constructor(private route: ActivatedRoute, private router: Router, private eventImageService: EventImageService,
               private eventService: EventService,private  loginService: LoginService) { }
 
@@ -179,6 +181,44 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
           (<any>$).growl.error({ message: err.error });
         }
       );
+    }
+  }
+  openImageModal(image) {
+    console.log("Image Modal Opended");
+    this.currentImage = image;
+    (<any>$('#image-gallery-image')).attr('src',this.imgPath+image.image);
+    (<any>$('#image-gallery')).modal('show');
+    const currentImageIndex = this.eventImages.indexOf(this.currentImage);
+    this.displayPrevNext(currentImageIndex);
+  }
+  showNextImage() {
+    const currentImageIndex = this.eventImages.indexOf(this.currentImage);
+    const nextImageIndex = currentImageIndex+1;
+    const totalImage = this.eventImages.length;
+    if(nextImageIndex<=totalImage-1) {
+      this.currentImage = this.eventImages[nextImageIndex];
+      this.displayPrevNext(nextImageIndex);
+      (<any>$('#image-gallery-image')).attr('src',this.imgPath+this.eventImages[nextImageIndex].image);
+    }
+  }
+  showPreviousImage() {
+    const currentImageIndex = this.eventImages.indexOf(this.currentImage);
+    const previousImageIndex = currentImageIndex-1;
+    if(previousImageIndex>=0) {
+      this.currentImage = this.eventImages[previousImageIndex];
+      this.displayPrevNext(previousImageIndex);
+      (<any>$('#image-gallery-image')).attr('src',this.imgPath+this.eventImages[previousImageIndex].image);
+    }
+  }
+  displayPrevNext(index) {
+    const totalImage = this.eventImages.length;
+    this.nextBtn = true;
+    this.prevBtn = true;
+    if(index==0) {
+      this.prevBtn = false;
+    }
+    if(index==totalImage-1) {
+      this.nextBtn = false;
     }
   }
   initialize() {
