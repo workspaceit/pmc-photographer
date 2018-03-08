@@ -41,11 +41,17 @@
     <div class="swiper-left wow slideInDown">
       <div class="event-logo">
         <div class="center-flex">
-          <img src="assets/images/pmc-stock/vendor.png" class="wow bounceInDown"  data-wow-duration="1s"  data-wow-delay="1s">
+          <img src="{{pageData.location.locationLogo}}"
+               style="width: 61%;height: 50%"
+               class="wow bounceInDown"
+               data-wow-duration="1s"  data-wow-delay="1s">
+
           <h2 class="wow bounceInLeft"   data-wow-delay="2s">
-            8825 E Jefferson Ave,<br>
-            Detroit, MI 48214<br>
-            (313) 822-6607
+           {{pageData.location.name}}
+          </h2>
+
+          <h2 class="wow bounceInLeft"   data-wow-delay="2s">
+            {{pageData.location.address}}
           </h2>
         </div>
         <!-- <div class="divider" style="margin-top:0px;padding:1px;"></div> -->
@@ -56,11 +62,11 @@
           <!-- Wrapper for slides -->
           <div class="carousel-inner" role="listbox">
             <div class="item active">
-              <img src="assets/images/pmc-stock/e.jpg" />
+              <img src="{{pageData.event.eventPhoto}}" />
             </div>
-            <div class="item">
+            <!--<div class="item">
               <img src="assets/images/pmc-stock/e1.png" />
-            </div>
+            </div>-->
           </div>
 
         </div>

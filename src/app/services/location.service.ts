@@ -8,11 +8,13 @@ import {catchError, tap} from 'rxjs/operators';
 import {of} from 'rxjs/observable/of';
 import {LocationListResponseData} from '../response-data-model/location-list-response-data';
 import {Location} from '../datamodel/location';
+import {pipe} from 'rxjs/util/pipe';
 
 
 @Injectable()
 export class LocationService extends BaseService {
 
+  uri = '/locations';
   constructor(private http: HttpClient) {
     super();
   }
@@ -29,6 +31,13 @@ export class LocationService extends BaseService {
   // Get Active Location by ID
   public getLocationById (locationId: number): Observable<Location> {
     return this.http.get<Location>(this.API_URL + '/locations/' + locationId)
+      .pipe(
+        tap(data => this.log(`fetched locations`)),
+        catchError(this.handleError<Location>('getLocationById' + locationId, null))
+      );
+  }
+  public getById (locationId: number): Observable<Location> {
+    return this.http.get<Location>(this.PUBLIC_API_URL +this.uri+ '/get/' + locationId)
       .pipe(
         tap(data => this.log(`fetched locations`)),
         catchError(this.handleError<Location>('getLocationById' + locationId, null))

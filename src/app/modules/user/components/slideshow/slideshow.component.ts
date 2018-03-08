@@ -1,14 +1,66 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
  import { WOW } from 'wowjs/dist/wow.min';
 import {delay} from 'q';
+import {Location} from '../../../../datamodel/location';
+import {Event} from '../../../../datamodel/event';
+import {environment} from '../../../../../environments/environment';
+import {ActivatedRoute} from '@angular/router';
+import {LocationService} from '../../../../services/location.service';
+import {EventService} from '../../../../services/event.service';
+import {LoginService} from '../../../../services/login.service';
 @Component({
   selector: 'app-slideshow',
   templateUrl: './slideshow.component.html',
-  styleUrls: ['./slideshow.component.css']
+  styleUrls: ['./slideshow.component.css'],
+  providers: [LocationService,EventService,LoginService]
 })
 export class SlideshowComponent implements  AfterViewInit  {
+  locationId=0;
+  eventId=0;
+  resourcePath = environment.pictureUrl;
+  pageData = {
+    location:new Location(),
+    event:new Event()
 
-  constructor() { }
+  };
+  constructor(private activatedRoute: ActivatedRoute,
+              private locationService:LocationService,
+              private eventService: EventService ) {
+    const locIdStr = this.activatedRoute.snapshot.queryParamMap.get("locId");
+    const eventIdStr = this.activatedRoute.snapshot.queryParamMap.get("evtId");
+    this.locationId =(locIdStr===null || locIdStr==='')?0:Number( locIdStr);
+    this.eventId =(eventIdStr===null || eventIdStr==='')?0:Number( eventIdStr);
+    console.log(locIdStr,eventIdStr);
+
+    // ;
+    // this.eventId = Number( this.activatedRoute.snapshot.paramMap.get("evtId"));
+    if(this.locationId >0){
+
+      this.locationService.getById(this.locationId).subscribe(data=>{
+        this.pageData.location = data;
+        this.pageData.location.locationLogo = this.resourcePath+this.pageData.location.locationLogo;
+      });
+    }
+    if(this.eventId>0){
+
+      this.eventService.getById(this.eventId).subscribe(data=>{
+        this.pageData.event = data;
+        this.pageData.event.eventPhoto = this.resourcePath+"/"+this.pageData.event.eventPhoto;
+      });
+    }
+
+
+
+
+
+    this.pageData.location.locationLogo = 'assets/images/pmc-stock/vendor.png';
+    this.pageData.location.name='Location Sample';
+    this.pageData.location.address ='8825 E JEFFERSON AVE,DETROIT, MI 48214 (313) 822-660';
+
+
+    this.pageData.event.eventPhoto = 'assets/images/pmc-stock/e1.png';
+
+  }
 
   ngAfterViewInit() {
 

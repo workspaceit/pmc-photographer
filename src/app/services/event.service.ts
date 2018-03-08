@@ -6,6 +6,7 @@ import {EventListResponseData} from '../response-data-model/event-list-response-
 import {EventDetailsResponseData} from '../response-data-model/event-details-response-data';
 import {OauthCredential} from '../datamodel/oauth.creadential';
 import {LoginService} from './login.service';
+import {Event} from '../datamodel/event';
 
 @Injectable()
 
@@ -19,7 +20,9 @@ export class EventService extends BaseService {
   public getEventDetails(eventId: number) {
     return this.http.get<EventDetailsResponseData>(this.API_URL + this.uri + '/' + eventId + '/details');
   }
-
+  public getById(eventId: number) {
+    return this.http.get<Event>(this.PUBLIC_API_URL + this.uri + '/get/' + eventId );
+  }
   public getAll(locationId: number, filterDate: string, limit: number , offset: number): Observable<EventListResponseData> {
     // let data = {'locationId': locationId};
     const data = new FormData();
