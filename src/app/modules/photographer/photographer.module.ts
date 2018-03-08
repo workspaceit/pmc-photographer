@@ -16,12 +16,12 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {AuthInterceptor} from '../../services/interceptor/authinterceptor';
 import {LoginService} from "../../services/login.service";
 import { DropzoneModule } from 'ngx-dropzone-wrapper';
-import {FormsModule} from '@angular/forms';
-
+import {FormsModule,ReactiveFormsModule} from '@angular/forms';
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     PhotographerRoutingModule,
     NgxPaginationModule,
     HttpClientModule,
