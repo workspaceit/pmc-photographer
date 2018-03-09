@@ -17,6 +17,7 @@ import {AuthInterceptor} from '../../services/interceptor/authinterceptor';
 import {LoginService} from "../../services/login.service";
 import { DropzoneModule } from 'ngx-dropzone-wrapper';
 import {FormsModule,ReactiveFormsModule} from '@angular/forms';
+import {ShareButtonsModule} from 'ngx-sharebuttons';
 @NgModule({
   imports: [
     CommonModule,
@@ -25,7 +26,8 @@ import {FormsModule,ReactiveFormsModule} from '@angular/forms';
     PhotographerRoutingModule,
     NgxPaginationModule,
     HttpClientModule,
-    DropzoneModule
+    DropzoneModule,
+    ShareButtonsModule.forRoot(),
   ],
   declarations: [PhotographerComponent,
     DashboardComponent,

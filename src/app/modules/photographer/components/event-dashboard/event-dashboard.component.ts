@@ -31,18 +31,26 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   public config: DropzoneConfigInterface;
   checkedItems:number[]=[];
   selectedWatermarkId = 0;
-  currentImage:EventImage=null;
+  currentImage: EventImage = new EventImage();
   nextBtn = true;
   prevBtn = true;
-  form: FormGroup;
+  emailForm: FormGroup;
+  smsForm: FormGroup;
   constructor(private route: ActivatedRoute, private router: Router, private eventImageService: EventImageService,
               private eventService: EventService,private  loginService: LoginService) { }
 
   ngOnInit() {
-
-    this.form = new FormGroup({
+    console.log(this.currentImage);
+    this.emailForm = new FormGroup({
       email:new FormControl('',[Validators.required,Validators.email]),
-      username:new FormControl('',[Validators.required])
+      username:new FormControl('',[Validators.required]),
+      message:new FormControl(''),
+    });
+
+    this.smsForm = new FormGroup({
+      phoneNumber:new FormControl('',[Validators.required]),
+      username:new FormControl('',[Validators.required]),
+      message:new FormControl(''),
     });
 
     this.route.params.subscribe(params => {
@@ -199,13 +207,21 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
       (<any>$('#sendPhotoViaEmail')).modal('show');
     }
   }
-  submitSendViaEmail(value) {
-    const username = value.username;
-    const email = value.email;
+  sendViaSms() {
     if(this.checkedItems.length==0) {
       (<any>$).growl.warning({ message: 'No items selected' });
     } else {
-      this.eventImageService.sendViaEmail(this.checkedItems,username,email,this.eventId).subscribe((data) => {
+      (<any>$('#sendPhotoViaSms')).modal('show');
+    }
+  }
+  submitSendViaEmail(value) {
+    const username = value.username;
+    const email = value.email;
+    const message = value.message;
+    if(this.checkedItems.length==0) {
+      (<any>$).growl.warning({ message: 'No items selected' });
+    } else {
+      this.eventImageService.sendViaEmail(this.checkedItems,username,email,message,this.eventId).subscribe((data) => {
           if(data) {
             for(const item of this.checkedItems) {
               $('#checkboxFiveInput'+item).prop('checked',false);
@@ -213,7 +229,31 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
             this.resetSelected();
             (<any>$('#sendPhotoViaEmail')).modal('hide');
             (<any>$).growl.notice({ message: 'Successfully send to email!' });
-            this.form.reset();
+            this.emailForm.reset();
+          }
+        },(err)=> {
+          console.log(err.error);
+          (<any>$).growl.error({ message: err.error });
+        }
+      );
+    }
+  }
+  submitSendViaSms(value) {
+    const username = value.username;
+    const phoneNumber = value.phoneNumber;
+    const message = value.message;
+    if(this.checkedItems.length==0) {
+      (<any>$).growl.warning({ message: 'No items selected' });
+    } else {
+      this.eventImageService.sendViaSms(this.checkedItems,username,phoneNumber,message,this.eventId).subscribe((data) => {
+          if(data) {
+            for(const item of this.checkedItems) {
+              $('#checkboxFiveInput'+item).prop('checked',false);
+            }
+            this.resetSelected();
+            (<any>$('#sendPhotoViaSms')).modal('hide');
+            (<any>$).growl.notice({ message: 'Successfully send to sms!' });
+            this.smsForm.reset();
           }
         },(err)=> {
           console.log(err.error);
@@ -238,7 +278,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     if(nextImageIndex<=totalImage-1) {
       this.currentImage = this.eventImages[nextImageIndex];
       this.displayPrevNext(nextImageIndex);
-      (<any>$('#image-gallery-image')).attr('src',this.imgPath+this.eventImages[nextImageIndex].image);
+      // (<any>$('#image-gallery-image')).attr('src',this.imgPath+this.eventImages[nextImageIndex].image);
     }
   }
   showPreviousImage() {
@@ -247,7 +287,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     if(previousImageIndex>=0) {
       this.currentImage = this.eventImages[previousImageIndex];
       this.displayPrevNext(previousImageIndex);
-      (<any>$('#image-gallery-image')).attr('src',this.imgPath+this.eventImages[previousImageIndex].image);
+      // (<any>$('#image-gallery-image')).attr('src',this.imgPath+this.eventImages[previousImageIndex].image);
     }
   }
   displayPrevNext(index) {
@@ -315,42 +355,42 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  loadGallery(setIDs, setClickAttr) {
-    const thisComponent = this;
-    let current_image,
-      selector,
-      counter = 0;
+  // loadGallery(setIDs, setClickAttr) {
+  //   const thisComponent = this;
+  //   let current_image,
+  //     selector,
+  //     counter = 0;
+  //
+  //   $('#show-next-image, #show-previous-image').click(function() {
+  //     if($(this).attr('id') === 'show-previous-image') {
+  //       current_image--;
+  //     } else {
+  //       current_image++;
+  //     }
+  //
+  //     selector = $('[data-image-id="' + current_image + '"]');
+  //     thisComponent.updateGallery(selector, counter);
+  //   });
+  //
+  //   if (setIDs == true) {
+  //     $('[data-image-id]').each(function() {
+  //       counter++;
+  //       $(this).attr('data-image-id', counter);
+  //     });
+  //   }
+  //   $(setClickAttr).on('click',function() {
+  //     thisComponent.updateGallery($(this), counter);
+  //   });
+  // }
 
-    $('#show-next-image, #show-previous-image').click(function() {
-      if($(this).attr('id') === 'show-previous-image') {
-        current_image--;
-      } else {
-        current_image++;
-      }
-
-      selector = $('[data-image-id="' + current_image + '"]');
-      thisComponent.updateGallery(selector, counter);
-    });
-
-    if (setIDs == true) {
-      $('[data-image-id]').each(function() {
-        counter++;
-        $(this).attr('data-image-id', counter);
-      });
-    }
-    $(setClickAttr).on('click',function() {
-      thisComponent.updateGallery($(this), counter);
-    });
-  }
-
-  updateGallery(selector, counter) {
-    const $sel = selector;
-    const current_image = $sel.data('image-id');
-    $('#image-gallery-caption').text($sel.data('caption'));
-    $('#image-gallery-title').text($sel.data('title'));
-    $('#image-gallery-image').attr('src', $sel.data('image'));
-    this.disableButtons(counter, $sel.data('image-id'));
-  }
+  // updateGallery(selector, counter) {
+  //   const $sel = selector;
+  //   const current_image = $sel.data('image-id');
+  //   $('#image-gallery-caption').text($sel.data('caption'));
+  //   $('#image-gallery-title').text($sel.data('title'));
+  //   $('#image-gallery-image').attr('src', $sel.data('image'));
+  //   this.disableButtons(counter, $sel.data('image-id'));
+  // }
 
   watermarkedChanged() {
     if(this.checkedItems.length==0) {

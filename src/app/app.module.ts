@@ -15,6 +15,7 @@ import {LoadingBarHttpClientModule} from '@ngx-loading-bar/http-client';
 import {LoadingBarRouterModule} from '@ngx-loading-bar/router';
 import {LoadingBarModule} from '@ngx-loading-bar/core';
 import {FormsModule} from '@angular/forms';
+import {ShareButtonsModule} from 'ngx-sharebuttons';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import {FormsModule} from '@angular/forms';
     LoadingBarRouterModule,
     LoadingBarHttpClientModule,
     LoadingBarModule.forRoot(),
+    ShareButtonsModule.forRoot(),
   ],
   providers: [PhotographerLoginService, OnlyLoggedInUsersGuard],
   bootstrap: [AppComponent]
