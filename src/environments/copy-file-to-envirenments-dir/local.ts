@@ -1,4 +1,4 @@
-const host = "http://locahost:8080";
+const host = "http://localhost:8080";
 export const localEnv = {
   production: false,
   // URL of development API
