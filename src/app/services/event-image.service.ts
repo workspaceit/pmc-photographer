@@ -30,13 +30,24 @@ export class EventImageService extends  BaseService {
     data.append('imageIds', eventIds);
     return this.http.post<EventImage[]>(this.API_URL + this.uri + '/send-to-slideshow',data);
   }
-  public sendViaEmail(eventIds,customerName,email,eventId) {
+  public sendViaEmail(eventIds,customerName,email,message,eventId) {
     const  data = new FormData();
     data.append('imageIds', eventIds);
     data.append('customerName',customerName);
     data.append('email',email);
+    data.append('message',message);
     data.append('eventId',eventId);
     return this.http.post<EventImage[]>(this.API_URL + this.uri + '/send-via-email',data);
+  }
+
+  public sendViaSms(eventIds,customerName,phoneNum,message,eventId) {
+    const  data = new FormData();
+    data.append('imageIds', eventIds);
+    data.append('customerName',customerName);
+    data.append('phoneNum',phoneNum);
+    data.append('message',message);
+    data.append('eventId',eventId);
+    return this.http.post<EventImage[]>(this.API_URL + this.uri + '/send-via-sms',data);
   }
 
   public addWatermark(imageIds, watermarkId: number) {

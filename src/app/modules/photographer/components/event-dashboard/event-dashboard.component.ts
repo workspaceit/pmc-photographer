@@ -34,15 +34,23 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   currentImage:EventImage=null;
   nextBtn = true;
   prevBtn = true;
-  form: FormGroup;
+  emailForm: FormGroup;
+  smsForm: FormGroup;
   constructor(private route: ActivatedRoute, private router: Router, private eventImageService: EventImageService,
               private eventService: EventService,private  loginService: LoginService) { }
 
   ngOnInit() {
 
-    this.form = new FormGroup({
+    this.emailForm = new FormGroup({
       email:new FormControl('',[Validators.required,Validators.email]),
-      username:new FormControl('',[Validators.required])
+      username:new FormControl('',[Validators.required]),
+      message:new FormControl(''),
+    });
+
+    this.smsForm = new FormGroup({
+      phoneNumber:new FormControl('',[Validators.required]),
+      username:new FormControl('',[Validators.required]),
+      message:new FormControl(''),
     });
 
     this.route.params.subscribe(params => {
@@ -199,13 +207,21 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
       (<any>$('#sendPhotoViaEmail')).modal('show');
     }
   }
-  submitSendViaEmail(value) {
-    const username = value.username;
-    const email = value.email;
+  sendViaSms() {
     if(this.checkedItems.length==0) {
       (<any>$).growl.warning({ message: 'No items selected' });
     } else {
-      this.eventImageService.sendViaEmail(this.checkedItems,username,email,this.eventId).subscribe((data) => {
+      (<any>$('#sendPhotoViaSms')).modal('show');
+    }
+  }
+  submitSendViaEmail(value) {
+    const username = value.username;
+    const email = value.email;
+    const message = value.message;
+    if(this.checkedItems.length==0) {
+      (<any>$).growl.warning({ message: 'No items selected' });
+    } else {
+      this.eventImageService.sendViaEmail(this.checkedItems,username,email,message,this.eventId).subscribe((data) => {
           if(data) {
             for(const item of this.checkedItems) {
               $('#checkboxFiveInput'+item).prop('checked',false);
@@ -213,7 +229,31 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
             this.resetSelected();
             (<any>$('#sendPhotoViaEmail')).modal('hide');
             (<any>$).growl.notice({ message: 'Successfully send to email!' });
-            this.form.reset();
+            this.emailForm.reset();
+          }
+        },(err)=> {
+          console.log(err.error);
+          (<any>$).growl.error({ message: err.error });
+        }
+      );
+    }
+  }
+  submitSendViaSms(value) {
+    const username = value.username;
+    const phoneNumber = value.phoneNumber;
+    const message = value.message;
+    if(this.checkedItems.length==0) {
+      (<any>$).growl.warning({ message: 'No items selected' });
+    } else {
+      this.eventImageService.sendViaSms(this.checkedItems,username,phoneNumber,message,this.eventId).subscribe((data) => {
+          if(data) {
+            for(const item of this.checkedItems) {
+              $('#checkboxFiveInput'+item).prop('checked',false);
+            }
+            this.resetSelected();
+            (<any>$('#sendPhotoViaSms')).modal('hide');
+            (<any>$).growl.notice({ message: 'Successfully send to sms!' });
+            this.smsForm.reset();
           }
         },(err)=> {
           console.log(err.error);
