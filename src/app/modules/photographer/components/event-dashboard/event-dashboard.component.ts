@@ -31,7 +31,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   public config: DropzoneConfigInterface;
   checkedItems:number[]=[];
   selectedWatermarkId = 0;
-  currentImage:EventImage=null;
+  currentImage: EventImage = new EventImage();
   nextBtn = true;
   prevBtn = true;
   form: FormGroup;
@@ -39,6 +39,8 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
               private eventService: EventService,private  loginService: LoginService) { }
 
   ngOnInit() {
+
+    console.log(this.currentImage);
 
     this.form = new FormGroup({
       email:new FormControl('',[Validators.required,Validators.email]),
@@ -238,7 +240,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     if(nextImageIndex<=totalImage-1) {
       this.currentImage = this.eventImages[nextImageIndex];
       this.displayPrevNext(nextImageIndex);
-      (<any>$('#image-gallery-image')).attr('src',this.imgPath+this.eventImages[nextImageIndex].image);
+      // (<any>$('#image-gallery-image')).attr('src',this.imgPath+this.eventImages[nextImageIndex].image);
     }
   }
   showPreviousImage() {
@@ -247,7 +249,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     if(previousImageIndex>=0) {
       this.currentImage = this.eventImages[previousImageIndex];
       this.displayPrevNext(previousImageIndex);
-      (<any>$('#image-gallery-image')).attr('src',this.imgPath+this.eventImages[previousImageIndex].image);
+      // (<any>$('#image-gallery-image')).attr('src',this.imgPath+this.eventImages[previousImageIndex].image);
     }
   }
   displayPrevNext(index) {
@@ -315,42 +317,42 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  loadGallery(setIDs, setClickAttr) {
-    const thisComponent = this;
-    let current_image,
-      selector,
-      counter = 0;
+  // loadGallery(setIDs, setClickAttr) {
+  //   const thisComponent = this;
+  //   let current_image,
+  //     selector,
+  //     counter = 0;
+  //
+  //   $('#show-next-image, #show-previous-image').click(function() {
+  //     if($(this).attr('id') === 'show-previous-image') {
+  //       current_image--;
+  //     } else {
+  //       current_image++;
+  //     }
+  //
+  //     selector = $('[data-image-id="' + current_image + '"]');
+  //     thisComponent.updateGallery(selector, counter);
+  //   });
+  //
+  //   if (setIDs == true) {
+  //     $('[data-image-id]').each(function() {
+  //       counter++;
+  //       $(this).attr('data-image-id', counter);
+  //     });
+  //   }
+  //   $(setClickAttr).on('click',function() {
+  //     thisComponent.updateGallery($(this), counter);
+  //   });
+  // }
 
-    $('#show-next-image, #show-previous-image').click(function() {
-      if($(this).attr('id') === 'show-previous-image') {
-        current_image--;
-      } else {
-        current_image++;
-      }
-
-      selector = $('[data-image-id="' + current_image + '"]');
-      thisComponent.updateGallery(selector, counter);
-    });
-
-    if (setIDs == true) {
-      $('[data-image-id]').each(function() {
-        counter++;
-        $(this).attr('data-image-id', counter);
-      });
-    }
-    $(setClickAttr).on('click',function() {
-      thisComponent.updateGallery($(this), counter);
-    });
-  }
-
-  updateGallery(selector, counter) {
-    const $sel = selector;
-    const current_image = $sel.data('image-id');
-    $('#image-gallery-caption').text($sel.data('caption'));
-    $('#image-gallery-title').text($sel.data('title'));
-    $('#image-gallery-image').attr('src', $sel.data('image'));
-    this.disableButtons(counter, $sel.data('image-id'));
-  }
+  // updateGallery(selector, counter) {
+  //   const $sel = selector;
+  //   const current_image = $sel.data('image-id');
+  //   $('#image-gallery-caption').text($sel.data('caption'));
+  //   $('#image-gallery-title').text($sel.data('title'));
+  //   $('#image-gallery-image').attr('src', $sel.data('image'));
+  //   this.disableButtons(counter, $sel.data('image-id'));
+  // }
 
   watermarkedChanged() {
     if(this.checkedItems.length==0) {

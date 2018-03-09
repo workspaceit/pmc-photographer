@@ -13,6 +13,8 @@
                   <p class="e-date" style="color:#fff;">
                     Date: {{eventDetailsResponseData.event.startsAt | date:'dd MMM, yyyy'}}
                   </p>
+                  <!--Set color and icon-->
+
                 </div>
               </div>
             </div>
@@ -110,14 +112,22 @@
       </div>
       <div class="modal-body clearfix">
         <div class="social-foot">
-          <a href="#"><img src="assets/images/social/facebook.png" width="30"></a>
-          <a href="#"><img src="assets/images/social/gplus.png" width="30"></a>
-          <a href="#"><img src="assets/images/social/twitter.png" width="30"></a>
-          <a href="#"><img src="assets/images/social/instagram.png" width="30"></a>
+          <share-button button="facebook"  [url]="imgPath + currentImage.image" [title]="imgPath">
+            <img src="assets/images/social/facebook.png" width="30">
+          </share-button>
+          <share-button button="twitter" [url]="imgPath + currentImage.image">
+            <img src="assets/images/social/twitter.png" width="30">
+          </share-button>
+          <share-button button="google" [url]="imgPath + currentImage.image">
+            <img src="assets/images/social/gplus.png" width="30">
+          </share-button>
+          <!--<share-button button="pinterest" [url]="imgPath + currentImage.image" [description]="'PMC'">-->
+            <!--<img src="assets/images/social/gplus.png" width="30">-->
+          <!--</share-button>-->
           <a href="#" style="float:right;background:transparent;color:red !important;"><i class="fa fa-2x fa-warning"></i></a>
         </div>
         <div class="col-md-12" style="padding:0px;">
-          <img id="image-gallery-image" class="img-responsive" src="">
+          <img id="image-gallery-image" class="img-responsive" src="{{imgPath}}{{currentImage.image}}">
         </div>
         <div class="desc-div-foot">
           <h5>This is the title pic</h5>
