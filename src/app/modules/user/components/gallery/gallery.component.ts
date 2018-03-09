@@ -215,9 +215,7 @@ export class GalleryComponent implements OnInit {
     this.advertisementConfig.popUpAd.arrayOffset++;
     return i;
   }
- mi123/* private async delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }*/
+
   private changePupUpAdd(){
     this.delayPopUpCloseIconShow();
     if(this.advertisementConfig.popUpAd.rotateSwitchedOff){
