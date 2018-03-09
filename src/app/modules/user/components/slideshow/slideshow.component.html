@@ -17,17 +17,16 @@
         <img class=""   src="assets/images/adjd.png" style="margin:0px auto;">
       </div>
     </div>
-    <div class="swiper-right swr-bg" style="background:#000 url(assets/images/party2.jpg)no-repeat;background-size:cover;background-position:center;">
+    <div class="swiper-right swr-bg"  [ngStyle]="{'background-image': 'url(' + pageData.slideShowAd.currentBackground+ ')',
+                                                        'background-size':'cover','background-position':'center'}">
       <div class="center-swiper">
         <div id="carousel-example-generic-ad" class="carousel slide cstm-carousel-slide carousel-fade" data-interval="500" data-ride="carousel">
 
           <!-- Wrapper for slides -->
           <div class="carousel-inner" role="listbox">
             <div class="item active">
-              <video class="video" id="video1" loop autoplay muted style="width: 100%;" >
-                <source src="assets/images/pmcads/mcdonalds.webm" type="video/webm" />
-                <source src="assets/images/pmcads/mcdonalds.ogv" type="video/ogg" />
-                <source src="assets/images/pmcads/mcdonalds.mp4" type="video/mp4" />
+              <video class="video" id="slidShowAdPmc" loop autoplay muted style="width: 100%;" >
+                <source src="{{pageData.slideShowAd.video.link}}" type="{{pageData.slideShowAd.video.mimeType}}" />
               </video>
             </div>
           </div>
@@ -37,8 +36,8 @@
 
     </div>
   </div>
-  <div class="swiper-wrapper  change-bg" id="changeBg">
-    <div class="swiper-left wow slideInDown">
+  <div class="swiper-wrapper  change-bg" id="changeBg"  >
+    <div class="swiper-left wow slideInDown" >
       <div class="event-logo">
         <div class="center-flex">
           <img src="{{pageData.location.locationLogo}}"
@@ -79,19 +78,19 @@
           <!-- Wrapper for slides -->
           <div class="carousel-inner" role="listbox">
             <div class="item active">
-              <img src="assets/images/pmc-stock/1.jpg" />
+              <img src="assets/images/pmc-stock/1.jpeg" />
             </div>
             <div class="item">
-              <img src="assets/images/pmc-stock/3.jpg" />
+              <img src="assets/images/pmc-stock/3.jpeg" />
             </div>
             <div class="item">
-              <img src="assets/images/pmc-stock/4.jpg" />
+              <img src="assets/images/pmc-stock/4.jpeg" />
             </div>
             <div class="item">
-              <img src="assets/images/pmc-stock/5.jpg" />
+              <img src="assets/images/pmc-stock/5.jpeg" />
             </div>
             <div class="item">
-              <img src="assets/images/pmc-stock/6.jpg" />
+              <img src="assets/images/pmc-stock/6.jpeg" />
             </div>
           </div>
 

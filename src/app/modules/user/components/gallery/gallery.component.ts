@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {AdvertisementService} from '../../../../services/advertisement.service';
 import {environment} from '../../../../../environments/environment';
 import {SectionResource} from '../../../../datamodel/section-resource';
@@ -13,7 +13,9 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./gallery.component.css'],
   providers: [AdvertisementService]
 })
-export class GalleryComponent implements OnInit {
+
+export class GalleryComponent implements AfterViewInit {
+
 
   currentAdvertisementDetails: AdvertisementDetails;
   advertisements = [];
@@ -63,13 +65,17 @@ export class GalleryComponent implements OnInit {
   fileType: FILE_TYPE;
 
 
+
   constructor(private rout: ActivatedRoute,private advertisementService: AdvertisementService) {
     this.currentAdvertisementDetails = null;
     this.eventId = Number( this.rout.snapshot.paramMap.get('eventId') );
     this.popUpType = this.rout.snapshot.paramMap.get('popUpType');
+
+
   }
 
-  ngOnInit() {
+
+ngAfterViewInit() {
 
     (<any>$("#content-1")).mCustomScrollbar({
       autoHideScrollbar:true,
@@ -269,11 +275,20 @@ export class GalleryComponent implements OnInit {
     this.fetchPopUpAdvertisement();
   }
   private async rotateGalleryAdTopBanner(startIndex?:number){
+
     let readyFlag =  this.checkNullUndefiend(this.currentAdvertisementDetails);
     if(readyFlag){
       readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections);
     }
-
+    if(readyFlag){
+      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections.TOP_BANNER);
+    }
+    if(readyFlag){
+      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections.TOP_BANNER.sectionResource);
+    }
+    if(readyFlag){
+      readyFlag = this.currentAdvertisementDetails.sections.TOP_BANNER.sectionResource.length>0?true:false;
+    }
     if(!readyFlag){
       delay(this.advertisementConfig.gallery.delay.topBanner).then(()=>{
         this.rotateGalleryAdTopBanner().then();
@@ -304,17 +319,26 @@ export class GalleryComponent implements OnInit {
     }catch(e) {
       console.log(e);
     }
-    this.rotateGalleryAdTopBanner().then();
     console.log("End of function");
   }
   private async rotateGalleryAdBottomBanner(startIndex?:number){
+
     let readyFlag =  this.checkNullUndefiend(this.currentAdvertisementDetails);
     if(readyFlag){
       readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections);
     }
+    if(readyFlag){
+      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections.BOTTOM_BANNER);
+    }
+    if(readyFlag){
+      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections.BOTTOM_BANNER.sectionResource);
+    }
+    if(readyFlag){
+      readyFlag = this.currentAdvertisementDetails.sections.BOTTOM_BANNER.sectionResource.length>0?true:false;
+    }
 
     if(!readyFlag){
-      delay(this.advertisementConfig.gallery.delay.topBanner).then(()=>{
+      delay(this.advertisementConfig.gallery.delay.bottomBanner).then(()=>{
         this.rotateGalleryAdBottomBanner().then();
       });
       return;

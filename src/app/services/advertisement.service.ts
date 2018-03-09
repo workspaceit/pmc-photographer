@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Advertisement} from '../datamodel/advertisement';
 import {BaseService} from './base.service';
 import {Observable} from 'rxjs/Observable';
+import {AdvertisementDetails} from '../datamodel/advertisement.details';
 
 @Injectable()
 export class AdvertisementService extends BaseService{
@@ -27,5 +28,9 @@ export class AdvertisementService extends BaseService{
   public getByEventIdAndType(eventId,adType,limit,offset): Observable<Advertisement[]>{
 
     return this.http.get<Advertisement[]>(this.PUBLIC_API_URL+ this.uri+"/get/"+adType+"/"+eventId+"/"+limit+"/"+offset);
+  }
+  public getByIdAndType(id,adType): Observable<AdvertisementDetails>{
+
+    return this.http.get<AdvertisementDetails>(this.PUBLIC_API_URL+ this.uri+"/get/"+adType+"/"+id);
   }
 }
