@@ -46,7 +46,8 @@ export class GalleryComponent implements AfterViewInit {
       video:{},
       image:{delay:2000},
       rotateSwitchedOff:false
-    }};
+    }
+  };
   eventId = 3;
   popUpType='';
   resourcePath = environment.pictureUrl;
