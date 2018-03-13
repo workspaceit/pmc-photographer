@@ -1,4 +1,4 @@
-<app-top-dock></app-top-dock>
+<!--<app-top-dock></app-top-dock>-->
 <div class="container-fluid">
   <div class="row clearfix">
     <div class="content-wrapper content-wrapper-user">
@@ -13,14 +13,14 @@
             </div>
           </div>
           <div class="col-md-6 mb-fix-text">
-             <a href="swiper_01.html" target="_blank" class="action-icon" style="margin-top:5px;color:#fff;text-transform:uppercase" data-toggle="tooltip" data-placement="bottom" style="line-height:40px;" title="Show Slideshow" target="_blank">Show Slideshow</a>
+            <a href="swiper_01.html" target="_blank" class="action-icon" style="margin-top:5px;color:#fff;text-transform:uppercase" data-toggle="tooltip" data-placement="bottom" style="line-height:40px;" title="Show Slideshow" target="_blank">Show Slideshow</a>
           </div>
         </div>
       </div>
       <div class="form-group panel-right-block"
            [ngStyle]="{'background-image': 'url(' + advertisementOnPage.background + ')',
                                                         'background-size':'cover'}"
-           >
+      >
         <div class="event-gallery container ad-show-width">
           <div class="desc-div row">
             <div class="noteditable-desc">
@@ -30,11 +30,10 @@
               <div class="row clearfix" style="margin-top:20px;">
                 <div class="col-lg-2">
                 </div>
-                <!--<div class="col-md-8" style="height:80px;overflow:hidden;">
+                <div class="col-md-8" style="height:80px;overflow:hidden;">
                   <img  src="{{advertisementOnPage.topBanner}}" class="img-responsive" style="display:block !important;width:100%;">
 
-                </div>-->
-                <app-adbanner  [delayDuration]="advertisementConfig.gallery.delay.topBanner"  [topBanners]="forChildComponent.topBanner" ></app-adbanner>
+                </div>
                 <div class="col-lg-2">
                 </div>
               </div>
@@ -274,10 +273,9 @@
           <div class="row clearfix" style="margin-top:20px;">
             <div class="col-lg-2">
             </div>
-            <!--<div class="col-md-8" style="height:80px;overflow:hidden;">
+            <div class="col-md-8" style="height:80px;overflow:hidden;">
               <img  src="{{advertisementOnPage.bottomBanner}}" class="img-responsive" style="display:block !important;width:100%;">
-            </div>-->
-            <app-adbanner [delayDuration]="advertisementConfig.gallery.delay.bottomBanner" [galleryId]="currentAdvertisementDetails.id" [topBanners]="forChildComponent.bottomBanner" ></app-adbanner>
+            </div>
             <div class="col-lg-2">
             </div>
           </div>
@@ -313,7 +311,7 @@
 
           <img *ngIf="advertisementOnPage.popUpAd.currentFileType == 'IMAGE'"
                src="{{advertisementOnPage.popUpAd.currentImage}}"
-                style="height: 400px;width: 570px"
+               style="height: 400px;width: 570px"
           >
 
           <video *ngIf="advertisementOnPage.popUpAd.currentFileType == 'VIDEO'" muted  class="video" id="pmcGalAdVideo" autoplay style="width: 100%;"  >

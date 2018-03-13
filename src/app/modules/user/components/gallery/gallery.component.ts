@@ -16,6 +16,10 @@ import {ActivatedRoute} from '@angular/router';
 
 export class GalleryComponent implements AfterViewInit {
 
+  forChildComponent={
+    topBanner:[],
+    bottomBanner:[]
+  };
 
   currentAdvertisementDetails: AdvertisementDetails;
   advertisements = [];
@@ -46,7 +50,8 @@ export class GalleryComponent implements AfterViewInit {
       video:{},
       image:{delay:2000},
       rotateSwitchedOff:false
-    }};
+    }
+  };
   eventId = 3;
   popUpType='';
   resourcePath = environment.pictureUrl;
@@ -67,7 +72,7 @@ export class GalleryComponent implements AfterViewInit {
 
 
   constructor(private rout: ActivatedRoute,private advertisementService: AdvertisementService) {
-    this.currentAdvertisementDetails = null;
+    this.currentAdvertisementDetails = new AdvertisementDetails();
     this.eventId = Number( this.rout.snapshot.paramMap.get('eventId') );
     this.popUpType = this.rout.snapshot.paramMap.get('popUpType');
 
@@ -98,8 +103,8 @@ ngAfterViewInit() {
     this.fetchGalleryAdvertisement();
     this.fetchPopUpAdvertisement();
 
-    this.rotateGalleryAdTopBanner(1).then();
-    this.rotateGalleryAdBottomBanner(1).then();
+  // this.rotateGalleryAdTopBanner(1).then();
+//    this.rotateGalleryAdBottomBanner(1).then();
 
   }
 
@@ -120,6 +125,7 @@ ngAfterViewInit() {
 
                                                       if(data.length==0){
                                                         this.advertisementConfig.gallery.isEndOfAd = true;
+                                                        this.advertisementConfig.gallery.selfLoop = true;
                                                       } else {
                                                         this.advertisements = this.advertisements.concat(data);
                                                       }
@@ -204,6 +210,7 @@ ngAfterViewInit() {
     }else{
       this.advertisementConfig.gallery.arrayOffset=0;
     }
+    console.log("this.advertisementConfig.gallery.arrayOffset this.advertisements.length",this.advertisementConfig.gallery.arrayOffset,this.advertisements.length);
     return i;
   }
   private getPopUpRotationStarIndex():number{
@@ -274,101 +281,8 @@ ngAfterViewInit() {
     }
     this.fetchPopUpAdvertisement();
   }
-  private async rotateGalleryAdTopBanner(startIndex?:number){
 
-    let readyFlag =  this.checkNullUndefiend(this.currentAdvertisementDetails);
-    if(readyFlag){
-      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections);
-    }
-    if(readyFlag){
-      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections.TOP_BANNER);
-    }
-    if(readyFlag){
-      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections.TOP_BANNER.sectionResource);
-    }
-    if(readyFlag){
-      readyFlag = this.currentAdvertisementDetails.sections.TOP_BANNER.sectionResource.length>0?true:false;
-    }
-    if(!readyFlag){
-      delay(this.advertisementConfig.gallery.delay.topBanner).then(()=>{
-        this.rotateGalleryAdTopBanner().then();
-      });
-      return;
-    }
 
-    if(startIndex==undefined || startIndex==null){
-      startIndex = 0;
-    }
-    const galleryAds = this.currentAdvertisementDetails;
-    const tbSecRes = galleryAds.sections.TOP_BANNER.sectionResource;
-    const id = galleryAds.id;
-    try{
-      for( let i=startIndex ;i< tbSecRes.length;i++){
-        this.advertisementOnPage.topBanner = this.resourcePath+tbSecRes[i].fileName;
-        await delay(this.advertisementConfig.gallery.delay.topBanner);
-        console.log("id",id,this.currentAdvertisementDetails.id);
-        if(id !== this.currentAdvertisementDetails.id){
-          /**
-           * rotate to next advertiser's Gallery Add
-           * */
-          this.rotateGalleryAdTopBanner(1).then();
-          console.log("End of function from IF");
-          return;
-        }
-      }
-    }catch(e) {
-      console.log(e);
-    }
-    console.log("End of function");
-  }
-  private async rotateGalleryAdBottomBanner(startIndex?:number){
-
-    let readyFlag =  this.checkNullUndefiend(this.currentAdvertisementDetails);
-    if(readyFlag){
-      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections);
-    }
-    if(readyFlag){
-      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections.BOTTOM_BANNER);
-    }
-    if(readyFlag){
-      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections.BOTTOM_BANNER.sectionResource);
-    }
-    if(readyFlag){
-      readyFlag = this.currentAdvertisementDetails.sections.BOTTOM_BANNER.sectionResource.length>0?true:false;
-    }
-
-    if(!readyFlag){
-      delay(this.advertisementConfig.gallery.delay.bottomBanner).then(()=>{
-        this.rotateGalleryAdBottomBanner().then();
-      });
-      return;
-    }
-
-    if(startIndex==undefined || startIndex==null){
-      startIndex=0;
-    }
-
-    let galleryAds = this.currentAdvertisementDetails;
-    let bbSecRes = galleryAds.sections.BOTTOM_BANNER.sectionResource;
-    let id = galleryAds.id;
-    try{
-      for( let i=startIndex;i<bbSecRes.length;i++){
-        this.advertisementOnPage.bottomBanner = this.resourcePath+bbSecRes[i].fileName;
-        await delay(this.advertisementConfig.gallery.delay.bottomBanner);
-        if(id !== this.currentAdvertisementDetails.id){
-          /**
-           * rotate to next advertiser's Gallery Add
-           * */
-          this.rotateGalleryAdBottomBanner(1).then();
-          return;
-        }
-      }
-    }catch(e) {
-      console.log(e);
-    }
-    this.rotateGalleryAdBottomBanner().then();
-
-  }
 
   private preparePopUpAdImage(secRes: SectionResource[]){
     this.advertisementOnPage.popUpAd.currentFileType = FILE_TYPE.IMAGE;
@@ -420,17 +334,27 @@ ngAfterViewInit() {
     }
 
     /**
-     * First Top banner
+     * Top banner
      * */
     if(tbSecRes.length>0){
        this.advertisementOnPage.topBanner = this.resourcePath+tbSecRes[0].fileName;
+       this.forChildComponent.topBanner = [];
+       for(const i in tbSecRes){
+        this.forChildComponent.topBanner.push(this.resourcePath+tbSecRes[i].fileName);
+       }
     }
     /**
-     * First Bottom banner
+     *  Bottom banner
      * */
     if(bbSecRes.length>0){
       this.advertisementOnPage.bottomBanner = this.resourcePath+bbSecRes[0].fileName;
+      this.forChildComponent.bottomBanner = [];
+      for(const i in tbSecRes){
+        this.forChildComponent.bottomBanner.push(this.resourcePath+bbSecRes[i].fileName);
+      }
     }
+
+
   }
 
   private resetPopUpAdSettings(){
@@ -440,4 +364,106 @@ ngAfterViewInit() {
     return (data==undefined || data==null)?false:true;
   }
 
+  /**
+   * Old code
+   * Now it's a separated component
+   * */
+  private async rotateGalleryAdTopBanner(startIndex?:number){
+
+    let readyFlag =  this.checkNullUndefiend(this.currentAdvertisementDetails);
+    if(readyFlag){
+      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections);
+    }
+    if(readyFlag){
+      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections.TOP_BANNER);
+    }
+    if(readyFlag){
+      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections.TOP_BANNER.sectionResource);
+    }
+    if(readyFlag){
+      readyFlag = this.currentAdvertisementDetails.sections.TOP_BANNER.sectionResource.length>0?true:false;
+    }
+    if(!readyFlag){
+      delay(this.advertisementConfig.gallery.delay.topBanner).then(()=>{
+        this.rotateGalleryAdTopBanner().then();
+      });
+      return;
+    }
+
+    if(startIndex==undefined || startIndex==null){
+      startIndex = 0;
+    }
+    const galleryAds = this.currentAdvertisementDetails;
+    const tbSecRes = galleryAds.sections.TOP_BANNER.sectionResource;
+    const id = galleryAds.id;
+    try{
+      for( let i=startIndex ;i< tbSecRes.length;i++){
+        this.advertisementOnPage.topBanner = this.resourcePath+tbSecRes[i].fileName;
+        await delay(this.advertisementConfig.gallery.delay.topBanner);
+        if(id !== this.currentAdvertisementDetails.id){
+          /**
+           * rotate to next advertiser's Gallery Add
+           * */
+          this.rotateGalleryAdTopBanner(1).then();
+          console.log("End of function from IF");
+          return;
+        }
+      }
+    }catch(e) {
+      console.log(e);
+    }
+    console.log("End of function");
+  }
+  /**
+   * Old code
+   * Now it's a separated component
+   * */
+  private async rotateGalleryAdBottomBanner(startIndex?:number){
+
+    let readyFlag =  this.checkNullUndefiend(this.currentAdvertisementDetails);
+    if(readyFlag){
+      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections);
+    }
+    if(readyFlag){
+      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections.BOTTOM_BANNER);
+    }
+    if(readyFlag){
+      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections.BOTTOM_BANNER.sectionResource);
+    }
+    if(readyFlag){
+      readyFlag = this.currentAdvertisementDetails.sections.BOTTOM_BANNER.sectionResource.length>0?true:false;
+    }
+
+    if(!readyFlag){
+      delay(this.advertisementConfig.gallery.delay.bottomBanner).then(()=>{
+        this.rotateGalleryAdBottomBanner().then();
+      });
+      return;
+    }
+
+    if(startIndex==undefined || startIndex==null){
+      startIndex=0;
+    }
+
+    let galleryAds = this.currentAdvertisementDetails;
+    let bbSecRes = galleryAds.sections.BOTTOM_BANNER.sectionResource;
+    let id = galleryAds.id;
+    try{
+      for( let i=startIndex;i<bbSecRes.length;i++){
+        this.advertisementOnPage.bottomBanner = this.resourcePath+bbSecRes[i].fileName;
+        await delay(this.advertisementConfig.gallery.delay.bottomBanner);
+        if(id !== this.currentAdvertisementDetails.id){
+          /**
+           * rotate to next advertiser's Gallery Add
+           * */
+          this.rotateGalleryAdBottomBanner(1).then();
+          return;
+        }
+      }
+    }catch(e) {
+      console.log(e);
+    }
+    this.rotateGalleryAdBottomBanner().then();
+
+  }
 }

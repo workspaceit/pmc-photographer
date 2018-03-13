@@ -1,24 +1,23 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
- import { WOW } from 'wowjs/dist/wow.min';
+import { WOW } from 'wowjs/dist/wow.min';
+import {LocationService} from '../../../../services/location.service';
 import {delay} from 'q';
 import {Location} from '../../../../datamodel/location';
-import {Event} from '../../../../datamodel/event';
-import {environment} from '../../../../../environments/environment';
-import {ActivatedRoute} from '@angular/router';
-import {LocationService} from '../../../../services/location.service';
-import {EventService} from '../../../../services/event.service';
-import {LoginService} from '../../../../services/login.service';
 import {AdvertisementService} from '../../../../services/advertisement.service';
+import {environment} from '../../../../../environments/environment';
+import {EventService} from '../../../../services/event.service';
+import {Event} from '../../../../datamodel/event';
 import {AdvertisementDetails} from '../../../../datamodel/advertisement.details';
-
+import {ActivatedRoute} from '@angular/router';
+import {LoginService} from '../../../../services/login.service';
 
 @Component({
-  selector: 'app-slideshow',
-  templateUrl: './slideshow.component.html',
-  styleUrls: ['./slideshow.component.css'],
-  providers: [LocationService,EventService,AdvertisementService,LoginService]
+  selector: 'app-slideshowad',
+  templateUrl: './slideshowad.component.html',
+  styleUrls: ['./slideshowad.component.css'],
+  providers:[LocationService,EventService,AdvertisementService,LoginService]
 })
-export class SlideshowComponent implements  AfterViewInit,OnInit  {
+export class SlideshowadComponent implements AfterViewInit,OnInit  {
   locationData:Location;
   eventData:Event;
   slideShowAdData: AdvertisementDetails;
@@ -35,15 +34,15 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
     slideShowAd:{
       video:{
         link:"",
-         mimeType:""
+        mimeType:""
       },
       bannerImages:[],
       currentBackground: "",
     }
   };
   constructor(private activatedRoute: ActivatedRoute,
-              private locationService:LocationService,
-              private eventService: EventService,private advertisermentService:AdvertisementService) {
+    private locationService:LocationService,
+    private eventService: EventService,private advertisementService:AdvertisementService) {
     const locIdStr = this.activatedRoute.snapshot.queryParamMap.get("locId");
     const eventIdStr = this.activatedRoute.snapshot.queryParamMap.get("evtId");
     const slideShowAdIdStr = this.activatedRoute.snapshot.queryParamMap.get("pmcadv");
@@ -73,7 +72,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
   }
   ngAfterViewInit() {
     this.getLocationAndEvent();
-    this.advertisermentService.getById(this.slideShowAdId)
+    this.advertisementService.getById(this.slideShowAdId)
       .subscribe(result=>{
         this.slideShowAdData = result;
 
@@ -103,7 +102,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
       });
     this.rotateBackground().then();
   }
-  private async rotateBackground(){
+private async rotateBackground(){
     console.log("Roation STart");
     const  bannerImages = this.pageData.slideShowAd.bannerImages;
     for(const i in bannerImages){
@@ -119,7 +118,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
     }
     console.log("Roation Ends");
   }
-  public getLocationAndEvent(){
+public getLocationAndEvent(){
     if(this.locationId >0){
       this.locationService.getById(this.locationId).subscribe(result=>{
         if(result==null)return;
@@ -131,18 +130,18 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
           console.log("Complete loc");
           this.getEventAndIntiJs();
         }else{
-          this.initJsFunction();
+          //this.initJsFunction();
         }
 
       });
     } else  if(this.eventId >0) {
       this.getEventAndIntiJs();
     }else {
-      this.initJsFunction();
+    //  this.initJsFunction();
     }
   }
 
-  public getEventAndIntiJs(){
+public getEventAndIntiJs(){
     this.eventService.getById(this.eventId).subscribe(data=>{
 
       if(data==null)return;
@@ -154,11 +153,25 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
     },()=>{
       console.log("Complete Ev");
 
-      this.initJsFunction();
+      //this.initJsFunction();
+
+
+      if(this.eventData===null){
+        this.eventDefultValue();
+      }else{
+        this.pageData.event = this.eventData;
+        this.pageData.event.eventPhoto = this.resourcePath+"/"+this.pageData.event.eventPhoto;
+      }
+      if(this.locationData===null){
+        this.locationDefaultValue();
+      }else{
+        this.pageData.location = this.locationData;
+        this.pageData.location.locationLogo = this.resourcePath+this.pageData.location.locationLogo;
+      }
     });
 
   }
-  private initJsFunction(){
+private initJsFunction(){
 
 
 
@@ -273,18 +286,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
     }, false);
 
 
-    if(this.eventData===null){
-      this.eventDefultValue();
-    }else{
-      this.pageData.event = this.eventData;
-      this.pageData.event.eventPhoto = this.resourcePath+"/"+this.pageData.event.eventPhoto;
-    }
-    if(this.locationData===null){
-      this.locationDefaultValue();
-    }else{
-      this.pageData.location = this.locationData;
-      this.pageData.location.locationLogo = this.resourcePath+this.pageData.location.locationLogo;
-    }
+
 
   }
 
