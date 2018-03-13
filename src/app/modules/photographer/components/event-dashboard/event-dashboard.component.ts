@@ -36,6 +36,8 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   prevBtn = true;
   emailForm: FormGroup;
   smsForm: FormGroup;
+  slideShowImagesOnly = false;
+
   constructor(private route: ActivatedRoute, private router: Router, private eventImageService: EventImageService,
               private eventService: EventService,private  loginService: LoginService) { }
 
@@ -86,10 +88,6 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  test() {
-    this.getEventImages();
-  }
-
   uploadModal() {
     // (<any>$('#uploadModal')).modal({backdrop: 'static', keyboard: false})
     (<any>$('#uploadModal')).modal('show');
@@ -107,7 +105,6 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   onUploadComplete(event,dz) {
     console.log("ALL upload is done");
     (<any>$('#uploadModal')).modal('hide');
-    // this.getEventImages();
   }
   getEventDetails() {
     this.eventService.getEventDetails(this.eventId).subscribe((data) => {
@@ -264,7 +261,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   }
 
   openImageModal(image) {
-    console.log("Image Modal Opended");
+    console.log("Image Modal Opened");
     this.currentImage = image;
     (<any>$('#image-gallery-image')).attr('src',this.imgPath+image.image);
     (<any>$('#image-gallery')).modal('show');
@@ -278,7 +275,6 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     if(nextImageIndex<=totalImage-1) {
       this.currentImage = this.eventImages[nextImageIndex];
       this.displayPrevNext(nextImageIndex);
-      // (<any>$('#image-gallery-image')).attr('src',this.imgPath+this.eventImages[nextImageIndex].image);
     }
   }
   showPreviousImage() {
@@ -287,7 +283,6 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     if(previousImageIndex>=0) {
       this.currentImage = this.eventImages[previousImageIndex];
       this.displayPrevNext(previousImageIndex);
-      // (<any>$('#image-gallery-image')).attr('src',this.imgPath+this.eventImages[previousImageIndex].image);
     }
   }
   displayPrevNext(index) {
@@ -452,6 +447,10 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
         }
       );
     }
+  }
+
+  slideShowToggle() {
+    console.log(this.slideShowImagesOnly);
   }
 
 }

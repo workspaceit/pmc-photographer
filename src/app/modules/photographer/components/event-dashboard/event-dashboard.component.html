@@ -11,7 +11,7 @@
                   <h3 class="event-name">{{eventDetailsResponseData.event.name}}
                     <small>( {{eventDetailsResponseData.imageCount}} Images )</small></h3>
                   <p class="e-date" style="color:#fff;">
-                    Date: {{eventDetailsResponseData.event.startsAt | date:'dd MMM, yyyy'}}
+                    Date: {{eventDetailsResponseData.event.startsAt | date:'d MMM, yyyy'}}
                   </p>
                   <!--Set color and icon-->
 
@@ -59,7 +59,21 @@
         </div>
       </div>
       <div class="form-group panel-right-block content" id="content-2">
+        <!--<div class="row clearfix">-->
+          <!--<div class="col-md-12 col-sm-12 col-xs-12">-->
+            <!--<div class="switcher_wrap">-->
+              <!--<label style="color: #5038aa;">Slideshow only</label>-->
+              <!--&lt;!&ndash; Rounded switch &ndash;&gt;-->
+              <!--<label class="switch">-->
+                <!--<input type="checkbox" [(ngModel)]="slideShowImagesOnly" [checked]="slideShowImagesOnly"-->
+                       <!--(change)="slideShowToggle()">-->
+                <!--<span class="slider round"></span>-->
+              <!--</label>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
         <div class="event-gallery thumb-container">
+
           <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 thumb" *ngFor="let eventImage of eventImages"
                [ngStyle]="{'background-image': 'url(' + imgPath + eventImage.image + ')', 'background-repeat': 'no-repeat'}">
             <div class="chk-div toggler" *ngIf="enableEdit">
@@ -111,7 +125,7 @@
         <h4 class="modal-title" id="image-gallery-title"></h4>
       </div>
       <div class="modal-body clearfix">
-        <div class="social-foot">
+        <div class="social-foot ornobio">
           <share-button button="facebook"  [url]="imgPath + currentImage.image" [title]="imgPath">
             <img src="assets/images/social/facebook.png" width="30">
           </share-button>

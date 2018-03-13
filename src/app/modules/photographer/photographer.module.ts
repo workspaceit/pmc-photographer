@@ -37,7 +37,8 @@ import {ShareButtonsModule} from 'ngx-sharebuttons';
     EventListItemComponent,
     LocationListComponent,
     EventDashboardComponent,
-    EventSidepanelComponent],
+    EventSidepanelComponent
+  ],
   providers:[
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },LoginService
   ]

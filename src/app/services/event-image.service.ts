@@ -16,6 +16,7 @@ export class EventImageService extends  BaseService {
   public getEventImages(eventId: number, limit: number , offset: number): Observable<EventImage[]> {
     const data = new FormData();
     data.append('eventId', eventId.toString());
+    data.append('eventId', eventId.toString());
     return this.http.post<EventImage[]>(this.API_URL + this.uri + '/' + limit + '/' + offset, data);
   }
 
