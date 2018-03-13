@@ -30,10 +30,11 @@
               <div class="row clearfix" style="margin-top:20px;">
                 <div class="col-lg-2">
                 </div>
-                <div class="col-md-8" style="height:80px;overflow:hidden;">
+                <!--<div class="col-md-8" style="height:80px;overflow:hidden;">
                   <img  src="{{advertisementOnPage.topBanner}}" class="img-responsive" style="display:block !important;width:100%;">
 
-                </div>
+                </div>-->
+                <app-adbanner  [delayDuration]="advertisementConfig.gallery.delay.topBanner"  [topBanners]="forChildComponent.topBanner" ></app-adbanner>
                 <div class="col-lg-2">
                 </div>
               </div>
@@ -273,9 +274,10 @@
           <div class="row clearfix" style="margin-top:20px;">
             <div class="col-lg-2">
             </div>
-            <div class="col-md-8" style="height:80px;overflow:hidden;">
+            <!--<div class="col-md-8" style="height:80px;overflow:hidden;">
               <img  src="{{advertisementOnPage.bottomBanner}}" class="img-responsive" style="display:block !important;width:100%;">
-            </div>
+            </div>-->
+            <app-adbanner [delayDuration]="advertisementConfig.gallery.delay.bottomBanner" [galleryId]="currentAdvertisementDetails.id" [topBanners]="forChildComponent.bottomBanner" ></app-adbanner>
             <div class="col-lg-2">
             </div>
           </div>
