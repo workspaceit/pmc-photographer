@@ -1,5 +1,4 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import { Swiper, Navigation, Pagination, Scrollbar } from 'swiper/dist/js/swiper.esm.js';
 import {EventImageService} from '../../../../services/event-image.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {environment} from '../../../../../environments/environment';
@@ -57,7 +56,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
 
     this.route.params.subscribe(params => {
       this.eventId = params['eventId'];
-      this.getEventImages();
+      this.getImages();
       this.getEventDetails();
       this.config = {
         url: this.API_URL+'/event-images/'+this.eventId,
@@ -103,6 +102,11 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     this.adjustHeight();
   }
   onUploadComplete(event,dz) {
+    if(this.slideShowImagesOnly) {
+      this.initializeValues();
+      this.slideShowImagesOnly = false;
+      this.getImages();
+    }
     console.log("ALL upload is done");
     (<any>$('#uploadModal')).modal('hide');
   }
@@ -112,25 +116,39 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getEventImages() {
-    const  thisComponent = this;
-    this.eventImageService.getEventImages(this.eventId, this.limit, this.offset).subscribe((data) => {
-      this.eventImages = data;
-      this.adjustHeight();
-    });
+  getImages() {
+    if (this.slideShowImagesOnly) {
+      this.getEventImagesFromSlideshow();
+    }
+    else {
+      this.getEventImages();
+    }
   }
-  getMoreEventImages() {
-    const  thisComponent = this;
-    this.offset += this.limit;
+
+  getEventImages() {
+    // const thisComponent = this;
     this.eventImageService.getEventImages(this.eventId, this.limit, this.offset).subscribe((data) => {
-      if(data.length==0) {
+      if(data.length === 0) {
         this.loadMore = false;
       } else {
-        this.eventImages=this.eventImages.concat(data);
+        this.eventImages = this.eventImages.concat(data);
         this.adjustHeight();
       }
     });
   }
+
+  getEventImagesFromSlideshow() {
+    // const thisComponent = this;
+    this.eventImageService.getEventImagesFromSlideshow(this.eventId, this.limit, this.offset).subscribe((data) => {
+      if(data.length === 0) {
+        this.loadMore = false;
+      } else {
+        this.eventImages = this.eventImages.concat(data);
+        this.adjustHeight();
+      }
+    });
+  }
+
   enableEditPhotos() {
     this.enableEdit = !this.enableEdit;
     if(!this.enableEdit) {
@@ -300,15 +318,27 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     const  thisComponent = this;
     (<any>$("#content-2")).mCustomScrollbar({
       autoHideScrollbar:true,
-      mouseWheel:{ scrollAmount: 150 },
+      mouseWheel:{ scrollAmount: 200 },
       theme:"rounded",
       callbacks:{
-        onTotalScroll:function() {
-          console.log("scrolling done . . .");
-          if(thisComponent.loadMore) {
-            thisComponent.getMoreEventImages();
+        onTotalScrollOffset: 200,
+        whileScrolling: function() {
+          // console.log(this.mcs.topPct);
+          if(this.mcs.topPct > 90) {
+            // console.log("scrolling done . . .");
+              if(thisComponent.loadMore) {
+                thisComponent.offset += thisComponent.limit;
+                thisComponent.getImages();
+              }
           }
-        }
+        },
+        // onTotalScroll:function() {
+        //   console.log("scrolling done . . .");
+        //   if(thisComponent.loadMore) {
+        //     thisComponent.offset += thisComponent.limit;
+        //     thisComponent.getEventImages();
+        //   }
+        // }
       }
     });
 
@@ -321,22 +351,6 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     });
 
     (<any>$('[data-toggle="tooltip"]')).tooltip();
-
-    // $("#doneEdit").hide();
-    // $("#editEvent").click(function(){
-    //   $(this).hide();
-    //   $(".toggler").show();
-    //   $(".togglerFace").hide();
-    //   $("#doneEdit").show();
-    //   $("#deleteTrash").show();
-    // });
-    // $("#doneEdit").click(function() {
-    //   $(this).hide();
-    //   $(".toggler").hide();
-    //   $(".togglerFace").show();
-    //   $("#editEvent").show();
-    //   $("#deleteTrash").hide();
-    // });
     $('.thumb').height($('.thumb').width());
   }
 
@@ -349,43 +363,6 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
       $('#show-previous-image').hide();
     }
   }
-
-  // loadGallery(setIDs, setClickAttr) {
-  //   const thisComponent = this;
-  //   let current_image,
-  //     selector,
-  //     counter = 0;
-  //
-  //   $('#show-next-image, #show-previous-image').click(function() {
-  //     if($(this).attr('id') === 'show-previous-image') {
-  //       current_image--;
-  //     } else {
-  //       current_image++;
-  //     }
-  //
-  //     selector = $('[data-image-id="' + current_image + '"]');
-  //     thisComponent.updateGallery(selector, counter);
-  //   });
-  //
-  //   if (setIDs == true) {
-  //     $('[data-image-id]').each(function() {
-  //       counter++;
-  //       $(this).attr('data-image-id', counter);
-  //     });
-  //   }
-  //   $(setClickAttr).on('click',function() {
-  //     thisComponent.updateGallery($(this), counter);
-  //   });
-  // }
-
-  // updateGallery(selector, counter) {
-  //   const $sel = selector;
-  //   const current_image = $sel.data('image-id');
-  //   $('#image-gallery-caption').text($sel.data('caption'));
-  //   $('#image-gallery-title').text($sel.data('title'));
-  //   $('#image-gallery-image').attr('src', $sel.data('image'));
-  //   this.disableButtons(counter, $sel.data('image-id'));
-  // }
 
   watermarkedChanged() {
     if(this.checkedItems.length==0) {
@@ -449,8 +426,35 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
+  removeFromSlideshow() {
+    if(this.checkedItems.length==0) {
+      (<any>$).growl.warning({ message: 'No photo selected' });
+    } else {
+      this.eventImageService.removeFromSlideShow(this.checkedItems).subscribe((data) => {
+          if(data) {
+            for(const item of this.checkedItems) {
+              $('#checkboxFiveInput'+item).prop('checked',false);
+            }
+            this.removePhotosFromView();
+            this.resetSelected();
+            (<any>$).growl.notice({ message: 'Successfully removed from Slideshow!' });
+          }
+        },(err)=> {
+          console.log(err.error);
+          (<any>$).growl.error({ message: err.error });
+        }
+      );
+    }
+  }
+
   slideShowToggle() {
-    console.log(this.slideShowImagesOnly);
+    this.initializeValues();
+    this.getImages();
+  }
+
+  initializeValues() {
+    this.offset = 0;
+    this.eventImages = [];
   }
 
 }

@@ -49,8 +49,11 @@
             <a href="form-user.html" target="_blank" class="action-icon" data-toggle="tooltip" data-placement="bottom"
                title="Send To Printer"><img src="assets/images/44.png" class="icon_style">
             </a>
-            <a (click)="sendToSlideShow()" target="_blank" class="action-icon" data-toggle="tooltip"
+            <a *ngIf="!slideShowImagesOnly" (click)="sendToSlideShow()" target="_blank" class="action-icon" data-toggle="tooltip"
                data-placement="bottom" title="Send To Slideshow"><img src="assets/images/55.png" class="icon_style">
+            </a>
+            <a *ngIf="slideShowImagesOnly" (click)="removeFromSlideshow()" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Remove fom slideshow">
+              <img src="assets/images/slideshow_remove.png" class="icon_style">
             </a>
             <a href="swiper_01.html" target="_blank" class="action-icon-preview" style="color:#fff;text-transform:uppercase"
                data-toggle="tooltip" data-placement="bottom" title="Show Preview" target="_blank">Preview
@@ -59,19 +62,25 @@
         </div>
       </div>
       <div class="form-group panel-right-block content" id="content-2">
-        <!--<div class="row clearfix">-->
-          <!--<div class="col-md-12 col-sm-12 col-xs-12">-->
-            <!--<div class="switcher_wrap">-->
-              <!--<label style="color: #5038aa;">Slideshow only</label>-->
-              <!--&lt;!&ndash; Rounded switch &ndash;&gt;-->
-              <!--<label class="switch">-->
-                <!--<input type="checkbox" [(ngModel)]="slideShowImagesOnly" [checked]="slideShowImagesOnly"-->
-                       <!--(change)="slideShowToggle()">-->
-                <!--<span class="slider round"></span>-->
-              <!--</label>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
+        <div class="row clearfix">
+          <div class="col-md-12 col-sm-12 col-xs-12 clearfix">
+            <div class="switcher_wrap">
+
+              <div class="box_switch">
+                <!-- Rounded switch -->
+                <label class="switch">
+                  <input type="checkbox" [(ngModel)]="slideShowImagesOnly" [checked]="slideShowImagesOnly"
+                         (change)="slideShowToggle()">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+              <div class="text_switch text-right">
+                <label style="color: #cdcdcd;">Slideshow images only</label>
+              </div>
+
+            </div>
+          </div>
+        </div>
         <div class="event-gallery thumb-container">
 
           <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 thumb" *ngFor="let eventImage of eventImages"
