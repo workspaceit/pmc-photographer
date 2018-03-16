@@ -66,9 +66,10 @@ export class EventSidepanelComponent implements OnInit {
     const  thisComponent = this;
     (<any>$("#content-1")).mCustomScrollbar({
       autoHideScrollbar:true,
-      mouseWheel:{ scrollAmount: 150 },
+      mouseWheel:{ scrollAmount: 200 },
       theme:"rounded",
       callbacks:{
+        onTotalScrollOffset: 200,
         onTotalScroll:function() {
           console.log("scrolling done . . .");
           thisComponent.getMoreEvents();

@@ -16,21 +16,37 @@ export class EventImageService extends  BaseService {
     return this.http.get<EventImage[]>(this.PUBLIC_API_URL + this.uri + '/get/' + identifier);
   }
   public getEventImages(eventId: number, limit: number , offset: number): Observable<EventImage[]> {
+    console.log(offset);
     const data = new FormData();
     data.append('eventId', eventId.toString());
+    data.append('eventId', eventId.toString());
     return this.http.post<EventImage[]>(this.API_URL + this.uri + '/' + limit + '/' + offset, data);
+  }
+
+  public getEventImagesFromSlideshow(eventId: number, limit: number , offset: number): Observable<EventImage[]> {
+    console.log(offset);
+    const data = new FormData();
+    data.append('eventId', eventId.toString());
+    data.append('eventId', eventId.toString());
+    return this.http.post<EventImage[]>(this.API_URL + this.uri + '/' + limit + '/' + offset + '/in-slideshow', data);
   }
 
   public deleteEventImages(eventIds) {
     const  data = new FormData();
     data.append('imageIds', eventIds);
-    return this.http.post<EventImage[]>(this.API_URL + this.uri + '/delete',data);
+    return this.http.post<EventImage[]>(this.API_URL + this.uri + '/delete', data);
   }
 
   public sendToSlideShow(eventIds) {
     const  data = new FormData();
     data.append('imageIds', eventIds);
-    return this.http.post<EventImage[]>(this.API_URL + this.uri + '/send-to-slideshow',data);
+    return this.http.post<EventImage[]>(this.API_URL + this.uri + '/send-to-slideshow', data);
+  }
+
+  public removeFromSlideShow(eventIds) {
+    const  data = new FormData();
+    data.append('imageIds', eventIds);
+    return this.http.post<EventImage[]>(this.API_URL + this.uri + '/remove-from-slideshow', data);
   }
   public sendViaEmail(eventIds,customerName,email,message,eventId) {
     const  data = new FormData();
@@ -39,7 +55,7 @@ export class EventImageService extends  BaseService {
     data.append('email',email);
     data.append('message',message);
     data.append('eventId',eventId);
-    return this.http.post<EventImage[]>(this.API_URL + this.uri + '/send-via-email',data);
+    return this.http.post<EventImage[]>(this.API_URL + this.uri + '/send-via-email', data);
   }
 
   public sendViaSms(eventIds,customerName,phoneNum,message,eventId) {
@@ -49,7 +65,7 @@ export class EventImageService extends  BaseService {
     data.append('phoneNum',phoneNum);
     data.append('message',message);
     data.append('eventId',eventId);
-    return this.http.post<EventImage[]>(this.API_URL + this.uri + '/send-via-sms',data);
+    return this.http.post<EventImage[]>(this.API_URL + this.uri + '/send-via-sms', data);
   }
 
   public addWatermark(imageIds, watermarkId: number) {

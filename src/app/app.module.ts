@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
-import {OnlyLoggedInUsersGuard} from './guard';
+import {OnlyLoggedInUsersGuard,UpdatePasswordGuard} from './guard';
 import {PhotographerLoginService} from './services/photographer-login.service';
 import * as $ from 'jquery';
 import {HttpClientModule} from '@angular/common/http';
@@ -14,17 +14,25 @@ import {NgxPaginationModule} from 'ngx-pagination';
 import {LoadingBarHttpClientModule} from '@ngx-loading-bar/http-client';
 import {LoadingBarRouterModule} from '@ngx-loading-bar/router';
 import {LoadingBarModule} from '@ngx-loading-bar/core';
-import {FormsModule} from '@angular/forms';
+import {FormsModule,ReactiveFormsModule} from '@angular/forms';
 import {ShareButtonsModule} from 'ngx-sharebuttons';
+import { ResetPasswordComponentComponent } from './components/reset-password-component/reset-password-component.component';
+import {ResetpasswordService} from "./services/resetpassword.service";
+import { PasswordTokenVerifyComponent } from './components/password-token-verify/password-token-verify.component';
+import { UpdatePasswordComponent } from './components/update-password/update-password.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    ResetPasswordComponentComponent,
+    PasswordTokenVerifyComponent,
+    UpdatePasswordComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
     CommonModule,
@@ -34,7 +42,7 @@ import {ShareButtonsModule} from 'ngx-sharebuttons';
     LoadingBarModule.forRoot(),
     ShareButtonsModule.forRoot(),
   ],
-  providers: [PhotographerLoginService, OnlyLoggedInUsersGuard],
+  providers: [PhotographerLoginService, OnlyLoggedInUsersGuard,ResetpasswordService,UpdatePasswordGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
