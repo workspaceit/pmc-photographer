@@ -5,7 +5,7 @@ export const localEnv = {
   apiBaseUrl: host,
   apiUrl: host+'/auth/api',
   pictureUrl: host+'/common/',
-  eventPhotoUrl: host+'/event-images/web/', // eventPhotoUrl: 'http://localhost:8080/event-images/web/',
+  eventPhotoUrl: host+'/img/images/', // eventPhotoUrl: 'http://localhost:8080/event-images/web/',
   publicApiBaseUrl: host+'/public/api',
 
 
