@@ -6,12 +6,14 @@ import {FILE_TYPE} from '../../../../constant/file.type';
 import {AdvertisementDetails} from '../../../../datamodel/advertisement.details';
 import {delay} from 'q';
 import {ActivatedRoute} from '@angular/router';
+import {EventImageService} from '../../../../services/event-image.service';
+import {EventImage} from '../../../../datamodel/event-image';
 
 @Component({
   selector: 'app-gallery',
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.css'],
-  providers: [AdvertisementService]
+  providers: [AdvertisementService,EventImageService]
 })
 
 export class GalleryComponent implements AfterViewInit {
@@ -20,7 +22,7 @@ export class GalleryComponent implements AfterViewInit {
     topBanner:[],
     bottomBanner:[]
   };
-
+  eventImages: EventImage[] = [];
   currentAdvertisementDetails: AdvertisementDetails;
   advertisements = [];
   popAds = [];
@@ -52,7 +54,7 @@ export class GalleryComponent implements AfterViewInit {
       rotateSwitchedOff:false
     }
   };
-  eventId = 3;
+  identifier = "";
   popUpType='';
   resourcePath = environment.pictureUrl;
   advertisementOnPage = {
@@ -71,9 +73,9 @@ export class GalleryComponent implements AfterViewInit {
 
 
 
-  constructor(private rout: ActivatedRoute,private advertisementService: AdvertisementService) {
+  constructor(private rout: ActivatedRoute,private advertisementService: AdvertisementService,private eventImageService: EventImageService) {
     this.currentAdvertisementDetails = new AdvertisementDetails();
-    this.eventId = Number( this.rout.snapshot.paramMap.get('eventId') );
+    this.identifier =this.rout.snapshot.paramMap.get('identifier');
     this.popUpType = this.rout.snapshot.paramMap.get('popUpType');
 
 
@@ -102,14 +104,18 @@ ngAfterViewInit() {
 
     this.fetchGalleryAdvertisement();
     this.fetchPopUpAdvertisement();
-
+    this.fetchEventImage();
   // this.rotateGalleryAdTopBanner(1).then();
 //    this.rotateGalleryAdBottomBanner(1).then();
 
   }
 
 
-
+  public fetchEventImage(){
+    this.eventImageService.getEventImagesBySlideShowIdentifier(this.identifier).subscribe((result)=>{
+      this.eventImages = result;
+    });
+  }
   public fetchGalleryAdvertisement() {
     if(this.advertisementConfig.gallery.isEndOfAd){
       this.rotationGalleryAd().then(()=>console.log("ROTATION CALLED"));
@@ -118,7 +124,7 @@ ngAfterViewInit() {
 
     const offset = this.advertisementConfig.gallery.apiOffset++;
     const limit = this.advertisementConfig.gallery.limit;
-    this.advertisementService.getByEventIdAndType(this.eventId,
+    this.advertisementService.getBySentSlideShowIdentifierAndType(this.identifier,
                                                   AdvertisementService.advTypeReqParamenter.GALLERY
                                                   ,limit
                                                   ,offset).subscribe((data)=>{
@@ -149,7 +155,7 @@ ngAfterViewInit() {
       case 'sms':
         popUpTypeReqParam = AdvertisementService.advTypeReqParamenter.POPUP_SMS;
     }
-    this.advertisementService.getByEventIdAndType(this.eventId,
+    this.advertisementService.getBySentSlideShowIdentifierAndType(this.identifier,
       popUpTypeReqParam
       ,limit
       ,offset).subscribe((data)=>{

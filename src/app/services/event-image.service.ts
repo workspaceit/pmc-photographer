@@ -12,7 +12,9 @@ export class EventImageService extends  BaseService {
   constructor(private http: HttpClient) {
     super();
   }
-
+  public getEventImagesBySlideShowIdentifier(identifier: string): Observable<EventImage[]> {
+    return this.http.get<EventImage[]>(this.PUBLIC_API_URL + this.uri + '/get/' + identifier);
+  }
   public getEventImages(eventId: number, limit: number , offset: number): Observable<EventImage[]> {
     const data = new FormData();
     data.append('eventId', eventId.toString());

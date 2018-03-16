@@ -25,7 +25,7 @@ export class AdvertisementService extends BaseService{
 
     return this.http.get<Advertisement[]>(this.PUBLIC_API_URL+ this.uri+"/get/"+eventId+"/"+limit+"/"+offset);
   }
-  public getByEventIdAndType(eventId,adType,limit,offset): Observable<Advertisement[]>{
+  public getBySentSlideShowIdentifierAndType(eventId, adType, limit, offset): Observable<Advertisement[]>{
 
     return this.http.get<Advertisement[]>(this.PUBLIC_API_URL+ this.uri+"/get/"+adType+"/"+eventId+"/"+limit+"/"+offset);
   }
