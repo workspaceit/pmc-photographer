@@ -56,6 +56,9 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
 
     this.route.params.subscribe(params => {
       this.eventId = params['eventId'];
+      this.offset = 0;
+      this.slideShowImagesOnly = false;
+      this.eventImages = [];
       this.getImages();
       this.getEventDetails();
       this.config = {
@@ -455,6 +458,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   initializeValues() {
     this.offset = 0;
     this.eventImages = [];
+    this.enableEdit = false;
   }
 
 }
