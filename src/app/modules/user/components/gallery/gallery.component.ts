@@ -57,6 +57,7 @@ export class GalleryComponent implements AfterViewInit {
   identifier = "";
   popUpType='';
   resourcePath = environment.pictureUrl;
+  eventImagePath = environment.eventPhotoUrl;
   advertisementOnPage = {
     popUpAd: {
       video:{ready:false,path:"",mimeType:""},
@@ -105,8 +106,8 @@ ngAfterViewInit() {
     this.fetchGalleryAdvertisement();
     this.fetchPopUpAdvertisement();
     this.fetchEventImage();
-  // this.rotateGalleryAdTopBanner(1).then();
-//    this.rotateGalleryAdBottomBanner(1).then();
+   this.rotateGalleryAdTopBanner(1).then();
+    this.rotateGalleryAdBottomBanner(1).then();
 
   }
 

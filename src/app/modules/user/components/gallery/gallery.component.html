@@ -57,7 +57,7 @@
 
           <div class="event-gallery thumb-container content" id="content-2">
 
-            <div *ngFor="let image of eventImages;" class="col-lg-2 col-md-2 col-sm-4 col-xs-12 thumb" [ngStyle]="{'background-image': 'url(' + resourcePath + image.image + ')','background-repeat': 'no-repeat'}">
+            <div *ngFor="let eventImage of eventImages;" class="col-lg-2 col-md-2 col-sm-4 col-xs-12 thumb" [ngStyle]="{'background-image': 'url(' + eventImagePath + eventImage.image + ')','background-repeat': 'no-repeat','height':'172px'}">
               <div class="chk-div toggler">
                 <div class="checkboxFive">
                   <input type="checkbox" value="1" id="checkboxFiveInput1" name=""/>
@@ -65,7 +65,7 @@
                   </label>
                 </div>
               </div>
-              <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="This is my title" data-caption="Some lovely red flowers" data-image="images/img_01.jpg" data-target="#image-gallery">
+              <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="This is my title" data-caption="Some lovely red flowers" data-image="{eventImagePath}{eventImage.image}" data-target="#image-gallery">
               </a>
             </div>
 
