@@ -16,3 +16,19 @@ export class OnlyLoggedInUsersGuard implements CanActivate {
     }
   }
 }
+
+@Injectable()
+export class UpdatePasswordGuard implements CanActivate {
+
+  constructor() {}
+
+  canActivate() {
+    const user = localStorage.getItem("update-password-user");
+    if (user) {
+      return true;
+    } else {
+      window.alert('no permission');
+      return false;
+    }
+  }
+}
