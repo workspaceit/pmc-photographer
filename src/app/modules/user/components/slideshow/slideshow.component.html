@@ -36,11 +36,11 @@
 
     </div>
   </div>
-  <div class="swiper-wrapper  change-bg" id="changeBg"  >
+  <div class="swiper-wrapper  change-bg" id="changeBg" [ngStyle]="{'background-image': 'url(assets/images/bg2.jpg)'}"  >
     <div class="swiper-left wow slideInDown" >
       <div class="event-logo">
         <div class="center-flex">
-          <img src="{{pageData.location.locationLogo}}"
+          <img  src="{{pageData.location.locationLogo}}"
                style="width: 61%;height: 50%"
                class="wow bounceInDown"
                data-wow-duration="1s"  data-wow-delay="1s">
@@ -61,7 +61,7 @@
           <!-- Wrapper for slides -->
           <div class="carousel-inner" role="listbox">
             <div class="item active">
-              <img src="{{pageData.event.eventPhoto}}" />
+              <img onerror="this.src='assets/images/event-default.png'" src="{{pageData.event.eventPhoto}}" />
             </div>
             <!--<div class="item">
               <img src="assets/images/pmc-stock/e1.png" />
@@ -77,21 +77,11 @@
 
           <!-- Wrapper for slides -->
           <div class="carousel-inner" role="listbox">
-            <div class="item active">
-              <img src="assets/images/pmc-stock/1.jpeg" />
+
+            <div *ngFor="let eventImage of pageData.eventImage;let i = index" [ngClass]="(i==1)?'item active':'item'">
+              <img src="{{eventImagePath}}{{eventImage.image}}" />
             </div>
-            <div class="item">
-              <img src="assets/images/pmc-stock/3.jpeg" />
-            </div>
-            <div class="item">
-              <img src="assets/images/pmc-stock/4.jpeg" />
-            </div>
-            <div class="item">
-              <img src="assets/images/pmc-stock/5.jpeg" />
-            </div>
-            <div class="item">
-              <img src="assets/images/pmc-stock/6.jpeg" />
-            </div>
+
           </div>
 
         </div>

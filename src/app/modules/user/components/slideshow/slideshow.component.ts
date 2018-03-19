@@ -10,13 +10,14 @@ import {EventService} from '../../../../services/event.service';
 import {LoginService} from '../../../../services/login.service';
 import {AdvertisementService} from '../../../../services/advertisement.service';
 import {AdvertisementDetails} from '../../../../datamodel/advertisement.details';
+import {EventImageService} from '../../../../services/event-image.service';
 
 
 @Component({
   selector: 'app-slideshow',
   templateUrl: './slideshow.component.html',
   styleUrls: ['./slideshow.component.css'],
-  providers: [LocationService,EventService,AdvertisementService,LoginService]
+  providers: [LocationService,EventService,AdvertisementService,LoginService,EventImageService]
 })
 export class SlideshowComponent implements  AfterViewInit,OnInit  {
   locationData:Location;
@@ -29,9 +30,11 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
   eventId=0;
   slideShowAdId=0;
   resourcePath = environment.pictureUrl;
+  eventImagePath = environment.eventPhotoUrl;
   pageData = {
     location:new Location(),
     event:new Event(),
+    eventImage:[],
     slideShowAd:{
       video:{
         link:"",
@@ -43,7 +46,9 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
   };
   constructor(private activatedRoute: ActivatedRoute,
               private locationService:LocationService,
-              private eventService: EventService,private advertisermentService:AdvertisementService) {
+              private eventService: EventService,
+              private advertisermentService:AdvertisementService,
+              private eventImagesService: EventImageService) {
     const locIdStr = this.activatedRoute.snapshot.queryParamMap.get("locId");
     const eventIdStr = this.activatedRoute.snapshot.queryParamMap.get("evtId");
     const slideShowAdIdStr = this.activatedRoute.snapshot.queryParamMap.get("pmcadv");
@@ -57,9 +62,10 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
     this.eventData = null;
 
     console.log(locIdStr,eventIdStr);
-
+    this.getEventImages();
   }
   private locationDefaultValue(){
+
     this.pageData.location.locationLogo = 'assets/images/pmc-stock/vendor.png';
     this.pageData.location.name='Location Sample';
     this.pageData.location.address ='8825 E JEFFERSON AVE,DETROIT, MI 48214 (313) 822-660';
@@ -103,6 +109,13 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
       });
     this.rotateBackground().then();
   }
+  private getEventImages(){
+    this.eventImagesService.getEventImagesByEventIdWhereIsSentSlideShowTrue(this.eventId).subscribe((result)=>{
+      this.pageData.eventImage = result;
+      console.log("Event Images",this.pageData.eventImage );
+      this.getEventAndIntiJs();
+    });
+  }
   private async rotateBackground(){
     console.log("Roation STart");
     const  bannerImages = this.pageData.slideShowAd.bannerImages;
@@ -129,16 +142,16 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
       },()=>{
         if(this.eventId >0) {
           console.log("Complete loc");
-          this.getEventAndIntiJs();
+         // this.getEventAndIntiJs();
         }else{
           this.initJsFunction();
         }
 
       });
     } else  if(this.eventId >0) {
-      this.getEventAndIntiJs();
+     // this.getEventAndIntiJs();
     }else {
-      this.initJsFunction();
+     // this.initJsFunction();
     }
   }
 
@@ -147,8 +160,9 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
 
       if(data==null)return;
       this.eventData = data;
+      this.locationData = this.eventData.location;
       this.pageConfig.eventAndLocationFetched = true;
-
+      console.log("Complete Ev",data);
     },error=>{
 
     },()=>{
@@ -161,7 +175,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
   private initJsFunction(){
 
 
-
+    console.log("Init JS Function");
     (<any>$('.count')).each(function () {
       $(this).prop('Counter',0).animate({
         Counter: $(this).text()
@@ -174,11 +188,9 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
       });
     });
 
-    (<any>$('#changeBg')).easybg({
+    /*(<any>$('#changeBg')).easybg({
       images: [ // an array of background dimages
-        'assets/images/bg2.jpg',
-        'assets/images/bg.jpg',
-        'assets/images/bg3.jpg'
+        'assets/images/bg2.jpg'
       ],
       interval: 10000,
       speed : 1000, // 1 minute
@@ -188,7 +200,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
       cloneClassId : null,
       cloneClassName : 'easybgClone',
       debug : false
-    });
+    });*/
 
     (<any>$(".img-check")).click(function(){
       $(this).toggleClass("check");
@@ -242,14 +254,14 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
     });
 
     // Hide the div
-    (<any>$("#adToggle")).hide();
+    //(<any>$("#adToggle")).hide();
     // $('#video1').get(0).pause();
 
     // Show the div in 5s
-    (<any>$("#adToggle")).delay(20000).fadeIn(500);
+    //(<any>$("#adToggle")).delay(20000).fadeIn(500);
 
 
-    (<any>$("#adToggle")).delay(20000).fadeOut(500);
+    //(<any>$("#adToggle")).delay(20000).fadeOut(500);
 
     let ONLYONETIME_EXECUTE = null;
     window.addEventListener('load', function(){ // on page load

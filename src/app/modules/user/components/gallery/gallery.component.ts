@@ -17,11 +17,16 @@ import {EventImage} from '../../../../datamodel/event-image';
 })
 
 export class GalleryComponent implements AfterViewInit {
+  currentImage:EventImage;
+  nextBtn = true;
+  prevBtn = true;
+
 
   forChildComponent={
     topBanner:[],
     bottomBanner:[]
   };
+  eventImagesFetchingComplete = false;
   eventImages: EventImage[] = [];
   currentAdvertisementDetails: AdvertisementDetails;
   advertisements = [];
@@ -78,14 +83,14 @@ export class GalleryComponent implements AfterViewInit {
     this.currentAdvertisementDetails = new AdvertisementDetails();
     this.identifier =this.rout.snapshot.paramMap.get('identifier');
     this.popUpType = this.rout.snapshot.paramMap.get('popUpType');
-
+    this.currentImage = new EventImage();
 
   }
 
 
 ngAfterViewInit() {
 
-    (<any>$("#content-1")).mCustomScrollbar({
+ /*   (<any>$("#content-1")).mCustomScrollbar({
       autoHideScrollbar:true,
       mouseWheel:{ scrollAmount: 150 },
       theme:"rounded"
@@ -95,7 +100,8 @@ ngAfterViewInit() {
       autoHideScrollbar:true,
       mouseWheel:{ scrollAmount: 150 },
       theme:"rounded"
-    });
+    });*/
+
 
     (<any>$('.thumb')).height($('.thumb').width());
 
@@ -106,15 +112,36 @@ ngAfterViewInit() {
     this.fetchGalleryAdvertisement();
     this.fetchPopUpAdvertisement();
     this.fetchEventImage();
-   this.rotateGalleryAdTopBanner(1).then();
+    this.rotateGalleryAdTopBanner(1).then();
     this.rotateGalleryAdBottomBanner(1).then();
 
   }
 
+  openImageModal(image) {
+    console.log("Image Modal Opened");
+    this.currentImage = image;
+    (<any>$('#image-gallery-image')).attr('src',this.eventImagePath+this.currentImage.image);
+    (<any>$('#image-gallery')).modal('show');
+    const currentImageIndex = this.eventImages.indexOf(this.currentImage);
+    this.displayPrevNext(currentImageIndex);
+  }
 
+  displayPrevNext(index) {
+    const totalImage = this.eventImages.length;
+    this.nextBtn = true;
+    this.prevBtn = true;
+
+    if(index==0) {
+      this.prevBtn = false;
+    }
+    if(index==totalImage-1) {
+      this.nextBtn = false;
+    }
+  }
   public fetchEventImage(){
     this.eventImageService.getEventImagesBySlideShowIdentifier(this.identifier).subscribe((result)=>{
       this.eventImages = result;
+      this.eventImagesFetchingComplete = true;
     });
   }
   public fetchGalleryAdvertisement() {
@@ -139,6 +166,25 @@ ngAfterViewInit() {
                                                       this.rotationGalleryAd().then(()=>console.log("ROTATION CALLED"));
                                                   });
 
+  }
+  showPreviousImage() {
+    const currentImageIndex = this.eventImages.indexOf(this.currentImage);
+    const previousImageIndex = currentImageIndex-1;
+    if(previousImageIndex>=0) {
+      this.currentImage = this.eventImages[previousImageIndex];
+      this.displayPrevNext(previousImageIndex);
+    }
+  }
+  showNextImage() {
+    const currentImageIndex = this.eventImages.indexOf(this.currentImage);
+    const nextImageIndex = currentImageIndex+1;
+    const totalImage = this.eventImages.length;
+    if(nextImageIndex<=totalImage-1) {
+      this.currentImage = this.eventImages[nextImageIndex];
+      this.displayPrevNext(nextImageIndex);
+    }
+    console.log("currentImageIndex "+this.currentImage.id);
+    console.log("currentImageIndex "+this.currentImage.image);
   }
   public fetchPopUpAdvertisement() {
     if(this.advertisementConfig.popUpAd.isEndOfAd){
@@ -275,7 +321,18 @@ ngAfterViewInit() {
   }
   public switchedOffRotation(){
     console.log("rotateSwitchedOff");
-    this.advertisementConfig.popUpAd.rotateSwitchedOff = true;
+
+    if(this.eventImagesFetchingComplete){
+      this.advertisementConfig.popUpAd.rotateSwitchedOff = true;
+    }
+
+    if(this.eventImages.length>0){
+      this.openImageModal(this.eventImages[0]);
+    }else if(!this.eventImagesFetchingComplete){
+      delay(2000).then(()=>this.switchedOffRotation());
+    }
+
+
   }
 
 

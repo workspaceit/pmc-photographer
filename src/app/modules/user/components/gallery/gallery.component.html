@@ -2,21 +2,6 @@
 <div class="container-fluid">
   <div class="row clearfix">
     <div class="content-wrapper content-wrapper-user">
-      <div class="col-md-12 icon_bg icon_bg_user" style="text-align: right;">
-        <div class="row">
-          <div class="col-md-6 text-left">
-            <div class="filter">
-              <button class="btn"><a style="color:#fff;" href="event-list-02.html"><i class="fa fa-angle-left" style="color:#fff;"></i>&nbsp;&nbsp;Event List</a></button>
-              <div class="datepicker-div" style="visibility:hidden;">
-                <input id="datepicker" width="270" />
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 mb-fix-text">
-             <a href="swiper_01.html" target="_blank" class="action-icon" style="margin-top:5px;color:#fff;text-transform:uppercase" data-toggle="tooltip" data-placement="bottom" style="line-height:40px;" title="Show Slideshow" target="_blank">Show Slideshow</a>
-          </div>
-        </div>
-      </div>
       <div class="form-group panel-right-block"
            [ngStyle]="{'background-image': 'url(' + advertisementOnPage.background + ')',
                                                         'background-size':'cover'}"
@@ -56,18 +41,21 @@
           </div>
 
           <div class="event-gallery thumb-container content" id="content-2">
+            <div id="mCSB_1" class="mCustomScrollBox mCS-rounded mCSB_vertical mCSB_inside" tabindex="0"><div id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position:relative; top:0; left:0;" dir="ltr">
+              <div id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position:relative; top:0; left:0;" dir="ltr">
 
-            <div *ngFor="let eventImage of eventImages;" class="col-lg-2 col-md-2 col-sm-4 col-xs-12 thumb" [ngStyle]="{'background-image': 'url(' + eventImagePath + eventImage.image + ')','background-repeat': 'no-repeat','height':'172px'}">
-              <div class="chk-div toggler">
-                <div class="checkboxFive">
-                  <input type="checkbox" value="1" id="checkboxFiveInput1" name=""/>
-                  <label for="checkboxFiveInput1">
-                  </label>
+              <div *ngFor="let eventImage of eventImages;" class="col-lg-2 col-md-2 col-sm-4 col-xs-12 thumb" [ngStyle]="{'background-image': 'url(' + eventImagePath + eventImage.image + ')','background-repeat': 'no-repeat','height':'172px'}">
+                <div class="chk-div toggler">
                 </div>
+                <a class="thumbnail" (click)="openImageModal(eventImage)" href="#" data-image-id="" data-toggle="modal" data-title="This is my title" data-caption="Some lovely red flowers"
+                   [attr.data-image]="eventImagePath+eventImage.image" data-image="" >
+                </a>
               </div>
-              <a class="thumbnail" href="#" data-image-id="" data-toggle="modal" data-title="This is my title" data-caption="Some lovely red flowers" data-image="{eventImagePath}{eventImage.image}" data-target="#image-gallery">
-              </a>
+              </div>
+
+
             </div>
+
 
           </div>
           <div class="row clearfix" style="margin-top:20px;">
@@ -105,7 +93,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <!-- <a href="#image-gallery" class="close" data-dismiss="modal" aria-label="Close">&times;</a> -->
-          <a *ngIf="advertisementConfig.popUpAd.showClosePopUp" href="#image-gallery" class="close" data-toggle="modal" data-dismiss="modal" (click)="switchedOffRotation()" >x</a>
+          <a *ngIf="advertisementConfig.popUpAd.showClosePopUp"  class="close" data-toggle="modal" data-dismiss="modal" (click)="switchedOffRotation()" >x</a>
           <h4 class="modal-title hidden-xs" id="popUpModalLabel">Please Close If you Don't Like Ad</h4>
         </div>
         <div class="modal-body">
@@ -143,28 +131,25 @@
           <h4 class="modal-title" id="image-gallery-title"></h4>
         </div>
         <div class="modal-body clearfix">
-          <div class="social-foot">
-            <a href="#"><img src="assets/images/social/facebook.png" width="30"></a>
-            <a href="#"><img src="assets/images/social/gplus.png" width="30"></a>
-            <a href="#"><img src="assets/images/social/twitter.png" width="30"></a>
-            <a href="#"><img src="assets/images/social/instagram.png" width="30"></a>
-            <a href="#" style="float:right;background:transparent;color:red !important;"><i class="fa fa-2x fa-warning"></i></a>
+          <div class="social-foot ornobio">
+            <share-button button="facebook"  [url]="eventImagePath+ currentImage.image">
+              <img src="assets/images/social/facebook.png" width="30">
+            </share-button>
+            <share-button button="twitter" [url]="eventImagePath + currentImage.image">
+              <img src="assets/images/social/twitter.png" width="30">
+            </share-button>
+            <share-button button="google" [url]="eventImagePath + currentImage.image">
+              <img src="assets/images/social/gplus.png" width="30">
+            </share-button>
           </div>
           <div class="col-md-12" style="padding:0px;">
-            <img id="image-gallery-image" class="img-responsive" src="assets/images/img_01.jpg">
-          </div>
-          <div class="desc-div-foot">
-            <h5>This is the title pic</h5>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum dolor urna, consequat fermentum orci convallis eget. Aenean ac nulla at est porta malesuada. Aliquam at lobortis enim, ornare laoreet sem. Aliquam blandit lacus augue, quis feugiat sapien imperdiet eget.
-            </p>
-            <span class="image-number">Image 4578A</span>
+            <img id="image-gallery-image" class="img-responsive" src="{{eventImagePath}}{{currentImage.image}}">
           </div>
         </div>
         <div class="modal-footer">
 
           <div class="col-md-2 text-left">
-            <button type="button" class="btn btn-primary btn-action" id="show-previous-image"><i class="fa fa-chevron-left"></i></button>
+           <button type="button" *ngIf="prevBtn" class="btn btn-primary btn-action" (click)="showPreviousImage()" id="show-previous-image"><i class="fa fa-chevron-left"></i></button>
           </div>
 
           <div class="col-md-8 text-center">
@@ -172,7 +157,7 @@
           </div>
 
           <div class="col-md-2">
-            <button type="button" id="show-next-image" class="btn btn-default btn-action"><i class="fa fa-chevron-right"></i></button>
+            <button type="button" *ngIf="nextBtn" (click)="showNextImage()" id="show-next-image" class="btn btn-default btn-action"><i class="fa fa-chevron-right"></i></button>
           </div>
         </div>
       </div>

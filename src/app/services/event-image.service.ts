@@ -22,6 +22,9 @@ export class EventImageService extends  BaseService {
     data.append('eventId', eventId.toString());
     return this.http.post<EventImage[]>(this.API_URL + this.uri + '/' + limit + '/' + offset, data);
   }
+  public getEventImagesByEventIdWhereIsSentSlideShowTrue(eventId: number): Observable<EventImage[]> {
+    return this.http.get<EventImage[]>(this.PUBLIC_API_URL + this.uri + '/get-by-event-id-where-is-sent-slide-show-true/'+eventId);
+  }
 
   public getEventImagesFromSlideshow(eventId: number, limit: number , offset: number): Observable<EventImage[]> {
     console.log(offset);
