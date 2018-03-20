@@ -152,13 +152,13 @@
         <div class="col-md-12" style="padding:0px;">
           <img id="image-gallery-image" class="img-responsive" src="{{imgPath}}{{currentImage.image}}">
         </div>
-        <div class="desc-div-foot">
-          <h5>This is the title pic</h5>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum dolor urna, consequat fermentum orci convallis eget. Aenean ac nulla at est porta malesuada. Aliquam at lobortis enim, ornare laoreet sem. Aliquam blandit lacus augue, quis feugiat sapien imperdiet eget.
-          </p>
-          <span class="image-number">Image 4578A</span>
-        </div>
+        <!--<div class="desc-div-foot">-->
+          <!--<h5>This is the title pic</h5>-->
+          <!--<p>-->
+            <!--Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum dolor urna, consequat fermentum orci convallis eget. Aenean ac nulla at est porta malesuada. Aliquam at lobortis enim, ornare laoreet sem. Aliquam blandit lacus augue, quis feugiat sapien imperdiet eget.-->
+          <!--</p>-->
+          <!--<span class="image-number">Image 4578A</span>-->
+        <!--</div>-->
       </div>
       <div class="modal-footer">
         <div class="col-md-2 text-left" >
@@ -192,26 +192,27 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true">x</span>
         </button>
         <h4 class="modal-title" id="myModalLabel1">Send Photo Via Email</h4>
       </div>
-      <div class="modal-body">
-        <form role="form" class="col-md-5 center-form" [formGroup]="emailForm" (submit)="submitSendViaEmail(emailForm.value)">
+      <div class="modal-body clearfix">
+        <form role="form" class="col-md-12 " [formGroup]="emailForm" (submit)="submitSendViaEmail(emailForm.value)">
           <h4 class="text-capitalize text-center">Please Fill up this information</h4>
           <div class="form-group">
-            <input type="text" formControlName="username" name="username" id="username" tabindex="1" class="form-control" placeholder="customer name" value="">
+            <input type="text" formControlName="username" name="username" id="username" tabindex="1" class="form-control"
+                   placeholder="Customer Name" value="">
           </div>
           <div class="form-group">
             <input type="text" formControlName="email" tabindex="2" class="form-control" placeholder="Email">
           </div>
           <div class="form-group">
-            <textarea type="text" formControlName="message" tabindex="2" class="form-control" placeholder="message"></textarea>
+            <textarea type="text" formControlName="message" tabindex="2" class="form-control" placeholder="Message"></textarea>
           </div>
           <div class="form-group">
             <div class="row">
-              <div class="col-sm-6 col-sm-offset-3">
-                <input type="submit" [disabled]="!emailForm.valid" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="SEND">
+              <div class="col-sm-12">
+                <input type="submit" [disabled]="!emailForm.valid" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" style="width: 130px;float: right;" value="SEND">
               </div>
             </div>
           </div>
@@ -226,26 +227,27 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true">x</span>
         </button>
         <h4 class="modal-title" id="myModalLabel2">Send Photo Via SMS</h4>
       </div>
-      <div class="modal-body">
-        <form role="form" class="col-md-5 center-form" [formGroup]="smsForm" (submit)="submitSendViaSms(smsForm.value)">
+      <div class="modal-body clearfix">
+        <form role="form" class="col-md-12" [formGroup]="smsForm" (submit)="submitSendViaSms(smsForm.value)">
           <h4 class="text-capitalize text-center">Please Fill up this information</h4>
           <div class="form-group">
-            <input type="text" formControlName="username" name="username"  tabindex="1" class="form-control" placeholder="customer name" value="">
+            <input type="text" formControlName="username" name="username"  tabindex="1" class="form-control"
+                   placeholder="Customer Name" value="">
           </div>
           <div class="form-group">
             <input type="text" formControlName="phoneNumber" tabindex="2" class="form-control" placeholder="phoneNumber">
           </div>
           <div class="form-group">
-            <textarea type="text" formControlName="message" tabindex="2" class="form-control" placeholder="message"></textarea>
+            <textarea type="text" formControlName="message" tabindex="2" class="form-control" placeholder="Message"></textarea>
           </div>
           <div class="form-group">
             <div class="row">
-              <div class="col-sm-6 col-sm-offset-3">
-                <input type="submit" [disabled]="!smsForm.valid" name="register-submit" tabindex="4" class="form-control btn btn-register" value="SEND">
+              <div class="col-sm-12">
+                <input type="submit" [disabled]="!smsForm.valid" name="register-submit" tabindex="4" class="form-control btn btn-register" style="width: 130px;float: right;" value="SEND">
               </div>
             </div>
           </div>
@@ -253,5 +255,4 @@
       </div>
     </div>
   </div>
-
-
+</div>
