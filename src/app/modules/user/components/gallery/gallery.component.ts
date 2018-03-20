@@ -186,6 +186,15 @@ ngAfterViewInit() {
     console.log("currentImageIndex "+this.currentImage.id);
     console.log("currentImageIndex "+this.currentImage.image);
   }
+  reportImage() {
+    const r = confirm("Do you really want to report this image?");
+    if (r == true) {
+      const imageId = this.currentImage.id;
+      this.eventImageService.reportImage(imageId).subscribe((data)=> {
+        console.log(data);
+      });
+    }
+  }
   public fetchPopUpAdvertisement() {
     if(this.advertisementConfig.popUpAd.isEndOfAd){
       this.changePupUpAdd();
