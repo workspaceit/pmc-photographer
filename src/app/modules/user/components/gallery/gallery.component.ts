@@ -263,8 +263,7 @@ ngAfterViewInit() {
     }else{
       this.advertisementConfig.gallery.arrayOffset=0;
     }
-    console.log("this.advertisementConfig.gallery.arrayOffset this.advertisements.length",this.advertisementConfig.gallery.arrayOffset,this.advertisements.length);
-    return i;
+   return i;
   }
   private getPopUpRotationStarIndex():number{
     console.log(this.globalPopUpAdSection);
@@ -366,7 +365,8 @@ ngAfterViewInit() {
         const galleryComponent = this;
 
         (<any>$("#pmcGalAdVideo")).load();
-        (<any>$("#pmcGalAdVideo")).on("ended",function(){
+        (<any>$("#pmcGalAdVideo")).off("ended").on("ended",function(){
+          debugger;
           this.pause();
           this.currentTime = 0;
           galleryComponent.fetchPopUpAdvertisement();

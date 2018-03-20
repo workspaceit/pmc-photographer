@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, DoCheck, OnInit} from '@angular/core';
  import { WOW } from 'wowjs/dist/wow.min';
 import {delay} from 'q';
 import {Location} from '../../../../datamodel/location';
@@ -19,10 +19,12 @@ import {EventImageService} from '../../../../services/event-image.service';
   styleUrls: ['./slideshow.component.css'],
   providers: [LocationService,EventService,AdvertisementService,LoginService,EventImageService]
 })
-export class SlideshowComponent implements  AfterViewInit,OnInit  {
+export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
   locationData:Location;
   eventData:Event;
+  slideShowAdListIndex:number;
   slideShowAdData: AdvertisementDetails;
+  slideShowAdList: AdvertisementDetails[];
   pageConfig = {
     eventAndLocationFetched : false
   };
@@ -38,17 +40,22 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
     slideShowAd:{
       video:{
         link:"",
-         mimeType:""
+         mimeType:"",
+        ready:false,
       },
       bannerImages:[],
+      currentBannerImg:"",
       currentBackground: "",
+      currentFileType:""
     }
   };
   constructor(private activatedRoute: ActivatedRoute,
               private locationService:LocationService,
               private eventService: EventService,
-              private advertisermentService:AdvertisementService,
+              private advertisementService:AdvertisementService,
               private eventImagesService: EventImageService) {
+
+
     const locIdStr = this.activatedRoute.snapshot.queryParamMap.get("locId");
     const eventIdStr = this.activatedRoute.snapshot.queryParamMap.get("evtId");
     const slideShowAdIdStr = this.activatedRoute.snapshot.queryParamMap.get("pmcadv");
@@ -60,6 +67,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
 
     this.locationData = null;
     this.eventData = null;
+    this.slideShowAdListIndex = 0;
 
     console.log(locIdStr,eventIdStr);
     this.getEventImages();
@@ -71,43 +79,40 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
     this.pageData.location.address ='8825 E JEFFERSON AVE,DETROIT, MI 48214 (313) 822-660';
 
   }
-  private eventDefultValue(){
+  private eventDefaultValue(){
     this.pageData.event.eventPhoto = 'assets/images/pmc-stock/e1.png';
   }
+
+
+  ngDoCheck(): void {
+  //  console.log(this.pageData.slideShowAd.video);
+  }
+
   ngOnInit(){
 
   }
   ngAfterViewInit() {
     this.getLocationAndEvent();
-    this.advertisermentService.getById(this.slideShowAdId)
+    this.fetchSlideShowAd();
+  }
+  public fetchSlideShowAd(){
+    this.advertisementService.getBySentSlideShowByEventIdAndType(this.eventId,"slideshow")
       .subscribe(result=>{
-        this.slideShowAdData = result;
-
-        const  tbSection = this.slideShowAdData.sections.TOP_BANNER;
-        const  videoSection = this.slideShowAdData.sections.BOTTOM_BANNER;
-        let  tbSecRes = tbSection.sectionResource;
-        tbSecRes = tbSecRes.concat(videoSection.sectionResource);
-        for(const i in tbSecRes) {
-          const fileName = tbSecRes[i].fileName;
-          const fileType = tbSecRes[i].fileType;
-          const mimeType = tbSecRes[i].mimeType;
-
-          if(fileType === "VIDEO"){
-            this.pageData.slideShowAd.video.link = this.resourcePath+"/"+fileName;
-            this.pageData.slideShowAd.video.mimeType = mimeType;
-            (<any>$('#slidShowAdPmc')).load();
-          } else {
-            this.pageData.slideShowAd.bannerImages.push(this.resourcePath+"/"+fileName);
-          }
-
-        }
-        console.log("PAGEDATA",this.pageData);
+        this.slideShowAdList = result;
+      //  this.rotateVideo();
       },error=>{
 
       },()=>{
 
       });
-    this.rotateBackground().then();
+  }
+  public showSlideShowAd(){
+    const slideshowComponent = this;
+    (<any>$("#changeBg")).fadeOut(500,function(){
+      (<any>$("#adToggle")).fadeIn(500);
+      slideshowComponent.pageData.slideShowAd.currentFileType="VIDEO";
+      slideshowComponent.rotateVideo().then();
+    });
   }
   private getEventImages(){
     this.eventImagesService.getEventImagesByEventIdWhereIsSentSlideShowTrue(this.eventId).subscribe((result)=>{
@@ -116,21 +121,122 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
       this.getEventAndIntiJs();
     });
   }
-  private async rotateBackground(){
-    console.log("Roation STart");
-    const  bannerImages = this.pageData.slideShowAd.bannerImages;
-    for(const i in bannerImages){
-      this.pageData.slideShowAd.currentBackground = bannerImages[i];
-      await delay(3000);
-    }
-    if(bannerImages.length==0){
+  private async rotateVideo(){
+    const currentIndex = this.getCurrentSlideShowIndex();
+    const slideShowAdData = new AdvertisementDetails(this.slideShowAdList[currentIndex]);
+    console.log("currentIndex ",currentIndex,slideShowAdData);
+
+    const  tbSection = slideShowAdData.sections.TOP_BANNER;
+    const  tbSecRes = tbSection.sectionResource;
+
+    if(tbSecRes.length==0){
       delay(3000).then(()=>{
-        this.rotateBackground().then();
+        this.rotateVideo().then();
       });
-    }else {
-      this.rotateBackground().then();
+      return;
     }
-    console.log("Roation Ends");
+
+    /**
+     * Only one video
+     * */
+    let fileName = "";
+    let fileType = "";
+    let mimeType = "";
+
+    if(tbSecRes.length>0) {
+       fileName = tbSecRes[0].fileName;
+       fileType = tbSecRes[0].fileType;
+       mimeType = tbSecRes[0].mimeType;
+    }
+
+    if(fileType === "VIDEO"){
+      this.pageData.slideShowAd.video.ready = false;
+      this.pageData.slideShowAd.video.link = this.resourcePath+fileName;
+      this.pageData.slideShowAd.video.mimeType = mimeType;
+
+
+      delay(300).then(()=>{
+        this.pageData.slideShowAd.video.ready = true;
+        const slideshowComponent = this;
+
+        (<any>$('#slidShowAdPmc')).load();
+
+        (<any>$("#slidShowAdPmc")).off("ended").on("ended",function(){
+          console.log("End video");
+          this.pause();
+
+
+          delay(2000).then(()=>{
+            slideshowComponent.rotateVideo().then();
+          });
+
+       //   console.log("Init Rotate");
+
+        });
+
+      });
+
+    }else{
+      this.decrementCurrentSlideShowIndex();
+      this.pageData.slideShowAd.video.ready = false;
+      this.pageData.slideShowAd.currentFileType = "IMAGE";
+      this.rotateSlideShowImageBanner().then();
+    }
+    console.log("currentIndex ",currentIndex,slideShowAdData);
+  }
+  private async rotateSlideShowImageBanner(){
+    const currentIndex = this.getCurrentSlideShowIndex();
+    console.log("currentIndex Of Banner ",currentIndex);
+    const slideShowAdData = this.slideShowAdList[currentIndex];
+    const  tbSection = slideShowAdData.sections.TOP_BANNER;
+    const  tbSecRes = tbSection.sectionResource;
+
+    if(tbSecRes.length==0){
+      delay(3000).then(()=>{
+        this.rotateSlideShowImageBanner().then();
+      });
+      return;
+    }
+    /**
+     * Multiple banner image
+     * */
+    let fileName = "";
+    let fileType = "";
+    let mimeType = "";
+
+
+    for(const i in tbSecRes) {
+      fileName = tbSecRes[i].fileName;
+      fileType = tbSecRes[i].fileType;
+      mimeType = tbSecRes[i].mimeType;
+
+      if(fileType == "IMAGE"){
+         this.pageData.slideShowAd.currentBannerImg = this.resourcePath+fileName;
+        await delay(2000);
+      }else{
+        this.decrementCurrentSlideShowIndex();
+        this.pageData.slideShowAd.currentFileType = "VIDEO";
+        this.rotateVideo().then();
+        return;
+      }
+    }
+
+    this.rotateSlideShowImageBanner().then();
+
+
+   // console.log("Roation Ends");
+  }
+  private decrementCurrentSlideShowIndex():number{
+    if(this.slideShowAdListIndex<=0){
+      this.slideShowAdListIndex=this.slideShowAdList.length-1;
+    }
+    return this.slideShowAdListIndex--;
+  }
+  private getCurrentSlideShowIndex():number{
+    if(this.slideShowAdListIndex>=this.slideShowAdList.length){
+      this.slideShowAdListIndex=0;
+    }
+    return this.slideShowAdListIndex++;
   }
   public getLocationAndEvent(){
     if(this.locationId >0){
@@ -184,15 +290,16 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
         easing: 'swing',
         step: function (now) {
           $(this).text(Math.ceil(now));
+          console.log("Interval");
         }
       });
     });
 
-    /*(<any>$('#changeBg')).easybg({
+    (<any>$('#changeBg')).easybg({
       images: [ // an array of background dimages
         'assets/images/bg2.jpg'
       ],
-      interval: 10000,
+      interval: 2000,
       speed : 1000, // 1 minute
       ignoreError : false,
       changeMode : 'normal', // normal or random
@@ -200,7 +307,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
       cloneClassId : null,
       cloneClassName : 'easybgClone',
       debug : false
-    });*/
+    });
 
     (<any>$(".img-check")).click(function(){
       $(this).toggleClass("check");
@@ -253,40 +360,15 @@ export class SlideshowComponent implements  AfterViewInit,OnInit  {
       this.parentNode.insertBefore(section, this);
     });
 
-    // Hide the div
-    //(<any>$("#adToggle")).hide();
-    // $('#video1').get(0).pause();
-
-    // Show the div in 5s
-    //(<any>$("#adToggle")).delay(20000).fadeIn(500);
-
-
-    //(<any>$("#adToggle")).delay(20000).fadeOut(500);
-
-    let ONLYONETIME_EXECUTE = null;
-    window.addEventListener('load', function(){ // on page load
-
-      document.body.addEventListener('touchstart', function(e){
-
-        if (ONLYONETIME_EXECUTE == null) {
-
-          //video.play();
-
-          //if you want to prepare more than one video/audios use this trick :
-          //  video2.play();
-          //  video2.pause();
-          // now video2 is buffering and you can play it programmability later
-
-          ONLYONETIME_EXECUTE = 0;
-        }
-
-      }, false);
-
-    }, false);
+    const slideshowComponentReff = this;
+    (<any>$("#adToggle")).delay(6000).queue(function(next){
+      slideshowComponentReff.showSlideShowAd();
+      next();
+    });
 
 
     if(this.eventData===null){
-      this.eventDefultValue();
+      this.eventDefaultValue();
     }else{
       this.pageData.event = this.eventData;
       this.pageData.event.eventPhoto = this.resourcePath+"/"+this.pageData.event.eventPhoto;
