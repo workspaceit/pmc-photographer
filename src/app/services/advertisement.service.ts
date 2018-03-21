@@ -21,17 +21,20 @@ export class AdvertisementService extends BaseService{
   }
 
 
-  public getByEventId(eventId,limit,offset): Observable<Advertisement[]>{
+  public getByEventId(eventId:number,limit:number,offset:number): Observable<Advertisement[]>{
 
     return this.http.get<Advertisement[]>(this.PUBLIC_API_URL+ this.uri+"/get/"+eventId+"/"+limit+"/"+offset);
   }
-  public getBySentSlideShowIdentifierAndType(eventId, adType, limit, offset): Observable<Advertisement[]>{
+  public getBySentSlideShowIdentifierAndType(identifier:string, adType:string, limit:number, offset:number): Observable<Advertisement[]>{
 
-    return this.http.get<Advertisement[]>(this.PUBLIC_API_URL+ this.uri+"/get/"+adType+"/"+eventId+"/"+limit+"/"+offset);
+    return this.http.get<Advertisement[]>(this.PUBLIC_API_URL+ this.uri+"/get/"+adType+"/"+identifier+"/"+limit+"/"+offset);
   }
   public getById(id): Observable<AdvertisementDetails>{
 
     return this.http.get<AdvertisementDetails>(this.PUBLIC_API_URL+ this.uri+"/get/"+id);
   }
+  public getBySentSlideShowByEventIdAndType(eventId:number, adType:string): Observable<AdvertisementDetails[]>{
 
+    return this.http.get<AdvertisementDetails[]>(this.PUBLIC_API_URL+ this.uri+"/get/"+adType+"/"+eventId);
+  }
 }

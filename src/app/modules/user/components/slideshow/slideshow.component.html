@@ -1,32 +1,43 @@
 <div class="swiper-body">
-  <div class="swiper-ad" id="adToggle" style="display:none;">
-    <div class="swiper-left swl-bg">
+  <div class="swiper-ad" id="adToggle" [ngStyle]="{'background-image': 'url(assets/images/bg2.jpg)',
+                                                  'display':'none',
+                                                  'background-size':'cover',
+                                                  'background-position':'center'}">
+    <div class="swiper-left">
       <div class="event-logo">
         <div class="center-flex">
-          <img src="assets/images/jd.png">
-          <h2 class="" >
-            8825 E Jefferson Ave,<br>
-            Detroit, MI 48214<br>
-            (313) 822-6607
+          <img  src="{{pageData.location.locationLogo}}"
+                style="width: 61%;height: 50%" >
+
+          <h2 >
+            {{pageData.location.name}}
+          </h2>
+          <h2 >
+            {{pageData.location.address}}
           </h2>
         </div>
         <!-- <div class="divider" style="margin-top:0px;padding:1px;"></div> -->
       </div>
 
       <div class="event-ad text-center ad-carousel">
-        <img class=""   src="assets/images/adjd.png" style="margin:0px auto;">
+        <img onerror="this.src='assets/images/event-default.png'" src="{{pageData.event.eventPhoto}}" style="margin:0px auto;" />
       </div>
     </div>
-    <div class="swiper-right swr-bg"  [ngStyle]="{'background-image': 'url(' + pageData.slideShowAd.currentBackground+ ')',
-                                                        'background-size':'cover','background-position':'center'}">
+    <div class="swiper-right" >
       <div class="center-swiper">
         <div id="carousel-example-generic-ad" class="carousel slide cstm-carousel-slide carousel-fade" data-interval="500" data-ride="carousel">
 
           <!-- Wrapper for slides -->
           <div class="carousel-inner" role="listbox">
             <div class="item active">
-              <video class="video" id="slidShowAdPmc" loop autoplay muted style="width: 100%;" >
-                <source src="{{pageData.slideShowAd.video.link}}" type="{{pageData.slideShowAd.video.mimeType}}" />
+             <!-- "-->
+              <input type="button" value="CLOSE" (click)="stopSlideshowAdRotation()">
+              <img *ngIf="pageData.slideShowAd.currentFileType=='IMAGE'" id="slidShowAdPmcBanner"   src="{{pageData.slideShowAd.currentBannerImg}}" >
+              <video   class="video" id="slidShowAdPmc" autoplay muted style="width: 100%;" >
+                <source
+                  *ngIf="pageData.slideShowAd.video.ready"
+                  src="{{pageData.slideShowAd.video.link}}" type="{{pageData.slideShowAd.video.mimeType}}"
+                />
               </video>
             </div>
           </div>
@@ -56,7 +67,7 @@
         <!-- <div class="divider" style="margin-top:0px;padding:1px;"></div> -->
       </div>
       <div class="event-ad wow bounceInUp" data-wow-delay="4s">
-        <div id="carousel-example-generic-ad" class="carousel slide  carousel-fade ad-carousel" data-interval="10000" data-ride="carousel">
+        <div  class="carousel slide  carousel-fade ad-carousel" data-interval="10000" data-ride="carousel">
 
           <!-- Wrapper for slides -->
           <div class="carousel-inner" role="listbox">
