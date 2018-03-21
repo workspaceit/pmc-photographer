@@ -16,7 +16,7 @@ import {EventImage} from '../../../../datamodel/event-image';
   providers: [AdvertisementService,EventImageService]
 })
 
-export class GalleryComponent implements AfterViewInit {
+export class GalleryComponent implements AfterViewInit,OnInit {
   currentImage:EventImage;
   nextBtn = true;
   prevBtn = true;
@@ -25,6 +25,10 @@ export class GalleryComponent implements AfterViewInit {
   forChildComponent={
     topBanner:[],
     bottomBanner:[]
+  };
+  preview={
+      galleryId:0,
+      popUpId:0
   };
   eventImagesFetchingComplete = false;
   eventImages: EventImage[] = [];
@@ -81,14 +85,29 @@ export class GalleryComponent implements AfterViewInit {
 
   constructor(private rout: ActivatedRoute,private advertisementService: AdvertisementService,private eventImageService: EventImageService) {
     this.currentAdvertisementDetails = new AdvertisementDetails();
-    this.identifier =this.rout.snapshot.paramMap.get('identifier');
+    this.identifier =  this.rout.snapshot.paramMap.get('identifier');
     this.popUpType = this.rout.snapshot.paramMap.get('popUpType');
+    const galleryIdStr = this.rout.snapshot.queryParamMap.get('galleryId');
+    const popUpIdStr = this.rout.snapshot.queryParamMap.get('popUpId');
     this.currentImage = new EventImage();
+
+
+
+    this.preview.galleryId = (galleryIdStr===null||galleryIdStr==='')?0:Number(galleryIdStr);
+    this.preview.popUpId = (popUpIdStr===null||popUpIdStr==='')?0:Number(popUpIdStr);
 
   }
 
 
-ngAfterViewInit() {
+  ngOnInit(): void {
+    if(this.identifier==null || this.identifier==''){
+
+      this.advertisementConfig.popUpAd.showClosePopUp = true;
+    }
+
+  }
+
+  ngAfterViewInit() {
 
  /*   (<any>$("#content-1")).mCustomScrollbar({
       autoHideScrollbar:true,
@@ -105,15 +124,25 @@ ngAfterViewInit() {
 
     (<any>$('.thumb')).height($('.thumb').width());
 
-    (<any>$('#popUpModal')).modal({  backdrop: 'static',
-      keyboard: false});
+    (<any>$('#popUpModal')).modal({
+      backdrop: 'static',
+      keyboard: false
+    });
 
+    if(this.identifier!==null && this.identifier!==''){
 
-    this.fetchGalleryAdvertisement();
-    this.fetchPopUpAdvertisement();
-    this.fetchEventImage();
-    this.rotateGalleryAdTopBanner(1).then();
-    this.rotateGalleryAdBottomBanner(1).then();
+      this.fetchGalleryAdvertisement();
+      this.fetchPopUpAdvertisement();
+      this.fetchEventImage();
+      this.rotateGalleryAdTopBanner(1).then();
+      this.rotateGalleryAdBottomBanner(1).then();
+    } else if(this.preview.popUpId>0){
+      console.log(this.preview.galleryId,this.preview.popUpId);
+      this.fetchPopUpAdvertisementById();
+    }else if(this.preview.galleryId>0){
+      this.fetchGalleryAdvertisementById();
+    }
+
 
   }
 
@@ -143,6 +172,17 @@ ngAfterViewInit() {
       this.eventImages = result;
       this.eventImagesFetchingComplete = true;
     });
+  }
+  public fetchGalleryAdvertisementById() {
+
+    this.advertisementService.getById(this.preview.galleryId).subscribe((data)=>{
+      debugger;
+      this.advertisementConfig.gallery.isEndOfAd = true;
+      this.advertisementConfig.gallery.selfLoop = true;
+      this.advertisements.push(data);
+      this.rotationGalleryAd().then(()=>console.log("ROTATION CALLED"));
+    });
+
   }
   public fetchGalleryAdvertisement() {
     if(this.advertisementConfig.gallery.isEndOfAd){
@@ -194,6 +234,16 @@ ngAfterViewInit() {
         console.log(data);
       });
     }
+  }
+  public fetchPopUpAdvertisementById() {
+
+    this.advertisementService.getById(this.preview.popUpId).subscribe((data)=>{
+      this.advertisementConfig.popUpAd.isEndOfAd = true;
+      this.popAds.push(data);
+      this.preparePopUpAd();
+      this.changePupUpAdd();
+
+    });
   }
   public fetchPopUpAdvertisement() {
     if(this.advertisementConfig.popUpAd.isEndOfAd){
@@ -375,7 +425,6 @@ ngAfterViewInit() {
 
         (<any>$("#pmcGalAdVideo")).load();
         (<any>$("#pmcGalAdVideo")).off("ended").on("ended",function(){
-          debugger;
           this.pause();
           this.currentTime = 0;
           galleryComponent.fetchPopUpAdvertisement();
