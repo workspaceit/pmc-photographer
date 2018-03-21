@@ -18,6 +18,7 @@ import {LoginService} from "../../services/login.service";
 import { DropzoneModule } from 'ngx-dropzone-wrapper';
 import {FormsModule,ReactiveFormsModule} from '@angular/forms';
 import {ShareButtonsModule} from 'ngx-sharebuttons';
+import { ReportedImageComponent } from './components/reported-image/reported-image.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -37,7 +38,8 @@ import {ShareButtonsModule} from 'ngx-sharebuttons';
     EventListItemComponent,
     LocationListComponent,
     EventDashboardComponent,
-    EventSidepanelComponent
+    EventSidepanelComponent,
+    ReportedImageComponent
   ],
   providers:[
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },LoginService

@@ -3,6 +3,7 @@ import {BaseService} from './base.service';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {EventImage} from '../datamodel/event-image';
+import {ReportedImage} from "../datamodel/reported-image";
 
 @Injectable()
 export class EventImageService extends  BaseService {
@@ -38,6 +39,18 @@ export class EventImageService extends  BaseService {
     const  data = new FormData();
     data.append('imageIds', eventIds);
     return this.http.post<EventImage[]>(this.API_URL + this.uri + '/delete', data);
+  }
+  public deleteReportedEventImages(eventIds) {
+    const  data = new FormData();
+    data.append('imageIds', eventIds);
+    data.append('type','delete')
+    return this.http.post<EventImage[]>(this.PUBLIC_API_URL + this.uri + '/report-image-action', data);
+  }
+  public ignoreReportedEventImages(eventIds) {
+    const  data = new FormData();
+    data.append('imageIds', eventIds);
+    data.append('type','ignore')
+    return this.http.post<EventImage[]>(this.PUBLIC_API_URL + this.uri + '/report-image-action', data);
   }
 
   public sendToSlideShow(eventIds) {
@@ -88,5 +101,7 @@ export class EventImageService extends  BaseService {
     data.append('eventImageId', imageId);
     return this.http.post<EventImage>(this.PUBLIC_API_URL + this.uri + '/report-image', data);
   }
-
+  public getReportedImage(eventId) {
+    return this.http.get<ReportedImage[]>(this.PUBLIC_API_URL + this.uri + '/reported-image/'+eventId);
+  }
 }

@@ -5,6 +5,7 @@ import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {EventListComponent} from './components/event-list/event-list.component';
 import {LocationListComponent} from './components/location-list/location-list.component';
 import {EventDashboardComponent} from './components/event-dashboard/event-dashboard.component';
+import {ReportedImageComponent} from "./components/reported-image/reported-image.component";
 
 const routes: Routes = [
   {
@@ -15,6 +16,7 @@ const routes: Routes = [
       // { path: 'locations/:locationId/venues', component: VenueListComponent },
       { path: 'locations/:locationId/events', component: EventListComponent },
       { path: 'locations/:locationId/events/:eventId', component: EventDashboardComponent },
+      { path: 'locations/:locationId/events/:eventId/reported-images', component: ReportedImageComponent },
     ]
   }
 ];

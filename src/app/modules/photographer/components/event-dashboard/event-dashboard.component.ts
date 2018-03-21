@@ -18,6 +18,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class EventDashboardComponent implements OnInit, AfterViewInit {
 
   eventId: number;
+  locationId: number;
   eventDetailsResponseData: EventDetailsResponseData = new EventDetailsResponseData();
   eventImages: EventImage[] = [];
   enableEdit = false;
@@ -56,6 +57,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
 
     this.route.params.subscribe(params => {
       this.eventId = params['eventId'];
+      this.locationId = params['locationId'];
       this.offset = 0;
       this.slideShowImagesOnly = false;
       this.eventImages = [];

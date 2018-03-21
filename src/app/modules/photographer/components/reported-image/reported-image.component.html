@@ -1,0 +1,171 @@
+<div class="container-fluid">
+  <div class="row clearfix">
+    <div class="content-wrapper">
+      <div class="col-md-12 icon_bg" style="text-align: right;">
+        <div class="container-fluid">
+          <div class="col-md-4">
+            <div class="desc-div row desc-non">
+              <div class="noteditable-desc ">
+                <div class="col-lg-12 text-left">
+                  <h3 class="event-name">{{eventDetailsResponseData.event.name}}
+                    <small>( {{eventDetailsResponseData.imageCount}} Images )</small></h3>
+                  <p class="e-date" style="color:#fff;">
+                    Date: {{eventDetailsResponseData.event.startsAt | date:'d MMM, yyyy'}}
+                  </p>
+                  <!--Set color and icon-->
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-8 mb-fix-text">
+            <!--<select class="watermark-select" [(ngModel)]="selectedWatermarkId" (change)="watermarkedChanged()">-->
+              <!--<option value="0">Choose Watermark</option>-->
+              <!--<option *ngFor="let watermark of eventDetailsResponseData.event.watermarks" [value]="watermark.id">-->
+                <!--{{ watermark.name }}-->
+              <!--</option>-->
+            <!--</select>-->
+            <!--<a (click)="removeWatermark()" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Remove Watermark">-->
+              <!--<img src="assets/images/remove watermark.png" class="icon_style">-->
+            <!--</a>-->
+            <a (click)="enableEditPhotos()" class="action-icon" data-toggle="tooltip" data-placement="bottom"
+               title="Edit Photos" id="editEvent">
+              <img src="assets/images/edit.png" class="icon_style">
+            </a>
+            <a (click)="deletePhotos()" class="action-icon" data-toggle="tooltip" data-placement="bottom"
+               title="Delete Photos" >
+              <img src="assets/images/garbage.png" class="icon_style">
+            </a>
+            <a (click)="ignore()" class="action-icon" data-toggle="tooltip" data-placement="bottom"
+               title="Ignore Photos">
+              <img src="assets/images/garbage.png" class="icon_style">
+            </a>
+            <!--<a (click)="sendViaSms()"  target="_blank" class="action-icon" data-toggle="tooltip" data-placement="bottom"-->
+               <!--title="Send Via SMS"><img src="assets/images/11.png" class="icon_style">-->
+            <!--</a>-->
+            <!--<a (click)="sendViaEmail()" target="_blank"class="action-icon" data-toggle="tooltip" data-placement="bottom"-->
+               <!--title="Send Via Email"><img src="assets/images/22.png" class="icon_style">-->
+            <!--</a>-->
+            <!--<a (click)="uploadModal()" class="action-icon" data-toggle="tooltip" data-placement="bottom"-->
+               <!--title="Upload"><img src="assets/images/33.png" class="icon_style">-->
+            <!--</a>-->
+            <!--<a href="form-user.html" target="_blank" class="action-icon" data-toggle="tooltip" data-placement="bottom"-->
+               <!--title="Send To Printer"><img src="assets/images/44.png" class="icon_style">-->
+            <!--</a>-->
+            <!--<a *ngIf="!slideShowImagesOnly" (click)="sendToSlideShow()" target="_blank" class="action-icon" data-toggle="tooltip"-->
+               <!--data-placement="bottom" title="Send To Slideshow"><img src="assets/images/55.png" class="icon_style">-->
+            <!--</a>-->
+            <!--<a *ngIf="slideShowImagesOnly" (click)="removeFromSlideshow()" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Remove fom slideshow">-->
+              <!--<img src="assets/images/slideshow_remove.png" class="icon_style">-->
+            <!--</a>-->
+            <!--<a href="swiper_01.html" target="_blank" class="action-icon-preview" style="color:#fff;text-transform:uppercase"-->
+               <!--data-toggle="tooltip" data-placement="bottom" title="Show Preview" target="_blank">Preview-->
+            <!--</a>-->
+          </div>
+        </div>
+      </div>
+      <div class="form-group panel-right-block content" id="content-2">
+        <div class="row clearfix">
+          <div class="col-md-12 col-sm-12 col-xs-12 clearfix">
+            <div class="switcher_wrap">
+
+              <!--<div class="box_switch">-->
+                <!--&lt;!&ndash; Rounded switch &ndash;&gt;-->
+                <!--<label class="switch">-->
+                  <!--<input type="checkbox" [(ngModel)]="slideShowImagesOnly" [checked]="slideShowImagesOnly"-->
+                         <!--(change)="slideShowToggle()">-->
+                  <!--<span class="slider round"></span>-->
+                <!--</label>-->
+              <!--</div>-->
+              <!--<div class="text_switch text-right">-->
+                <!--<label style="color: #cdcdcd;">Slideshow images only</label>-->
+              <!--</div>-->
+
+            </div>
+          </div>
+        </div>
+        <div class="event-gallery thumb-container">
+
+          <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 thumb" *ngFor="let reportedImage of reportedImages"
+               [ngStyle]="{'background-image': 'url(' + imgPath + reportedImage.eventImage.image + ')', 'background-repeat': 'no-repeat'}">
+            <div class="chk-div toggler" *ngIf="enableEdit">
+              <div class="checkboxFive">
+                <input type="checkbox" (change)="checkBoxUpdate(reportedImage,$event)" value="1" id="checkboxFiveInput{{reportedImage.eventImage.id}}"/>
+                <label for="checkboxFiveInput{{reportedImage.eventImage.id}}">
+                </label>
+              </div>
+            </div>
+            <a class="thumbnail" (click)="openImageModal(reportedImage)" href="#" data-image-id="" data-toggle="modal" data-title="This is my title"
+               data-caption="Some lovely red flowers" [attr.data-image]="imgPath + reportedImage.eventImage.image">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade modal-gallery" id="image-gallery" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="image-gallery-title"></h4>
+      </div>
+      <div class="modal-body clearfix">
+        <div class="social-foot ornobio">
+          <!--<share-button button="facebook"  [url]="imgPath + currentImage.eventImage.image" [title]="imgPath">-->
+            <!--<img src="assets/images/social/facebook.png" width="30">-->
+          <!--</share-button>-->
+          <!--<share-button button="twitter" [url]="imgPath + currentImage.eventImage.image">-->
+            <!--<img src="assets/images/social/twitter.png" width="30">-->
+          <!--</share-button>-->
+          <!--<share-button button="google" [url]="imgPath + currentImage.eventImage.image">-->
+            <!--<img src="assets/images/social/gplus.png" width="30">-->
+          <!--</share-button>-->
+          <!--<share-button button="pinterest" [url]="imgPath + currentImage.image" [description]="'PMC'">-->
+          <!--<img src="assets/images/social/gplus.png" width="30">-->
+          <!--</share-button>-->
+          <!--<a href="#" style="float:right;background:transparent;color:red !important;"><i class="fa fa-2x fa-warning"></i></a>-->
+        </div>
+        <div class="col-md-12" style="padding:0px;">
+          <img id="image-gallery-image" class="img-responsive" *ngIf="currentImage.eventImage" src="{{imgPath}}{{currentImage.eventImage.image}}">
+        </div>
+        <div class="desc-div-foot">
+          <h5>This is the title pic</h5>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum dolor urna, consequat fermentum orci convallis eget. Aenean ac nulla at est porta malesuada. Aliquam at lobortis enim, ornare laoreet sem. Aliquam blandit lacus augue, quis feugiat sapien imperdiet eget.
+          </p>
+          <span class="image-number">Image 4578A</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="col-md-2 text-left" >
+          <button type="button" *ngIf="prevBtn" class="btn btn-primary btn-action" (click)="showPreviousImage()" id="show-previous-image"><i class="fa fa-chevron-left"></i></button>
+        </div>
+
+        <!-- <div class="col-md-8 text-center">
+          <div class="action-container">
+            <a href="#"><img src="./images/garbage.png" /></a>
+            <a href="#"><img src="./images/11.png" /></a>
+            <a href="#"><img src="./images/22.png" /></a>
+            <a href="#"><img src="./images/33.png" /></a>
+            <a href="#"><img src="./images/44.png" /></a>
+            <a href="#"><img src="./images/55.png" /></a>
+          </div>
+        </div> -->
+        <div class="col-md-8 text-center">
+
+        </div>
+
+        <div class="col-md-2" >
+          <button type="button" *ngIf="nextBtn" (click)="showNextImage()" id="show-next-image" class="btn btn-default btn-action"><i class="fa fa-chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
