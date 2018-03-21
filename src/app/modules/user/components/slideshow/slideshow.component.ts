@@ -22,9 +22,10 @@ import {EventImageService} from '../../../../services/event-image.service';
 export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
   locationData:Location;
   eventData:Event;
+  slideShowAdRotation = true;
   slideShowAdListIndex:number;
   slideShowAdData: AdvertisementDetails;
-  slideShowAdList: AdvertisementDetails[];
+  slideShowAdList: AdvertisementDetails[]=[];
   pageConfig = {
     eventAndLocationFetched : false
   };
@@ -40,7 +41,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     slideShowAd:{
       video:{
         link:"",
-         mimeType:"",
+        mimeType:"",
         ready:false,
       },
       bannerImages:[],
@@ -55,9 +56,8 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
               private advertisementService:AdvertisementService,
               private eventImagesService: EventImageService) {
 
-
     const locIdStr = this.activatedRoute.snapshot.queryParamMap.get("locId");
-    const eventIdStr = this.activatedRoute.snapshot.queryParamMap.get("evtId");
+    const eventIdStr = this.activatedRoute.snapshot.queryParamMap.get("eventId");
     const slideShowAdIdStr = this.activatedRoute.snapshot.queryParamMap.get("pmcadv");
 
     this.locationId =(locIdStr===null || locIdStr==='')?0:Number( locIdStr);
@@ -70,7 +70,23 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     this.slideShowAdListIndex = 0;
 
     console.log(locIdStr,eventIdStr);
-    this.getEventImages();
+
+    if(this.eventId>0){
+      /**
+       * Fetch and eventImage
+       * and on subscribe bring event
+       * and init js function
+       * */
+      this.getEventImages();
+      this.fetchSlideShowAdByEventId();
+    }else if(this.slideShowAdId>0){
+      this.locationDefaultValue();
+      this.eventDefaultValue();
+      this.fetchSlideShowAdById();
+    }else if(this.locationId>0){
+      this.getLocationAndInitJs();
+      this.eventDefaultValue();
+    }
   }
   private locationDefaultValue(){
 
@@ -92,10 +108,17 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
 
   }
   ngAfterViewInit() {
-    this.getLocationAndEvent();
-    this.fetchSlideShowAd();
+
   }
-  public fetchSlideShowAd(){
+  public fetchSlideShowAdById(){
+    this.advertisementService.getById(this.slideShowAdId).subscribe(result=>{
+      console.log("fetchSlideShowAdById ",result);
+      this.slideShowAdList.push(result);
+    },error => {},()=>{
+      this.initJsFunction();
+    });
+  }
+  public fetchSlideShowAdByEventId(){
     this.advertisementService.getBySentSlideShowByEventIdAndType(this.eventId,"slideshow")
       .subscribe(result=>{
         this.slideShowAdList = result;
@@ -114,6 +137,16 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       slideshowComponent.rotateVideo().then();
     });
   }
+  public showSlideShow(){
+    const slideshowComponent = this;
+    (<any>$("#adToggle")).fadeOut(500,function(){
+      (<any>$("#changeBg")).fadeIn(500);
+      new WOW({
+        live: false
+      }).init();
+    });
+  }
+
   private getEventImages(){
     this.eventImagesService.getEventImagesByEventIdWhereIsSentSlideShowTrue(this.eventId).subscribe((result)=>{
       this.pageData.eventImage = result;
@@ -122,6 +155,13 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     });
   }
   private async rotateVideo(){
+    if(!this.slideShowAdRotation){
+      return;
+    }
+    this.pageData.slideShowAd.video.link = "";
+    this.pageData.slideShowAd.video.mimeType = "";
+    this.pageData.slideShowAd.video.ready = false;
+
     const currentIndex = this.getCurrentSlideShowIndex();
     const slideShowAdData = new AdvertisementDetails(this.slideShowAdList[currentIndex]);
     console.log("currentIndex ",currentIndex,slideShowAdData);
@@ -148,9 +188,8 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
        fileType = tbSecRes[0].fileType;
        mimeType = tbSecRes[0].mimeType;
     }
-
+    //debugger;
     if(fileType === "VIDEO"){
-      this.pageData.slideShowAd.video.ready = false;
       this.pageData.slideShowAd.video.link = this.resourcePath+fileName;
       this.pageData.slideShowAd.video.mimeType = mimeType;
 
@@ -185,6 +224,10 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     console.log("currentIndex ",currentIndex,slideShowAdData);
   }
   private async rotateSlideShowImageBanner(){
+    if(!this.slideShowAdRotation){
+      return;
+    }
+
     const currentIndex = this.getCurrentSlideShowIndex();
     console.log("currentIndex Of Banner ",currentIndex);
     const slideShowAdData = this.slideShowAdList[currentIndex];
@@ -238,27 +281,20 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     }
     return this.slideShowAdListIndex++;
   }
-  public getLocationAndEvent(){
-    if(this.locationId >0){
-      this.locationService.getById(this.locationId).subscribe(result=>{
-        if(result==null)return;
-        this.locationData = result;
-      },error=>{
-        console.log(error);
-      },()=>{
-        if(this.eventId >0) {
-          console.log("Complete loc");
-         // this.getEventAndIntiJs();
-        }else{
-          this.initJsFunction();
-        }
+  public stopSlideshowAdRotation(){
+    this.slideShowAdRotation = false;
 
-      });
-    } else  if(this.eventId >0) {
-     // this.getEventAndIntiJs();
-    }else {
-     // this.initJsFunction();
-    }
+    this.showSlideShow();
+  }
+  public getLocationAndInitJs(){
+    this.locationService.getById(this.locationId).subscribe(result=>{
+      if(result==null)return;
+      this.locationData = result;
+    },error=>{
+      console.log(error);
+    },()=>{
+      this.initJsFunction();
+    });
   }
 
   public getEventAndIntiJs(){
@@ -361,7 +397,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     });
 
     const slideshowComponentReff = this;
-    (<any>$("#adToggle")).delay(6000).queue(function(next){
+    (<any>$("#adToggle")).delay(10000).queue(function(next){
       slideshowComponentReff.showSlideShowAd();
       next();
     });

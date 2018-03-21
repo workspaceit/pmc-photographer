@@ -31,7 +31,7 @@
           <div class="carousel-inner" role="listbox">
             <div class="item active">
              <!-- "-->
-              <input type="button" value="CLOSE">
+              <input type="button" value="CLOSE" (click)="stopSlideshowAdRotation()">
               <img *ngIf="pageData.slideShowAd.currentFileType=='IMAGE'" id="slidShowAdPmcBanner"   src="{{pageData.slideShowAd.currentBannerImg}}" >
               <video   class="video" id="slidShowAdPmc" autoplay muted style="width: 100%;" >
                 <source
