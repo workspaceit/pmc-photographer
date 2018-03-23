@@ -1,17 +1,18 @@
 import {Injectable} from '@angular/core';
-import {CanActivate} from '@angular/router';
-import {PhotographerLoginService} from './services/photographer-login.service';
+import {CanActivate, Router} from '@angular/router';
+import {LoginService} from "./services/login.service";
+import {PhotographerLoginService} from "./services/photographer-login.service";
 
 @Injectable()
 export class OnlyLoggedInUsersGuard implements CanActivate {
 
-  constructor(private photographerLoginService: PhotographerLoginService) {}
+  constructor(private photographerLoginService: PhotographerLoginService, private router: Router) {}
 
   canActivate() {
     if (this.photographerLoginService.isLoggedIn()) {
       return true;
     } else {
-      window.alert('no permission');
+      this.router.navigate(['/login']);
       return false;
     }
   }

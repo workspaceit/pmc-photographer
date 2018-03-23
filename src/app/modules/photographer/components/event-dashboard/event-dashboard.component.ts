@@ -5,15 +5,15 @@ import {environment} from '../../../../../environments/environment';
 import {EventImage} from '../../../../datamodel/event-image';
 import {EventDetailsResponseData} from '../../../../response-data-model/event-details-response-data';
 import {EventService} from '../../../../services/event.service';
-import {LoginService} from '../../../../services/login.service';
 import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {PhotographerLoginService} from "../../../../services/photographer-login.service";
 
 @Component({
   selector: 'app-event-dashboard',
   templateUrl: './event-dashboard.component.html',
   styleUrls: ['./event-dashboard.component.css'],
-  providers: [EventImageService, EventService, LoginService]
+  providers: [EventImageService, EventService, PhotographerLoginService]
 })
 export class EventDashboardComponent implements OnInit, AfterViewInit {
 
@@ -28,6 +28,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   loadMore = true;
   imgPath = environment.eventPhotoUrl;
   API_URL = environment.apiUrl;
+  BASE_URL = environment.apiBaseUrl;
   public config: DropzoneConfigInterface;
   checkedItems:number[]=[];
   selectedWatermarkId = 0;
@@ -39,7 +40,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   slideShowImagesOnly = false;
 
   constructor(private route: ActivatedRoute, private router: Router, private eventImageService: EventImageService,
-              private eventService: EventService,private  loginService: LoginService) { }
+              private eventService: EventService,private  photographerLoginService: PhotographerLoginService) { }
 
   ngOnInit() {
     console.log(this.currentImage);
@@ -72,7 +73,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
         autoReset:1,
         errorReset:1,
         headers:{
-          'Authorization': 'Bearer '+this.loginService.getLocalOauthCredential().access_token
+          'Authorization': 'Bearer '+this.photographerLoginService.getLocalOauthCredential().access_token
         }
       };
     });

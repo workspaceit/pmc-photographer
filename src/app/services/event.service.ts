@@ -13,7 +13,7 @@ import {Event} from '../datamodel/event';
 export class EventService extends BaseService {
   private uri = '/events';
 
-  constructor(private http: HttpClient, private loginService: LoginService) {
+  constructor(private http: HttpClient) {
       super();
   }
 
@@ -26,18 +26,10 @@ export class EventService extends BaseService {
   public getAll(locationId: number, filterDate: string, limit: number , offset: number): Observable<EventListResponseData> {
     // let data = {'locationId': locationId};
     const data = new FormData();
-    console.log(this.loginService.getLocalOauthCredential().access_token);
-    // const httpOptions = {
-    //   headers: new HttpHeaders({
-    //     'Authorization': 'Bearer ' + this.loginService.getLocalOauthCredential().access_token
-    //   })
-    // };
     data.append('locationId', locationId.toString());
     if (filterDate) {
       data.append('filterDate', filterDate);
     }
-    // return this.http.post<EventListResponseData>('http://localhost:8080/auth/api' + this.uri + '/' + limit + '/' + offset, data,
-    //   httpOptions);
     return this.http.post<EventListResponseData>(this.API_URL + this.uri + '/' + limit + '/' + offset, data);
   }
 }

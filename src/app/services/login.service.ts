@@ -6,17 +6,15 @@ import {HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {OauthCredential} from '../datamodel/oauth.creadential';
 import {catchError, tap} from 'rxjs/operators';
-import {LocationListResponseData} from '../response-data-model/location-list-response-data';
+import {PhotographerLoginService} from "./photographer-login.service";
 
 @Injectable()
-export class LoginService extends BaseService{
+export class LoginService extends BaseService {
 
-  curentUserKey= 'currentUser';
-  oauthCredentialKey= 'oauthCredential';
-  clientId = 'pmc-app-client';
-  clientSecret = 'f6c3d96bc05036e738f0899ba149f447924b3a09';
+  private clientId = 'pmc-app-client';
+  private clientSecret = 'f6c3d96bc05036e738f0899ba149f447924b3a09';
 
-  constructor(private http: HttpClient ) {
+  constructor(private http: HttpClient, private photographerLoginService: PhotographerLoginService) {
     super();
   }
 
@@ -30,38 +28,28 @@ export class LoginService extends BaseService{
 
 
 
-
-
-
-    return this.http.post<OauthCredential>(this.API_BASEURL + '/oauth/token', null, {params:params}).pipe(
-                                                        tap(data => {
-
-                                                          localStorage.setItem(this.oauthCredentialKey,JSON.stringify(data));
-                                                          console.log(localStorage.getItem(this.oauthCredentialKey));
-                                                      }));
+    return this.http.post<OauthCredential>(this.API_BASEURL + '/oauth/token', null, {params:params})
+      .pipe(tap(data => {
+        this.photographerLoginService.setOauthCredential(data);
+      }));
   }
 
   public getUserDetails(accessToken: string): Observable<Photographer> {
-
     let params = new HttpParams().set('access_token',accessToken);
-
-      return this.http.get<Photographer>(this.API_BASEURL + '/auth/api/user-service/get',  {params:params});
+    return this.http.get<Photographer>(this.API_BASEURL + '/auth/api/user-service/get',  {params:params});
   }
+
   public getUserDetailsAndStoreInLocal(accessToken: string): Observable<Photographer> {
-
     let params = new HttpParams().set('access_token',accessToken);
-
     return this.http.get<Photographer>(this.API_BASEURL + '/auth/api/user-service/get',  {params:params}).pipe(
       tap(photographer=>{
-          localStorage.setItem(this.curentUserKey,JSON.stringify(photographer));
-          console.log(localStorage.getItem(this.oauthCredentialKey));
+          this.photographerLoginService.setCurrentUser(photographer);
         })
     );
   }
-  public getLocalUserDetails(): Photographer{
-    return JSON.parse(localStorage.getItem(this.curentUserKey));
-  }
-  public getLocalOauthCredential(): OauthCredential{
-    return JSON.parse(localStorage.getItem(this.oauthCredentialKey));
-  }
+
+
+
+
+
 }

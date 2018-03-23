@@ -104,4 +104,5 @@ export class EventImageService extends  BaseService {
   public getReportedImage(eventId) {
     return this.http.get<ReportedImage[]>(this.PUBLIC_API_URL + this.uri + '/reported-image/'+eventId);
   }
+
 }

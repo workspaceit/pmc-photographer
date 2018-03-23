@@ -13,8 +13,6 @@
                   <p class="e-date" style="color:#fff;">
                     Date: {{eventDetailsResponseData.event.startsAt | date:'d MMM, yyyy'}}
                   </p>
-                  <!--Set color and icon-->
-
                 </div>
               </div>
             </div>
@@ -52,11 +50,17 @@
             <a *ngIf="!slideShowImagesOnly" (click)="sendToSlideShow()" target="_blank" class="action-icon" data-toggle="tooltip"
                data-placement="bottom" title="Send To Slideshow"><img src="assets/images/55.png" class="icon_style">
             </a>
-            <a *ngIf="slideShowImagesOnly" (click)="removeFromSlideshow()" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Remove fom slideshow">
+            <a *ngIf="slideShowImagesOnly" (click)="removeFromSlideshow()" class="action-icon" data-toggle="tooltip"
+               data-placement="bottom" title="Remove fom slideshow">
               <img src="assets/images/slideshow_remove.png" class="icon_style">
             </a>
-            <a href="swiper_01.html" target="_blank" class="action-icon-preview" style="color:#fff;text-transform:uppercase"
+            <a routerLink="/user-panel/slideshow" [queryParams]="{eventId: eventId}" target="_blank"
+               class="action-icon-preview" style="color:#fff;text-transform:uppercase"
                data-toggle="tooltip" data-placement="bottom" title="Show Preview" target="_blank">Preview
+            </a>
+            <a routerLink="/photographer-panel/locations/{{locationId}}/events/{{eventId}}/reported-images"
+               class="action-icon-preview" style="color:#fff;text-transform:uppercase" data-toggle="tooltip" data-placement="bottom"
+               title="Show Reported Images">Reported Images
             </a>
           </div>
         </div>
@@ -77,9 +81,6 @@
               <div class="text_switch text-right">
                 <label style="color: #cdcdcd;">Slideshow images only</label>
               </div>
-            </div>
-            <div class="pull-right">
-              <a routerLink="/photographer-panel/locations/{{locationId}}/events/{{eventId}}/reported-images">Reported Image</a>
             </div>
           </div>
         </div>
@@ -166,21 +167,8 @@
         <div class="col-md-2 text-left" >
           <button type="button" *ngIf="prevBtn" class="btn btn-primary btn-action" (click)="showPreviousImage()" id="show-previous-image"><i class="fa fa-chevron-left"></i></button>
         </div>
-
-        <!-- <div class="col-md-8 text-center">
-          <div class="action-container">
-            <a href="#"><img src="./images/garbage.png" /></a>
-            <a href="#"><img src="./images/11.png" /></a>
-            <a href="#"><img src="./images/22.png" /></a>
-            <a href="#"><img src="./images/33.png" /></a>
-            <a href="#"><img src="./images/44.png" /></a>
-            <a href="#"><img src="./images/55.png" /></a>
-          </div>
-        </div> -->
         <div class="col-md-8 text-center">
-
         </div>
-
         <div class="col-md-2" >
           <button type="button" *ngIf="nextBtn" (click)="showNextImage()" id="show-next-image" class="btn btn-default btn-action"><i class="fa fa-chevron-right"></i></button>
         </div>

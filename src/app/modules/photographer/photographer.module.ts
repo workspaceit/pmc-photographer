@@ -14,11 +14,12 @@ import { EventDashboardComponent } from './components/event-dashboard/event-dash
 import { EventSidepanelComponent } from './components/event-sidepanel/event-sidepanel.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {AuthInterceptor} from '../../services/interceptor/authinterceptor';
-import {LoginService} from "../../services/login.service";
 import { DropzoneModule } from 'ngx-dropzone-wrapper';
 import {FormsModule,ReactiveFormsModule} from '@angular/forms';
 import {ShareButtonsModule} from 'ngx-sharebuttons';
 import { ReportedImageComponent } from './components/reported-image/reported-image.component';
+import {PhotographerLoginService} from "../../services/photographer-login.service";
+import {LoginService} from "../../services/login.service";
 @NgModule({
   imports: [
     CommonModule,
@@ -42,7 +43,7 @@ import { ReportedImageComponent } from './components/reported-image/reported-ima
     ReportedImageComponent
   ],
   providers:[
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },LoginService
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, PhotographerLoginService, LoginService
   ]
 })
 export class PhotographerModule { }

@@ -20,6 +20,7 @@ import { ResetPasswordComponentComponent } from './components/reset-password-com
 import {ResetpasswordService} from "./services/resetpassword.service";
 import { PasswordTokenVerifyComponent } from './components/password-token-verify/password-token-verify.component';
 import { UpdatePasswordComponent } from './components/update-password/update-password.component';
+import {LoginService} from "./services/login.service";
 
 @NgModule({
   declarations: [
@@ -42,7 +43,7 @@ import { UpdatePasswordComponent } from './components/update-password/update-pas
     LoadingBarModule.forRoot(),
     ShareButtonsModule.forRoot(),
   ],
-  providers: [PhotographerLoginService, OnlyLoggedInUsersGuard,ResetpasswordService,UpdatePasswordGuard],
+  providers: [LoginService, PhotographerLoginService, OnlyLoggedInUsersGuard,ResetpasswordService,UpdatePasswordGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

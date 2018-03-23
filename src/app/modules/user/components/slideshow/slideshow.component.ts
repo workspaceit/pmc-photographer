@@ -319,7 +319,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
 
     console.log("Init JS Function");
     (<any>$('.count')).each(function () {
-      $(this).prop('Counter',0).animate({
+      (<any>$(this)).prop('Counter',0).animate({
         Counter: $(this).text()
       }, {
         duration: 4000,
@@ -346,7 +346,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     });
 
     (<any>$(".img-check")).click(function(){
-      $(this).toggleClass("check");
+      (<any>$(this)).toggleClass("check");
     });
 
     (<any>$('#datepicker')).datepicker({
@@ -409,9 +409,9 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       this.pageData.event = this.eventData;
       this.pageData.event.eventPhoto = this.resourcePath+"/"+this.pageData.event.eventPhoto;
     }
-    if(this.locationData===null){
+    if(this.locationData===null) {
       this.locationDefaultValue();
-    }else{
+    } else{
       this.pageData.location = this.locationData;
       this.pageData.location.locationLogo = this.resourcePath+this.pageData.location.locationLogo;
     }

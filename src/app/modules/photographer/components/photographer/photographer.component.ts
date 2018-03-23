@@ -10,6 +10,7 @@ export class PhotographerComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+
   }
 
 }

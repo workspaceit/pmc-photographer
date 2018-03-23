@@ -3,12 +3,13 @@ import {LoginService} from '../../services/login.service';
 import {OauthCredential} from '../../datamodel/oauth.creadential';
 import {Photographer} from '../../datamodel/photographer';
 import {Router} from '@angular/router';
+import {PhotographerLoginService} from "../../services/photographer-login.service";
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  providers: [LoginService]
+  providers: [LoginService, PhotographerLoginService]
 })
 export class LoginComponent implements OnInit {
 
@@ -22,8 +23,6 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
 
   }
-
-
 
   private authenticate(emailOrUsername: string, password: string, loginCallBack: LoginCallBack ){
 
@@ -45,8 +44,6 @@ export class LoginComponent implements OnInit {
     this.authenticate(emailOrUsername, password, ( loginSuccess: boolean,msg: string): void => {
       this.loginMsg = msg;
       if(loginSuccess){
-        console.log(this.loginService.getLocalUserDetails());
-        console.log(this.loginService.getLocalOauthCredential());
         this.router.navigateByUrl('/photographer-panel/locations');
       }
 
