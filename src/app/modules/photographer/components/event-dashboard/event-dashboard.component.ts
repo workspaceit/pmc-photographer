@@ -125,8 +125,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   getImages() {
     if (this.slideShowImagesOnly) {
       this.getEventImagesFromSlideshow();
-    }
-    else {
+    } else {
       this.getEventImages();
     }
   }
@@ -319,6 +318,40 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     if(index==totalImage-1) {
       this.nextBtn = false;
     }
+  }
+  print() {
+    if(this.checkedItems.length==0) {
+      (<any>$).growl.warning({ message: 'No items selected' });
+    } else {
+      let images: EventImage[] = [];
+      for (const item of this.checkedItems) {
+        images = images.concat(this.eventImages.filter(data => data.id === item));
+      }
+      let html:string = '';
+      for (const image of images) {
+        html += "<img src='" + this.imgPath + image.image + "'/>";
+      }
+      let printContents, popupWin;
+      printContents = document.getElementById('print-section').innerHTML;
+      popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
+      popupWin.document.open();
+      popupWin.document.write(`
+        <html>
+          <head>
+            <title>Print tab</title>
+            <style>
+            //........Customized style.......
+            </style>
+          </head>
+      <body onload="window.print();window.close()">${printContents + html}</body>
+        </html>`
+      );
+      popupWin.document.close();
+    }
+    for(const item of this.checkedItems) {
+      $('#checkboxFiveInput'+item).prop('checked',false);
+    }
+    this.resetSelected();
   }
   initialize() {
     const  thisComponent = this;
