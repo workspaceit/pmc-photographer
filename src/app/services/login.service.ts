@@ -28,7 +28,7 @@ export class LoginService extends BaseService {
 
 
 
-    return this.http.post<OauthCredential>(this.API_BASEURL + '/oauth/token', null, {params:params})
+    return this.http.post<OauthCredential>(this.API_BASEURL + '/oauth/token', params)
       .pipe(tap(data => {
         this.photographerLoginService.setOauthCredential(data);
       }));
