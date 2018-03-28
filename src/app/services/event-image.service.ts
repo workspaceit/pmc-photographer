@@ -85,9 +85,9 @@ export class EventImageService extends  BaseService {
   }
 
   public addWatermark(imageIds, watermarkId: number) {
-    const  data = new FormData();
-    data.append('imageIds', imageIds);
-    data.append('watermarkId', String(watermarkId));
+    let data = new HttpParams();
+    data = data.set('imageIds', imageIds);
+    data = data.set('watermarkId', String(watermarkId));
     return this.http.post<EventImage[]>(this.API_URL + this.uri + '/add-watermark', data);
   }
 
