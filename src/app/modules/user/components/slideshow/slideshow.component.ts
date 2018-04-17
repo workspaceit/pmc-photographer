@@ -11,6 +11,9 @@ import {LoginService} from '../../../../services/login.service';
 import {AdvertisementService} from '../../../../services/advertisement.service';
 import {AdvertisementDetails} from '../../../../datamodel/advertisement.details';
 import {EventImageService} from '../../../../services/event-image.service';
+import {City} from '../../../../datamodel/city';
+import {State} from '../../../../datamodel/state';
+import {LocationImage} from '../../../../datamodel/locationImage';
 
 
 @Component({
@@ -38,13 +41,13 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     location:new Location(),
     event:new Event(),
     eventImage:[],
+    currentBgImage:"",
     slideShowAd:{
       video:{
         link:"",
         mimeType:"",
         ready:false,
       },
-      bannerImages:[],
       currentBannerImg:"",
       currentBackground: "",
       currentFileType:""
@@ -69,6 +72,11 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     this.eventData = null;
     this.slideShowAdListIndex = 0;
 
+    this.pageData.location.city = new City();
+    this.pageData.location.state = new State();
+    this.pageData.location.backgroundImages = [];
+    this.pageData.currentBgImage = 'url(assets/images/bg2.jpg)';
+
     console.log(locIdStr,eventIdStr);
 
     if(this.eventId>0){
@@ -92,8 +100,11 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
 
     this.pageData.location.locationLogo = 'assets/images/pmc-stock/vendor.png';
     this.pageData.location.name='Location Sample';
-    this.pageData.location.address ='8825 E JEFFERSON AVE,DETROIT, MI 48214 (313) 822-660';
-
+    this.pageData.location.address ='8825 E JEFFERSON AVE,DETROIT, MI 48214 ';
+    this.pageData.location.city.name = "DETROIT";
+    this.pageData.location.state.name = "MI";
+    this.pageData.location.zip = "48214";
+    this.pageData.location.phone = "(313) 822-660";
   }
   private eventDefaultValue(){
     this.pageData.event.eventPhoto = 'assets/images/pmc-stock/e1.png';
@@ -222,6 +233,15 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       this.rotateSlideShowImageBanner().then();
     }
     console.log("currentIndex ",currentIndex,slideShowAdData);
+  }
+  private async rotateBackground(){
+    const locBgImgs = this.pageData.location.backgroundImages;
+    for(const i in locBgImgs){
+      this.pageData.currentBgImage = this.pageData.currentBgImage = 'url('+ this.resourcePath+locBgImgs[i].image+')';
+      console.log(this.pageData.currentBgImage);
+      await delay(5000);
+    }
+    this.rotateBackground().then();
   }
   private async rotateSlideShowImageBanner(){
     if(!this.slideShowAdRotation){
@@ -412,8 +432,11 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     if(this.locationData===null) {
       this.locationDefaultValue();
     } else{
+      console.log("this.locationData",this.locationData);
       this.pageData.location = this.locationData;
+      console.log(" this.pageData.location", this.pageData.location);
       this.pageData.location.locationLogo = this.resourcePath+this.pageData.location.locationLogo;
+      this.rotateBackground().then();
     }
 
   }

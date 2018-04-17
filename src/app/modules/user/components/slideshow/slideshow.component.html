@@ -1,5 +1,5 @@
 <div class="swiper-body">
-  <div class="swiper-ad" id="adToggle" [ngStyle]="{'background-image': 'url(assets/images/bg2.jpg)',
+  <div class="swiper-ad" id="adToggle" [ngStyle]="{'background-image': pageData.currentBgImage,
                                                   'display':'none',
                                                   'background-size':'cover',
                                                   'background-position':'center'}">
@@ -13,14 +13,17 @@
             {{pageData.location.name}}
           </h2>
           <h2 >
-            {{pageData.location.address}}
+            {{pageData.location.city.name}},{{pageData.location.state.name}},{{pageData.location.zip}}<br>
+            {{pageData.location.phone}}
           </h2>
         </div>
         <!-- <div class="divider" style="margin-top:0px;padding:1px;"></div> -->
       </div>
 
       <div class="event-ad text-center ad-carousel">
+
         <img onerror="this.src='assets/images/event-default.png'" src="{{pageData.event.eventPhoto}}" style="margin:0px auto;" />
+
       </div>
     </div>
     <div class="swiper-right" >
@@ -47,7 +50,9 @@
 
     </div>
   </div>
-  <div class="swiper-wrapper  change-bg" id="changeBg" [ngStyle]="{'background-image': 'url(assets/images/bg2.jpg)'}"  >
+  <div class="swiper-wrapper  change-bg" id="changeBg" [ngStyle]="{'background-image': pageData.currentBgImage,
+                                                                   'background-size':'cover',
+                                                                    'background-position':'center'}"  >
     <div class="swiper-left wow slideInDown" >
       <div class="event-logo">
         <div class="center-flex">
@@ -61,7 +66,8 @@
           </h2>
 
           <h2 class="wow bounceInLeft"   data-wow-delay="2s">
-            {{pageData.location.address}}
+            {{pageData.location.city.name}},{{pageData.location.state.name}},{{pageData.location.zip}}<br>
+            {{pageData.location.phone}}
           </h2>
         </div>
         <!-- <div class="divider" style="margin-top:0px;padding:1px;"></div> -->
