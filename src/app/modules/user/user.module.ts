@@ -8,12 +8,14 @@ import { TopDockComponent } from './components/top-dock/top-dock.component';
 import { SlideshowComponent } from './components/slideshow/slideshow.component';
 import { AdbannerComponent } from './components/adbanner/adbanner.component';
 import {ShareButtonsModule} from 'ngx-sharebuttons';
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   imports: [
     CommonModule,
     UserRoutingModule,
-    ShareButtonsModule.forRoot()
+    HttpClientModule,
+    ShareButtonsModule
   ],
   declarations: [GalleryComponent, UserComponent, TopDockComponent, SlideshowComponent, AdbannerComponent]
 })

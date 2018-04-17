@@ -20,6 +20,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
   currentImage:EventImage;
   nextBtn = true;
   prevBtn = true;
+  shareSuffix = '/share';
 
 
   forChildComponent={
@@ -67,6 +68,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
   popUpType='';
   resourcePath = environment.pictureUrl;
   eventImagePath = environment.eventPhotoUrl;
+  eventImageSharingPath = environment.eventPhotoSharingUrl;
   advertisementOnPage = {
     popUpAd: {
       video:{ready:false,path:"",mimeType:""},
@@ -108,20 +110,6 @@ export class GalleryComponent implements AfterViewInit,OnInit {
   }
 
   ngAfterViewInit() {
-
- /*   (<any>$("#content-1")).mCustomScrollbar({
-      autoHideScrollbar:true,
-      mouseWheel:{ scrollAmount: 150 },
-      theme:"rounded"
-    });
-
-    (<any>$("#content-2")).mCustomScrollbar({
-      autoHideScrollbar:true,
-      mouseWheel:{ scrollAmount: 150 },
-      theme:"rounded"
-    });*/
-
-
     (<any>$('.thumb')).height($('.thumb').width());
 
     (<any>$('#popUpModal')).modal({
@@ -139,7 +127,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
     } else if(this.preview.popUpId>0){
       console.log(this.preview.galleryId,this.preview.popUpId);
       this.fetchPopUpAdvertisementById();
-    }else if(this.preview.galleryId>0){
+    } else if(this.preview.galleryId>0) {
       this.fetchGalleryAdvertisementById();
     }
 
@@ -204,6 +192,8 @@ export class GalleryComponent implements AfterViewInit,OnInit {
                                                         this.advertisements = this.advertisements.concat(data);
                                                       }
                                                       this.rotationGalleryAd().then(()=>console.log("ROTATION CALLED"));
+                                                      console.log("ad length");
+                                                      console.log(this.advertisements.length);
                                                   });
 
   }
@@ -527,14 +517,14 @@ export class GalleryComponent implements AfterViewInit,OnInit {
            * rotate to next advertiser's Gallery Add
            * */
           this.rotateGalleryAdTopBanner(1).then();
-          console.log("End of function from IF");
+          // console.log("End of function from IF");
           return;
         }
       }
     }catch(e) {
       console.log(e);
     }
-    console.log("End of function");
+    // console.log("End of function");
   }
   /**
    * Old code

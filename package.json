@@ -24,6 +24,8 @@
     "@ngx-loading-bar/core": "^1.1.1",
     "@ngx-loading-bar/http-client": "^1.1.1",
     "@ngx-loading-bar/router": "^1.1.1",
+    "@ngx-share/button": "^5.3.1",
+    "@ngx-share/core": "^5.3.1",
     "core-js": "^2.4.1",
     "jquery": "^1.11.1",
     "ngx-dropzone-wrapper": "^5.3.3",

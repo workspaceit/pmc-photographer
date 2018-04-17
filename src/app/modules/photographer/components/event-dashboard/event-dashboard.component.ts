@@ -45,9 +45,10 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     console.log(this.currentImage);
     this.emailForm = new FormGroup({
-      email:new FormControl('',[Validators.required,Validators.email]),
+      email:new FormControl('',[]),
+      phoneNumber:new FormControl('',[]),
       username:new FormControl('',[Validators.required]),
-      message:new FormControl(''),
+      message:new FormControl('')
     });
 
     this.smsForm = new FormGroup({
@@ -64,18 +65,20 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
       this.eventImages = [];
       this.getImages();
       this.getEventDetails();
+
       this.config = {
         url: this.API_URL+'/event-images/'+this.eventId,
         maxFiles: 50,
         clickable: true,
         acceptedFiles: 'image/*',
         createImageThumbnails: true,
-        autoReset:1,
-        errorReset:1,
+        autoReset: 1,
+        errorReset: 1,
         headers:{
           'Authorization': 'Bearer '+this.photographerLoginService.getLocalOauthCredential().access_token
         }
       };
+
     });
     this.initialize();
   }
@@ -234,14 +237,16 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
       (<any>$('#sendPhotoViaSms')).modal('show');
     }
   }
-  submitSendViaEmail(value) {
+  send(value) {
+    console.log(value);
     const username = value.username;
     const email = value.email;
+    const phoneNumber = value.phoneNumber;
     const message = value.message;
     if(this.checkedItems.length==0) {
       (<any>$).growl.warning({ message: 'No items selected' });
     } else {
-      this.eventImageService.sendViaEmail(this.checkedItems,username,email,message,this.eventId).subscribe((data) => {
+      this.eventImageService.send(this.checkedItems,username,email, phoneNumber, message,this.eventId).subscribe((data) => {
           if(data) {
             for(const item of this.checkedItems) {
               $('#checkboxFiveInput'+item).prop('checked',false);
@@ -284,6 +289,9 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   }
 
   openImageModal(image) {
+    if(this.enableEdit){
+      return;
+    }
     console.log("Image Modal Opened");
     this.currentImage = image;
     (<any>$('#image-gallery-image')).attr('src',this.imgPath+image.image);

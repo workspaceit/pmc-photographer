@@ -44,13 +44,13 @@ export class EventImageService extends  BaseService {
     const  data = new FormData();
     data.append('imageIds', eventIds);
     data.append('type','delete')
-    return this.http.post<EventImage[]>(this.PUBLIC_API_URL + this.uri + '/report-image-action', data);
+    return this.http.post<EventImage[]>(this.API_URL + this.uri + '/report-image-action', data);
   }
   public ignoreReportedEventImages(eventIds) {
     const  data = new FormData();
     data.append('imageIds', eventIds);
     data.append('type','ignore')
-    return this.http.post<EventImage[]>(this.PUBLIC_API_URL + this.uri + '/report-image-action', data);
+    return this.http.post<EventImage[]>(this.API_URL + this.uri + '/report-image-action', data);
   }
 
   public sendToSlideShow(eventIds) {
@@ -64,14 +64,15 @@ export class EventImageService extends  BaseService {
     data.append('imageIds', eventIds);
     return this.http.post<EventImage[]>(this.API_URL + this.uri + '/remove-from-slideshow', data);
   }
-  public sendViaEmail(eventIds,customerName,email,message,eventId) {
+  public send(eventIds, customerName, email, phoneNumber, message, eventId) {
     const  data = new FormData();
     data.append('imageIds', eventIds);
-    data.append('customerName',customerName);
-    data.append('email',email);
-    data.append('message',message);
-    data.append('eventId',eventId);
-    return this.http.post<EventImage[]>(this.API_URL + this.uri + '/send-via-email', data);
+    data.append('customerName', customerName);
+    data.append('email', email);
+    data.append('phoneNumber', phoneNumber);
+    data.append('message', message);
+    data.append('eventId', eventId);
+    return this.http.post<EventImage[]>(this.API_URL + this.uri + '/send', data);
   }
 
   public sendViaSms(eventIds,customerName,phoneNum,message,eventId) {
@@ -102,7 +103,7 @@ export class EventImageService extends  BaseService {
     return this.http.post<EventImage>(this.PUBLIC_API_URL + this.uri + '/report-image', data);
   }
   public getReportedImage(eventId) {
-    return this.http.get<ReportedImage[]>(this.PUBLIC_API_URL + this.uri + '/reported-image/'+eventId);
+    return this.http.get<ReportedImage[]>(this.API_URL + this.uri + '/reported-image/'+eventId);
   }
 
 }

@@ -132,13 +132,13 @@
         </div>
         <div class="modal-body clearfix">
           <div class="social-foot ornobio">
-            <share-button button="facebook"  [url]="eventImagePath+ currentImage.image">
+            <share-button button="facebook" [url]="eventImageSharingPath + currentImage.image + shareSuffix">
               <img src="assets/images/social/facebook.png" width="30">
             </share-button>
-            <share-button button="twitter" [url]="eventImagePath + currentImage.image">
+            <share-button button="twitter" [url]="eventImageSharingPath + currentImage.image + shareSuffix">
               <img src="assets/images/social/twitter.png" width="30">
             </share-button>
-            <share-button button="google" [url]="eventImagePath + currentImage.image">
+            <share-button button="google" [url]="eventImageSharingPath + currentImage.image + shareSuffix">
               <img src="assets/images/social/gplus.png" width="30">
             </share-button>
             <a (click)="reportImage()" style="float:right;background:transparent;color:red !important;"><i class="fa fa-2x fa-warning"></i></a>
@@ -164,3 +164,5 @@
       </div>
     </div>
   </div>
+  </div>
+</div>

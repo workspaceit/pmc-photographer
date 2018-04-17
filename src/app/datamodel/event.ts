@@ -9,7 +9,7 @@ export class Event {
   endsAt: string ;
   eventPrivate: boolean;
   watermarks: Watermark[] = [];
-  location:Location
+  location:Location = new Location();
   constructor(values: Object = {}) {
     Object.assign(this, values);
   }

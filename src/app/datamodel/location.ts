@@ -1,5 +1,5 @@
 export class Location {
-  id: number;
+  id: number = 0;
   name: string;
   address:String;
   locationLogo: string;

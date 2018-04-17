@@ -34,7 +34,11 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 `ng serve --aot --live-reload false --open`
 
+`ng serve --aot --live-reload false --host 0.0.0.0  --open`
+
 `ng build`
 
 `ng build --prod --aot --vc -cc -dop --buildOptimizer`
+
+
 

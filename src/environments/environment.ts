@@ -13,7 +13,8 @@ export const environment = {
     apiBaseUrl: localEnv.apiBaseUrl,
     apiUrl: localEnv.apiUrl,
     pictureUrl: localEnv.pictureUrl,
-    eventPhotoUrl: localEnv.eventPhotoUrl, // eventPhotoUrl: 'http://localhost:8080/event-images/web/',
+    eventPhotoUrl: localEnv.eventPhotoUrl,
+    eventPhotoSharingUrl: localEnv.eventPhotoSharingUrl,
     publicApiBaseUrl: localEnv.publicApiBaseUrl,
 
 

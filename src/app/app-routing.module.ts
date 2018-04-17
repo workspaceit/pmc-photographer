@@ -19,15 +19,15 @@ const routes: Routes = [
   {
     path: 'update-password', component: UpdatePasswordComponent, data: {},canActivate:[UpdatePasswordGuard]
   },
-  // { path: 'photographer-panel', loadChildren: () => PhotographerModule, canActivate: [OnlyLoggedInUsersGuard]},
-  { path: 'photographer-panel', loadChildren: './modules/photographer/photographer.module#PhotographerModule',
+  {
+    path: 'photographer-panel', loadChildren: './modules/photographer/photographer.module#PhotographerModule',
     canActivate: [OnlyLoggedInUsersGuard]
   },
-  { path: 'user-panel', loadChildren: './modules/user/user.module#UserModule',
-    canActivate: [OnlyLoggedInUsersGuard]
+  {
+    path: 'user-panel', loadChildren: './modules/user/user.module#UserModule'
   },
-  { path: 'pmcad-preview', loadChildren: './modules/preview/preview.module#PreviewModule',
-    canActivate: [OnlyLoggedInUsersGuard]
+  {
+    path: 'pmcad-preview', loadChildren: './modules/preview/preview.module#PreviewModule'
   }
 ];
 

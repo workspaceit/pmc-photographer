@@ -35,9 +35,9 @@
                title="Delete Photos" id="doneEdit">
               <img src="assets/images/garbage.png" class="icon_style">
             </a>
-            <a (click)="sendViaSms()"  target="_blank" class="action-icon" data-toggle="tooltip" data-placement="bottom"
-               title="Send Via SMS"><img src="assets/images/11.png" class="icon_style">
-            </a>
+            <!--<a (click)="sendViaSms()"  target="_blank" class="action-icon" data-toggle="tooltip" data-placement="bottom"-->
+               <!--title="Send Via SMS"><img src="assets/images/11.png" class="icon_style">-->
+            <!--</a>-->
             <a (click)="sendViaEmail()" target="_blank"class="action-icon" data-toggle="tooltip" data-placement="bottom"
                title="Send Via Email"><img src="assets/images/22.png" class="icon_style">
             </a>
@@ -66,6 +66,23 @@
         </div>
       </div>
       <div class="form-group panel-right-block content" id="content-2">
+
+
+        <div class="desc-div row">
+          <div class="container-fluid">
+            <ol class="breadcrumb breadcrumb-arrow">
+              <li><a routerLink="/photographer-panel/locations">Locations</a></li>
+              <li><a routerLink="/photographer-panel/locations/{{eventDetailsResponseData.event.location.id}}/events">
+                  {{eventDetailsResponseData.event.location.name}}
+                </a>
+              </li>
+              <li><a>{{eventDetailsResponseData.event.name}}</a></li>
+            </ol>
+          </div>
+
+        </div>
+
+
         <div class="row clearfix">
           <div class="col-md-12 col-sm-12 col-xs-12 clearfix">
             <div class="switcher_wrap">
@@ -187,7 +204,7 @@
         <h4 class="modal-title" id="myModalLabel1">Send Photo Via Email</h4>
       </div>
       <div class="modal-body clearfix">
-        <form role="form" class="col-md-12 " [formGroup]="emailForm" (submit)="submitSendViaEmail(emailForm.value)">
+        <form role="form" class="col-md-12 " [formGroup]="emailForm" (submit)="send(emailForm.value)">
           <h4 class="text-capitalize text-center">Please Fill up this information</h4>
           <div class="form-group">
             <input type="text" formControlName="username" name="username" id="username" tabindex="1" class="form-control"
@@ -197,12 +214,17 @@
             <input type="text" formControlName="email" tabindex="2" class="form-control" placeholder="Email">
           </div>
           <div class="form-group">
+            <input type="text" formControlName="phoneNumber" tabindex="2" class="form-control" placeholder="Phone Number">
+          </div>
+          <div class="form-group">
             <textarea type="text" formControlName="message" tabindex="2" class="form-control" placeholder="Message"></textarea>
           </div>
           <div class="form-group">
             <div class="row">
               <div class="col-sm-12">
-                <input type="submit" [disabled]="!emailForm.valid" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" style="width: 130px;float: right;" value="SEND">
+                <input type="submit" [disabled]="!emailForm.valid" name="register-submit"
+                       id="register-submit" tabindex="4" class="form-control btn btn-register"
+                       style="width: 130px;float: right;" value="SEND">
               </div>
             </div>
           </div>
