@@ -8,6 +8,7 @@ import {delay} from 'q';
 import {ActivatedRoute} from '@angular/router';
 import {EventImageService} from '../../../../services/event-image.service';
 import {EventImage} from '../../../../datamodel/event-image';
+import {Event} from "../../../../datamodel/event";
 
 @Component({
   selector: 'app-gallery',
@@ -21,7 +22,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
   nextBtn = true;
   prevBtn = true;
   shareSuffix = '/share';
-
+  event: Event = new Event();
 
   forChildComponent={
     topBanner:[],
@@ -103,10 +104,9 @@ export class GalleryComponent implements AfterViewInit,OnInit {
 
   ngOnInit(): void {
     if(this.identifier==null || this.identifier==''){
-
       this.advertisementConfig.popUpAd.showClosePopUp = true;
     }
-
+    this.getEventBySlideShowIdentifier();
   }
 
   ngAfterViewInit() {
@@ -132,6 +132,12 @@ export class GalleryComponent implements AfterViewInit,OnInit {
     }
 
 
+  }
+
+  getEventBySlideShowIdentifier() {
+    this.eventImageService.getEventBySlideShowIdentifier(this.identifier).subscribe((event)=> {
+      this.event = event;
+    });
   }
 
   openImageModal(image) {

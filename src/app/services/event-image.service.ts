@@ -4,6 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {EventImage} from '../datamodel/event-image';
 import {ReportedImage} from "../datamodel/reported-image";
+import {Event} from "../datamodel/event";
 
 @Injectable()
 export class EventImageService extends  BaseService {
@@ -16,6 +17,11 @@ export class EventImageService extends  BaseService {
   public getEventImagesBySlideShowIdentifier(identifier: string): Observable<EventImage[]> {
     return this.http.get<EventImage[]>(this.PUBLIC_API_URL + this.uri + '/get/' + identifier);
   }
+
+  public getEventBySlideShowIdentifier(identifier: string): Observable<Event> {
+    return this.http.get<Event>(this.PUBLIC_API_URL + this.uri + '/get-event/' + identifier);
+  }
+
   public getEventImages(eventId: number, limit: number , offset: number): Observable<EventImage[]> {
     console.log(offset);
     const data = new FormData();

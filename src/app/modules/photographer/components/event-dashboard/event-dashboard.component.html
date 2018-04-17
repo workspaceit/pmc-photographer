@@ -8,24 +8,27 @@
             <div class="desc-div row desc-non">
               <div class="noteditable-desc ">
                 <div class="col-lg-12 text-left">
-                  <h3 class="event-name">{{eventDetailsResponseData.event.name}}
-                    <small>( {{eventDetailsResponseData.imageCount}} Images )</small></h3>
+                  <h3 class="event-name">{{ eventDetailsResponseData.event.name }}
+                    <small>( {{ eventDetailsResponseData.imageCount }} Images )</small></h3>
                   <p class="e-date" style="color:#fff;">
-                    Date: {{eventDetailsResponseData.event.startsAt | date:'d MMM, yyyy'}}
+                    Date: {{ eventDetailsResponseData.event.startsAt | date:'d MMM, yyyy'}}
                   </p>
                 </div>
               </div>
             </div>
           </div>
           <div class="col-md-8 mb-fix-text">
-            <select class="watermark-select" [(ngModel)]="selectedWatermarkId" (change)="watermarkedChanged()">
-              <option value="0">Choose Watermark</option>
-              <option *ngFor="let watermark of eventDetailsResponseData.event.watermarks" [value]="watermark.id">
-                {{ watermark.name }}
-              </option>
-            </select>
+            <!--<select class="watermark-select" [(ngModel)]="selectedWatermarkId" (change)="watermarkedChanged()">-->
+              <!--<option value="0">Choose Watermark</option>-->
+              <!--<option *ngFor="let watermark of eventDetailsResponseData.event.watermarks" [value]="watermark.id">-->
+                <!--{{ watermark.name }}-->
+              <!--</option>-->
+            <!--</select>-->
+            <a (click)="addWatermark()" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Add Watermark">
+              <img src="assets/images/add-watermark.png" class="icon_style">
+            </a>
             <a (click)="removeWatermark()" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Remove Watermark">
-              <img src="assets/images/remove watermark.png" class="icon_style">
+              <img src="assets/images/remove-watermark.png" class="icon_style">
             </a>
             <a (click)="enableEditPhotos()" class="action-icon" data-toggle="tooltip" data-placement="bottom"
                title="Edit Photos" id="editEvent">
@@ -39,7 +42,7 @@
                <!--title="Send Via SMS"><img src="assets/images/11.png" class="icon_style">-->
             <!--</a>-->
             <a (click)="sendViaEmail()" target="_blank"class="action-icon" data-toggle="tooltip" data-placement="bottom"
-               title="Send Via Email"><img src="assets/images/22.png" class="icon_style">
+               title="Send Via Email / SMS"><img src="assets/images/send.png" class="icon_style">
             </a>
             <a (click)="uploadModal()" class="action-icon" data-toggle="tooltip" data-placement="bottom"
                title="Upload"><img src="assets/images/33.png" class="icon_style">
@@ -66,8 +69,6 @@
         </div>
       </div>
       <div class="form-group panel-right-block content" id="content-2">
-
-
         <div class="desc-div row">
           <div class="container-fluid">
             <ol class="breadcrumb breadcrumb-arrow">
@@ -79,10 +80,7 @@
               <li><a>{{eventDetailsResponseData.event.name}}</a></li>
             </ol>
           </div>
-
         </div>
-
-
         <div class="row clearfix">
           <div class="col-md-12 col-sm-12 col-xs-12 clearfix">
             <div class="switcher_wrap">
@@ -102,7 +100,6 @@
           </div>
         </div>
         <div class="event-gallery thumb-container">
-
           <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 thumb" *ngFor="let eventImage of eventImages"
                [ngStyle]="{'background-image': 'url(' + imgPath + eventImage.image + ')', 'background-repeat': 'no-repeat'}">
             <div class="chk-div toggler" *ngIf="enableEdit">
@@ -112,7 +109,8 @@
                 </label>
               </div>
             </div>
-            <a class="thumbnail" (click)="openImageModal(eventImage)" href="#" data-image-id="" data-toggle="modal" data-title="This is my title"
+            <a class="thumbnail" (click)="openImageModal(eventImage)" href="#" data-image-id="" data-toggle="modal"
+               data-title="This is my title"
                data-caption="Some lovely red flowers" [attr.data-image]="imgPath + eventImage.image">
             </a>
           </div>
@@ -150,44 +148,28 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span>
+          <span class="sr-only">Close</span>
+        </button>
         <h4 class="modal-title" id="image-gallery-title"></h4>
       </div>
       <div class="modal-body clearfix">
-        <div class="social-foot ornobio">
-          <share-button button="facebook"  [url]="imgPath + currentImage.image" [title]="imgPath">
-            <img src="assets/images/social/facebook.png" width="30">
-          </share-button>
-          <share-button button="twitter" [url]="imgPath + currentImage.image">
-            <img src="assets/images/social/twitter.png" width="30">
-          </share-button>
-          <share-button button="google" [url]="imgPath + currentImage.image">
-            <img src="assets/images/social/gplus.png" width="30">
-          </share-button>
-          <!--<share-button button="pinterest" [url]="imgPath + currentImage.image" [description]="'PMC'">-->
-            <!--<img src="assets/images/social/gplus.png" width="30">-->
-          <!--</share-button>-->
-          <!--<a href="#" style="float:right;background:transparent;color:red !important;"><i class="fa fa-2x fa-warning"></i></a>-->
-        </div>
         <div class="col-md-12" style="padding:0px;">
           <img id="image-gallery-image" class="img-responsive" src="{{imgPath}}{{currentImage.image}}">
         </div>
-        <!--<div class="desc-div-foot">-->
-          <!--<h5>This is the title pic</h5>-->
-          <!--<p>-->
-            <!--Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum dolor urna, consequat fermentum orci convallis eget. Aenean ac nulla at est porta malesuada. Aliquam at lobortis enim, ornare laoreet sem. Aliquam blandit lacus augue, quis feugiat sapien imperdiet eget.-->
-          <!--</p>-->
-          <!--<span class="image-number">Image 4578A</span>-->
-        <!--</div>-->
       </div>
       <div class="modal-footer">
         <div class="col-md-2 text-left" >
-          <button type="button" *ngIf="prevBtn" class="btn btn-primary btn-action" (click)="showPreviousImage()" id="show-previous-image"><i class="fa fa-chevron-left"></i></button>
+          <button type="button" *ngIf="prevBtn" class="btn btn-primary btn-action" (click)="showPreviousImage()"
+                  id="show-previous-image"><i class="fa fa-chevron-left"></i></button>
         </div>
         <div class="col-md-8 text-center">
         </div>
         <div class="col-md-2" >
-          <button type="button" *ngIf="nextBtn" (click)="showNextImage()" id="show-next-image" class="btn btn-default btn-action"><i class="fa fa-chevron-right"></i></button>
+          <button type="button" *ngIf="nextBtn" (click)="showNextImage()" id="show-next-image"
+                  class="btn btn-default btn-action">
+            <i class="fa fa-chevron-right"></i>
+          </button>
         </div>
       </div>
     </div>
@@ -259,7 +241,8 @@
           <div class="form-group">
             <div class="row">
               <div class="col-sm-12">
-                <input type="submit" [disabled]="!smsForm.valid" name="register-submit" tabindex="4" class="form-control btn btn-register" style="width: 130px;float: right;" value="SEND">
+                <input type="submit" [disabled]="!smsForm.valid" name="register-submit" tabindex="4"
+                       class="form-control btn btn-register" style="width: 130px;float: right;" value="SEND">
               </div>
             </div>
           </div>
