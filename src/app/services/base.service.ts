@@ -11,9 +11,8 @@ export class BaseService {
   constructor() { }
 
 
-  /** Log a HeroService message with the MessageService */
+  /** Log a Service message with the MessageService */
   protected log(message: string) {
-    console.log('location Service' + message);
     // this.messageService.add('HeroService: ' + message);
   }
 
