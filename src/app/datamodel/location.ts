@@ -12,7 +12,7 @@ export class Location {
   locationLogo: string;
   phone:string;
   createdAt: Date;
-  backgroundImages: LocationImage[];
+  locationBackgroundImages: LocationImage[];
 
   durationSpeed: number;
   fadeInTime: number;

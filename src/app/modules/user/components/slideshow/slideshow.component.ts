@@ -50,7 +50,9 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       },
       currentBannerImg:"",
       currentBackground: "",
-      currentFileType:""
+      currentFileType:"",
+      closingCountdown:0,
+      duration:0
     }
   };
   constructor(private activatedRoute: ActivatedRoute,
@@ -74,8 +76,8 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
 
     this.pageData.location.city = new City();
     this.pageData.location.state = new State();
-    this.pageData.location.backgroundImages = [];
-    this.pageData.currentBgImage = 'url(assets/images/bg2.jpg)';
+    this.pageData.location.locationBackgroundImages = [];
+    this.pageData.currentBgImage = 'assets/images/bg.jpg';
 
     console.log(locIdStr,eventIdStr);
 
@@ -142,20 +144,16 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
   }
   public showSlideShowAd(){
     const slideshowComponent = this;
-    (<any>$("#changeBg")).fadeOut(500,function(){
-      (<any>$("#adToggle")).fadeIn(500);
-      slideshowComponent.pageData.slideShowAd.currentFileType="VIDEO";
-      slideshowComponent.rotateVideo().then();
-    });
+    (<any>$("#eventImageDiv")).hide();
+    (<any>$("#slideShowAdDiv")).show();
+
+    slideshowComponent.pageData.slideShowAd.currentFileType="VIDEO";
+    slideshowComponent.rotateVideo().then(()=>{slideshowComponent.initClosingCountdown();});
   }
   public showSlideShow(){
     const slideshowComponent = this;
-    (<any>$("#adToggle")).fadeOut(500,function(){
-      (<any>$("#changeBg")).fadeIn(500);
-      new WOW({
-        live: false
-      }).init();
-    });
+    (<any>$("#eventImageDiv")).show();
+    (<any>$("#slideShowAdDiv")).hide();
   }
 
   private getEventImages(){
@@ -164,6 +162,28 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       console.log("Event Images",this.pageData.eventImage );
       this.getEventAndIntiJs();
     });
+  }
+  private async initClosingCountdown(){
+    /**
+     * Takes value first time only
+     *  */
+
+    if(this.slideShowAdList==null || this.slideShowAdList.length==0)return;
+
+    const slideShowAdData = new AdvertisementDetails(this.slideShowAdList[0]);
+    const  tbSection = slideShowAdData.sections.TOP_BANNER;
+
+    this.pageData.slideShowAd.duration =  tbSection.duration;
+    console.log("this.pageData.slideShowAd.duration",this.pageData.slideShowAd.duration);
+
+    /**
+     *
+     * */
+
+    for(let i=this.pageData.slideShowAd.duration;i>=0;i--){
+      this.pageData.slideShowAd.closingCountdown=i;
+      await delay(1000);
+    }
   }
   private async rotateVideo(){
     if(!this.slideShowAdRotation){
@@ -193,6 +213,9 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     let fileName = "";
     let fileType = "";
     let mimeType = "";
+
+
+
 
     if(tbSecRes.length>0) {
        fileName = tbSecRes[0].fileName;
@@ -235,11 +258,51 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     console.log("currentIndex ",currentIndex,slideShowAdData);
   }
   private async rotateBackground(){
-    const locBgImgs = this.pageData.location.backgroundImages;
+    const locBgImgs = this.pageData.location.locationBackgroundImages;
+    if(locBgImgs==null || locBgImgs.length==0)return;
+
+    /** In millisecond */
+    let fadeInTransition = 500;
+    let fadeOutTransition = 500;
+    let durationSpeed = 5000;
+
+    if(this.pageData.location.hasSlideshow){
+       fadeInTransition = this.pageData.location.fadeInTime*1000;
+       fadeOutTransition = this.pageData.location.fadeOutTime*1000;
+       durationSpeed = this.pageData.location.durationSpeed*1000;
+    }
+
     for(const i in locBgImgs){
-      this.pageData.currentBgImage = this.pageData.currentBgImage = 'url('+ this.resourcePath+locBgImgs[i].image+')';
-      console.log(this.pageData.currentBgImage);
-      await delay(5000);
+      /*this.pageData.currentBgImage = this.pageData.currentBgImage =  this.resourcePath+locBgImgs[i].image;
+      console.log(this.pageData.currentBgImage);*/
+      console.log("BG ROTATE",i);
+      let index= Number(i);
+      let fadeOutIndex=0;
+      let fadeInIndex =0;
+      if(index==0){
+        fadeInIndex = index;
+        fadeOutIndex = locBgImgs.length-1;
+      }else{
+        fadeInIndex = index;
+        fadeOutIndex = index -1;
+      }
+
+      if( (<any>$('#'+fadeOutIndex+'Bg')).is(":visible") ){
+        (<any>$('#'+fadeOutIndex+'Bg')).fadeOut(fadeOutTransition,function(){
+          $('#'+fadeInIndex+'Bg').fadeIn(fadeInTransition);
+        });
+      }else{
+        /**
+         * Need this delay not sure why
+         * Elements may be not ready first time
+         * */
+        await delay(1000);
+        (<any>$('#'+fadeInIndex+'Bg')).fadeIn(fadeInTransition);
+        console.log('#'+fadeInIndex+'Bg');
+      }
+
+
+      await delay(durationSpeed);
     }
     this.rotateBackground().then();
   }
@@ -266,6 +329,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     let fileName = "";
     let fileType = "";
     let mimeType = "";
+
 
 
     for(const i in tbSecRes) {
@@ -301,9 +365,8 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     }
     return this.slideShowAdListIndex++;
   }
-  public stopSlideshowAdRotation(){
+  public stopSlideShowAdRotation(){
     this.slideShowAdRotation = false;
-
     this.showSlideShow();
   }
   public getLocationAndInitJs(){
@@ -311,7 +374,6 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       if(result==null)return;
       this.locationData = result;
     },error=>{
-      console.log(error);
     },()=>{
       this.initJsFunction();
     });
@@ -324,11 +386,9 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       this.eventData = data;
       this.locationData = this.eventData.location;
       this.pageConfig.eventAndLocationFetched = true;
-      console.log("Complete Ev",data);
     },error=>{
 
     },()=>{
-      console.log("Complete Ev");
 
       this.initJsFunction();
     });
@@ -337,7 +397,6 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
   private initJsFunction(){
 
 
-    console.log("Init JS Function");
     (<any>$('.count')).each(function () {
       (<any>$(this)).prop('Counter',0).animate({
         Counter: $(this).text()
@@ -346,24 +405,10 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
         easing: 'swing',
         step: function (now) {
           $(this).text(Math.ceil(now));
-          console.log("Interval");
         }
       });
     });
 
-    (<any>$('#changeBg')).easybg({
-      images: [ // an array of background dimages
-        'assets/images/bg2.jpg'
-      ],
-      interval: 2000,
-      speed : 1000, // 1 minute
-      ignoreError : false,
-      changeMode : 'normal', // normal or random
-      initIndex : 0,
-      cloneClassId : null,
-      cloneClassName : 'easybgClone',
-      debug : false
-    });
 
     (<any>$(".img-check")).click(function(){
       (<any>$(this)).toggleClass("check");
@@ -372,43 +417,12 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     (<any>$('#datepicker')).datepicker({
       uiLibrary: 'bootstrap'
     });
-    // (<any>$('[data-toggle="tooltip"]')).tooltip()
-
-    (<any>$(document)).ready(function(){
-      /*   let swiper = new Swiper('.swiper-container', {
-           pagination: '.swiper-pagination',
-           effect: 'coverflow',
-           grabCursor: true,
-           centeredSlides: true,
-           slidesPerView: 'auto',
-           coverflow: {
-             rotate: 50,
-             stretch: 0,
-             depth: 100,
-             modifier: 1,
-             slideShadows : true
-           }
-         });*/
-
-    });
-
-    console.log("Before Init");
-    new WOW({
-      live: false
-    }).init();
-    /*let wow = new WOW()(
-      {
-        animateClass: 'animated',
-        offset:       100,
-        callback:     function(box) {
-          console.log("WOW: animating <" + box.tagName.toLowerCase() + ">");
-        }
-      }
-    );
-   wow.init();*/
 
 
-    console.log("After Init");
+
+
+
+
 
     (<any>$('#moar')).on("click", function() {
       var section = document.createElement('section');
@@ -417,9 +431,8 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     });
 
     const slideshowComponentReff = this;
-    (<any>$("#adToggle")).delay(10000).queue(function(next){
+    (<any>$("#slideShowAdDiv")).delay(10000).queue(function(next){
       slideshowComponentReff.showSlideShowAd();
-      next();
     });
 
 
@@ -438,6 +451,10 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       this.pageData.location.locationLogo = this.resourcePath+this.pageData.location.locationLogo;
       this.rotateBackground().then();
     }
+
+    new WOW({
+      live: false
+    }).init();
 
   }
 
