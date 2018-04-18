@@ -238,22 +238,27 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     }
   }
   send(value) {
-    console.log(value);
+    let email = '';
+    let phoneNumber = '';
     const username = value.username;
-    const email = value.email;
-    const phoneNumber = value.phoneNumber;
+    if(value.email) {
+      email = value.email;
+    }
+    if(value.phoneNumber) {
+      phoneNumber = value.phoneNumber;
+    }
     const message = value.message;
     if(this.checkedItems.length==0) {
       (<any>$).growl.warning({ message: 'No items selected' });
     } else {
-      this.eventImageService.send(this.checkedItems,username,email, phoneNumber, message,this.eventId).subscribe((data) => {
+      this.eventImageService.send(this.checkedItems, username, email, phoneNumber, message,this.eventId).subscribe((data) => {
           if(data) {
             for(const item of this.checkedItems) {
               $('#checkboxFiveInput'+item).prop('checked',false);
             }
             this.resetSelected();
             (<any>$('#sendPhotoViaEmail')).modal('hide');
-            (<any>$).growl.notice({ message: 'Successfully send to email!' });
+            (<any>$).growl.notice({ message: 'Sent successfully!' });
             this.emailForm.reset();
           }
         },(err)=> {
@@ -411,35 +416,34 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  watermarkedChanged() {
+  addWatermark() {
     if(this.checkedItems.length==0) {
       (<any>$).growl.warning({ message: 'No photo selected' });
+    } else if(this.eventDetailsResponseData.event.watermarks.length == 0) {
+      (<any>$).growl.warning({ message: 'No watermark assigned for this event' });
     } else {
-      if (this.selectedWatermarkId != 0) {
-        this.eventImageService.addWatermark(this.checkedItems, this.selectedWatermarkId).subscribe((data) => {
-            if (data) {
-              for(let j = 0; j < data.length; j++) {
-                for (let i = 0; i < this.eventImages.length; i++) {
-                  if (this.eventImages[i].id == data[j].id) {
-                    this.eventImages[i] = data[j];
-                    break;
-                  }
-                }
+      this.eventImageService.addWatermark(this.checkedItems, this.eventDetailsResponseData.event.watermarks[0].id).subscribe((data) => {
+        if (data) {
+          for(let j = 0; j < data.length; j++) {
+            for (let i = 0; i < this.eventImages.length; i++) {
+              if (this.eventImages[i].id == data[j].id) {
+                this.eventImages[i] = data[j];
+                break;
               }
-              (<any>$).growl.notice({title: 'Success!', message: 'Watermark added'});
-              this.adjustHeight();
-              setTimeout(function() {
-                for(let i = 0; i < data.length; i++) {
-                  const  f = $('#checkboxFiveInput' + data[i].id).prop('checked', true);
-                }
-              }, 0);
             }
-          }, (err) => {
-            console.log(err.error);
-            (<any>$).growl.error({message: err.error});
           }
-        );
-      }
+          (<any>$).growl.notice({title: 'Success!', message: 'Watermark added'});
+          this.adjustHeight();
+          setTimeout(function() {
+            for(let i = 0; i < data.length; i++) {
+              const  f = $('#checkboxFiveInput' + data[i].id).prop('checked', true);
+            }
+          }, 0);
+        }
+      }, (err) => {
+        console.log(err.error);
+        (<any>$).growl.error({message: err.error});
+      });
     }
   }
 

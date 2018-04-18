@@ -24,13 +24,13 @@
                 </div>
               </div>
               <div class="col-lg-12 text-center">
-                <h3 class="event-name" style="color:#fff;margin-top:5px;font-size:18px;margin-bottom:5px;">Beach party 2015</h3>
+                <h3 class="event-name" style="color:#fff;margin-top:5px;font-size:18px;margin-bottom:5px;">{{ event.name }}</h3>
                 <p class="e-date" style="color:#fff;margin-bottom:5px;margin-top:0px;font-size:14px;">
-                  Date: 12 July,2017
+                  Date: {{ event.startsAt | date:'MMM d, yyyy' }}
                 </p>
-                <p class="e-image-no" style="font-size:14px;margin-top:10px;font-weight:500;margin-top:0px;">
-                  768 images
-                </p>
+                <!--<p class="e-image-no" style="font-size:14px;margin-top:10px;font-weight:500;margin-top:0px;">-->
+                  <!--768 images-->
+                <!--</p>-->
               </div>
             </div>
             <!-- <div class="editable-desc toggler">
