@@ -1625,7 +1625,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a68c2ce0', e
 
 .event-logo{
   background: transparent;
-  height: 50%;
+  height: 60%;
   width: 100%;
   text-align: center;
   display: block;
@@ -1954,12 +1954,22 @@ color: #fff;
       border-bottom: 1px solid #969696;
 
     }*/
+
+    #popUpModal .fix-modal-mob-pop{
+      height: auto !important;
+      width: 100% !important;
+    }
+    #popUpModal{
+      margin-right: 0px !important;
+    }
     .event-logo{
       text-align: center;
     }
     .event-logo img{
-      height: 150px;
       margin: 0px auto;
+      width: auto !important;
+      height: 140px !important;
+      margin-top: 120px;
     }
     .event-list{
       width:auto;
@@ -1967,7 +1977,7 @@ color: #fff;
       padding-top: 5px;
     }
     .event-logo h2{
-      font-size: 22px;
+      font-size: 16px;
     }
     .event-list li{
       display: inline-block;
@@ -2201,7 +2211,7 @@ color: #fff;
         padding: 0px;
       }
       .modal-noborder .modal-dialog{
-        margin-right: 28px;
+        margin-right: 10px;
         margin-top: 100px;
       }
       .modal-noborder .modal-header .close {
