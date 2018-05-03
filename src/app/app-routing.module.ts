@@ -7,28 +7,15 @@ import {PasswordTokenVerifyComponent} from "./components/password-token-verify/p
 import {UpdatePasswordComponent} from "./components/update-password/update-password.component";
 
 const routes: Routes = [
-  {
-    path: 'login', component: LoginComponent, data: {}
-  },
-  {
-    path: 'reset-password', component: ResetPasswordComponentComponent, data: {}
-  },
-  {
-    path: 'reset-password-verify/:id/:token', component: PasswordTokenVerifyComponent, data: {}
-  },
-  {
-    path: 'update-password', component: UpdatePasswordComponent, data: {},canActivate:[UpdatePasswordGuard]
-  },
-  {
-    path: 'photographer-panel', loadChildren: './modules/photographer/photographer.module#PhotographerModule',
-    canActivate: [OnlyLoggedInUsersGuard]
-  },
-  {
-    path: 'user-panel', loadChildren: './modules/user/user.module#UserModule'
-  },
-  {
-    path: 'pmcad-preview', loadChildren: './modules/preview/preview.module#PreviewModule'
-  }
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'reset-password', component: ResetPasswordComponentComponent },
+  { path: 'reset-password-verify/:id/:token', component: PasswordTokenVerifyComponent },
+  { path: 'update-password', component: UpdatePasswordComponent, data: {},canActivate:[UpdatePasswordGuard] },
+  { path: 'photographer-panel', loadChildren: './modules/photographer/photographer.module#PhotographerModule',
+    canActivate: [OnlyLoggedInUsersGuard] },
+  { path: 'user-panel', loadChildren: './modules/user/user.module#UserModule' },
+  { path: 'pmcad-preview', loadChildren: './modules/preview/preview.module#PreviewModule' }
 ];
 
 @NgModule({

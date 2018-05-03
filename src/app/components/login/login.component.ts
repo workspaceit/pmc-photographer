@@ -16,12 +16,14 @@ export class LoginComponent implements OnInit {
   authCredential: OauthCredential;
   photographer: Photographer;
   loginMsg = '';
-  constructor(private router: Router, private loginService: LoginService) {
+  constructor(private router: Router, private loginService: LoginService, private photographerLoginService: PhotographerLoginService) {
 
   }
 
-  ngOnInit() {
-
+  ngOnInit(){
+    if(this.photographerLoginService.isLoggedIn()){
+      this.router.navigate(['/photographer-panel/locations']);
+    }
   }
 
   private authenticate(emailOrUsername: string, password: string, loginCallBack: LoginCallBack ){

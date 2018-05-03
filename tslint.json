@@ -30,7 +30,7 @@
     "label-position": true,
     "max-line-length": [
       true,
-      200
+      140
     ],
     "member-access": false,
     "member-ordering": [
@@ -70,22 +70,22 @@
     "no-string-literal": false,
     "no-string-throw": true,
     "no-switch-case-fall-through": true,
-    "no-trailing-whitespace": true,
+    "no-trailing-whitespace": false,
     "no-unnecessary-initializer": true,
     "no-unused-expression": true,
     "no-use-before-declare": true,
     "no-var-keyword": true,
     "object-literal-sort-keys": false,
     "one-line": [
-      true,
+      false,
       "check-open-brace",
       "check-catch",
       "check-else",
       "check-whitespace"
     ],
-    "prefer-const": true,
+    "prefer-const": false,
     "quotemark": [
-      false,
+      true,
       "single"
     ],
     "radix": true,
@@ -94,7 +94,7 @@
       "always"
     ],
     "triple-equals": [
-      false,
+      true,
       "allow-null-check"
     ],
     "typedef-whitespace": [
