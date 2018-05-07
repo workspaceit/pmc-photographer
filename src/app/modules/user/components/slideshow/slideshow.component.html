@@ -19,9 +19,14 @@
           </h2>
 
           <h3 class="wow bounceInLeft"   data-wow-delay="2s">
-            {{pageData.location.address}}<br>
-            {{pageData.location.city.name}}, {{pageData.location.state.name}}, {{pageData.location.zip}}<br>
-            {{pageData.location.phone}}
+            <span>{{pageData.location.address}}</span>
+            <span >
+              {{pageData.location.city.name}}
+              <label   *ngIf="pageData.location.city.name!=null && pageData.location.city.name!=''">,</label>
+              {{pageData.location.state.name}}
+              <label   *ngIf="pageData.location.state.name!=null && pageData.location.state.name!=''">,</label>
+              {{pageData.location.zip}}</span>
+            <span> {{pageData.location.phone}}</span>
           </h3>
         </div>
         <!-- <div class="divider" style="margin-top:0px;padding:1px;"></div> -->
