@@ -9,12 +9,13 @@ import {ActivatedRoute} from '@angular/router';
 import {EventImageService} from '../../../../services/event-image.service';
 import {EventImage} from '../../../../datamodel/event-image';
 import {Event} from "../../../../datamodel/event";
+import {BannerAdCommunicatorService} from '../../../../services/banner-ad-communicator.service';
 
 @Component({
   selector: 'app-gallery',
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.css'],
-  providers: [AdvertisementService,EventImageService]
+  providers: [AdvertisementService,EventImageService,BannerAdCommunicatorService]
 })
 
 export class GalleryComponent implements AfterViewInit,OnInit {
@@ -50,6 +51,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
         topBanner:1000,
         bottomBanner:1000,
       },
+      banner:['top','bottom'],
       arrayOffset:0
     },
     popUpAd:{
@@ -86,7 +88,12 @@ export class GalleryComponent implements AfterViewInit,OnInit {
 
 
 
-  constructor(private rout: ActivatedRoute,private advertisementService: AdvertisementService,private eventImageService: EventImageService) {
+  constructor(private rout: ActivatedRoute,
+              private advertisementService: AdvertisementService,
+              private eventImageService: EventImageService,
+              private bannerAdCommunicatorService: BannerAdCommunicatorService) {
+
+
     this.currentAdvertisementDetails = new AdvertisementDetails();
     this.identifier =  this.rout.snapshot.paramMap.get('identifier');
     this.popUpType = this.rout.snapshot.paramMap.get('popUpType');
@@ -122,8 +129,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       this.fetchGalleryAdvertisement();
       this.fetchPopUpAdvertisement();
       this.fetchEventImage();
-      this.rotateGalleryAdTopBanner(1).then();
-      this.rotateGalleryAdBottomBanner(1).then();
+
     } else if(this.preview.popUpId>0){
       console.log(this.preview.galleryId,this.preview.popUpId);
       this.fetchPopUpAdvertisementById();
@@ -170,26 +176,23 @@ export class GalleryComponent implements AfterViewInit,OnInit {
   public fetchGalleryAdvertisementById() {
 
     this.advertisementService.getById(this.preview.galleryId).subscribe((data)=>{
-      debugger;
       this.advertisementConfig.gallery.isEndOfAd = true;
       this.advertisementConfig.gallery.selfLoop = true;
       this.advertisements.push(data);
-      this.rotationGalleryAd().then(()=>console.log("ROTATION CALLED"));
+      this.rotateGalleryAd().then(()=>console.log("ROTATION CALLED"));
     });
 
   }
   public fetchGalleryAdvertisement() {
     if(this.advertisementConfig.gallery.isEndOfAd){
-      this.rotationGalleryAd().then(()=>console.log("ROTATION CALLED"));
+      this.rotateGalleryAd().then(()=>console.log("ROTATION CALLED"));
       return;
     }
 
     const offset = this.advertisementConfig.gallery.apiOffset++;
     const limit = this.advertisementConfig.gallery.limit;
-    this.advertisementService.getBySentSlideShowIdentifierAndType(this.identifier,
-                                                  AdvertisementService.advTypeReqParamenter.GALLERY
-                                                  ,limit
-                                                  ,offset).subscribe((data)=>{
+    this.advertisementService.getAllBySentSlideShowIdentifierAndType(this.identifier,
+                                                  AdvertisementService.advTypeReqParamenter.GALLERY).subscribe((data)=>{
 
                                                       if(data.length==0){
                                                         this.advertisementConfig.gallery.isEndOfAd = true;
@@ -197,10 +200,16 @@ export class GalleryComponent implements AfterViewInit,OnInit {
                                                       } else {
                                                         this.advertisements = this.advertisements.concat(data);
                                                       }
-                                                      this.rotationGalleryAd().then(()=>console.log("ROTATION CALLED"));
+                                                      this.rotateGalleryAd().then(()=>console.log("ROTATION CALLED"));
                                                       console.log("ad length");
                                                       console.log(this.advertisements.length);
-                                                  });
+
+
+
+
+
+
+    });
 
   }
   showPreviousImage() {
@@ -293,23 +302,25 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       this.globalPopUpAdSection.push(popupAds.sections.BANNER);
     }
   }
-  async rotationGalleryAd() {
-    const startIndex = this.getRotationStarIndex();
-    for(let i = startIndex;i<this.advertisements.length;i++){
+  async rotateGalleryAd() {
+  //  const startIndex = this.getRotationStarIndex();
+    for(let i = 0;i<this.advertisements.length;i++){
 
       this.currentAdvertisementDetails = new AdvertisementDetails( this.advertisements[i] );
       this.prepareGalleryAdForPage();
 
-
      await delay(this.advertisementConfig.gallery.delay.global);
     }
-    if(!this.advertisementConfig.gallery.isEndOfAd){
+
+    /*if(!this.advertisementConfig.gallery.isEndOfAd){
       this.fetchGalleryAdvertisement();
       console.log("gallery API CALLED");
     } else if(this.advertisementConfig.gallery.selfLoop){
       console.log("gallery SELF LOOP");
-      this.rotationGalleryAd().then();
-    }
+      this.rotateGalleryAd().then();
+    }*/
+
+    this.rotateGalleryAd().then();
   }
   private getRotationStarIndex():number{
     let i = 0;
@@ -455,7 +466,9 @@ export class GalleryComponent implements AfterViewInit,OnInit {
      * Top banner
      * */
     if(tbSecRes.length>0){
+
        this.advertisementOnPage.topBanner = this.resourcePath+tbSecRes[0].fileName;
+      this.bannerAdCommunicatorService.changeAdvertiser('top', this.advertisementOnPage.topBanner);
        this.forChildComponent.topBanner = [];
        for(const i in tbSecRes){
         this.forChildComponent.topBanner.push(this.resourcePath+tbSecRes[i].fileName);
@@ -466,6 +479,8 @@ export class GalleryComponent implements AfterViewInit,OnInit {
      * */
     if(bbSecRes.length>0){
       this.advertisementOnPage.bottomBanner = this.resourcePath+bbSecRes[0].fileName;
+      this.bannerAdCommunicatorService.changeAdvertiser('bottom', this.advertisementOnPage.topBanner);
+
       this.forChildComponent.bottomBanner = [];
       for(const i in tbSecRes){
         this.forChildComponent.bottomBanner.push(this.resourcePath+bbSecRes[i].fileName);
@@ -482,106 +497,6 @@ export class GalleryComponent implements AfterViewInit,OnInit {
     return (data==undefined || data==null)?false:true;
   }
 
-  /**
-   * Old code
-   * Now it's a separated component
-   * */
-  private async rotateGalleryAdTopBanner(startIndex?:number){
 
-    let readyFlag =  this.checkNullUndefiend(this.currentAdvertisementDetails);
-    if(readyFlag){
-      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections);
-    }
-    if(readyFlag){
-      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections.TOP_BANNER);
-    }
-    if(readyFlag){
-      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections.TOP_BANNER.sectionResource);
-    }
-    if(readyFlag){
-      readyFlag = this.currentAdvertisementDetails.sections.TOP_BANNER.sectionResource.length>0?true:false;
-    }
-    if(!readyFlag){
-      delay(this.advertisementConfig.gallery.delay.topBanner).then(()=>{
-        this.rotateGalleryAdTopBanner().then();
-      });
-      return;
-    }
 
-    if(startIndex==undefined || startIndex==null){
-      startIndex = 0;
-    }
-    const galleryAds = this.currentAdvertisementDetails;
-    const tbSecRes = galleryAds.sections.TOP_BANNER.sectionResource;
-    const id = galleryAds.id;
-    try{
-      for( let i=startIndex ;i< tbSecRes.length;i++){
-        this.advertisementOnPage.topBanner = this.resourcePath+tbSecRes[i].fileName;
-        await delay(this.advertisementConfig.gallery.delay.topBanner);
-        if(id !== this.currentAdvertisementDetails.id){
-          /**
-           * rotate to next advertiser's Gallery Add
-           * */
-          this.rotateGalleryAdTopBanner(1).then();
-          // console.log("End of function from IF");
-          return;
-        }
-      }
-    }catch(e) {
-      console.log(e);
-    }
-    // console.log("End of function");
-  }
-  /**
-   * Old code
-   * Now it's a separated component
-   * */
-  private async rotateGalleryAdBottomBanner(startIndex?:number){
-
-    let readyFlag =  this.checkNullUndefiend(this.currentAdvertisementDetails);
-    if(readyFlag){
-      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections);
-    }
-    if(readyFlag){
-      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections.BOTTOM_BANNER);
-    }
-    if(readyFlag){
-      readyFlag = this.checkNullUndefiend(this.currentAdvertisementDetails.sections.BOTTOM_BANNER.sectionResource);
-    }
-    if(readyFlag){
-      readyFlag = this.currentAdvertisementDetails.sections.BOTTOM_BANNER.sectionResource.length>0?true:false;
-    }
-
-    if(!readyFlag){
-      delay(this.advertisementConfig.gallery.delay.bottomBanner).then(()=>{
-        this.rotateGalleryAdBottomBanner().then();
-      });
-      return;
-    }
-
-    if(startIndex==undefined || startIndex==null){
-      startIndex=0;
-    }
-
-    let galleryAds = this.currentAdvertisementDetails;
-    let bbSecRes = galleryAds.sections.BOTTOM_BANNER.sectionResource;
-    let id = galleryAds.id;
-    try{
-      for( let i=startIndex;i<bbSecRes.length;i++){
-        this.advertisementOnPage.bottomBanner = this.resourcePath+bbSecRes[i].fileName;
-        await delay(this.advertisementConfig.gallery.delay.bottomBanner);
-        if(id !== this.currentAdvertisementDetails.id){
-          /**
-           * rotate to next advertiser's Gallery Add
-           * */
-          this.rotateGalleryAdBottomBanner(1).then();
-          return;
-        }
-      }
-    }catch(e) {
-      console.log(e);
-    }
-    this.rotateGalleryAdBottomBanner().then();
-
-  }
 }

@@ -29,6 +29,10 @@ export class AdvertisementService extends BaseService{
 
     return this.http.get<Advertisement[]>(this.PUBLIC_API_URL+ this.uri+"/get/"+adType+"/"+identifier+"/"+limit+"/"+offset);
   }
+  public getAllBySentSlideShowIdentifierAndType(identifier:string, adType:string): Observable<Advertisement[]>{
+
+    return this.http.get<Advertisement[]>(this.PUBLIC_API_URL+ this.uri+"/get-all/"+adType+"/"+identifier);
+  }
   public getById(id): Observable<AdvertisementDetails>{
 
     return this.http.get<AdvertisementDetails>(this.PUBLIC_API_URL+ this.uri+"/get/"+id);

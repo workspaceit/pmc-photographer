@@ -1,5 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {delay} from 'q';
+import {BannerAdCommunicatorService} from '../../../../services/banner-ad-communicator.service';
+import {AdvertisementService} from '../../../../services/advertisement.service';
+import {EventImageService} from '../../../../services/event-image.service';
 
 @Component({
   selector: 'app-adbanner',
@@ -8,7 +11,23 @@ import {delay} from 'q';
 })
 export class AdbannerComponent implements OnInit {
 
-  constructor() { }
+  constructor(private bannerAdCommunicatorService: BannerAdCommunicatorService) {
+
+    bannerAdCommunicatorService.advertiserChanged$.subscribe(command=>{
+      const commandSegments = command.split('@');
+      console.log("this.type "+this.type);
+      if(commandSegments[0] === this.type){
+        this.topBanner = commandSegments[1];
+        console.log(' imagePath ' +commandSegments);
+        this.advertiserChanged = true;
+      }
+
+    });
+  }
+
+  private advertiserChanged=false;
+  @Input()
+  type:string;
 
   @Input()
   delayDuration:number;
@@ -45,14 +64,16 @@ export class AdbannerComponent implements OnInit {
         this.topBanner = this.topBanners[i];
         await delay(this.delayDuration);
 
-        if(id !== this.galleryId){
+        if(this.advertiserChanged ==true){
           /**
            * rotate to next advertiser's Gallery Add
            * */
-          this.rotateGalleryAdTopBanner(0).then();
+          this.rotateGalleryAdTopBanner(1).then();
           console.log("End of function from IF");
           return;
         }
+
+
       }
     }catch(e) {
       console.log(e);
