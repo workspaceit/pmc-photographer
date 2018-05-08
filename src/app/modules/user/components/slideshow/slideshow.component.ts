@@ -78,6 +78,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     this.pageData.location.state = new State();
     this.pageData.location.locationBackgroundImages = [];
     this.pageData.currentBgImage = 'assets/images/bg.jpg';
+    this.pageData.location.locationLogo = 'assets/images/dummy_transparent.png';
 
     console.log(locIdStr,eventIdStr);
 
@@ -396,7 +397,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
   }
   private initJsFunction(){
 
-
+    //return;
     (<any>$('.count')).each(function () {
       (<any>$(this)).prop('Counter',0).animate({
         Counter: $(this).text()
