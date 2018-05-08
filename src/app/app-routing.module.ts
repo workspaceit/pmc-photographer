@@ -5,10 +5,12 @@ import {ResetPasswordComponentComponent} from "./components/reset-password-compo
 import {OnlyLoggedInUsersGuard,UpdatePasswordGuard} from './guard';
 import {PasswordTokenVerifyComponent} from "./components/password-token-verify/password-token-verify.component";
 import {UpdatePasswordComponent} from "./components/update-password/update-password.component";
+import {AdminPhotographerLoginComponent} from "./modules/photographer/components/admin-photographer-login/admin-photographer-login.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
+  { path: 'admin-photographer-login', component: AdminPhotographerLoginComponent },
   { path: 'reset-password', component: ResetPasswordComponentComponent },
   { path: 'reset-password-verify/:id/:token', component: PasswordTokenVerifyComponent },
   { path: 'update-password', component: UpdatePasswordComponent, data: {},canActivate:[UpdatePasswordGuard] },

@@ -33,20 +33,25 @@ export class LoginComponent implements OnInit {
       result => {
         this.authCredential = result;
         this.loginService.getUserDetailsAndStoreInLocal( this.authCredential.access_token).subscribe(data=>{
-          loginCallBack(true, 'Login success');
+          loginCallBack(true, 'Login success', data);
         });
       },
       error => {
         console.log(error);
-        loginCallBack(false, error.error.error_description);
+        loginCallBack(false, error.error.error_description, null);
       });
   }
 
   public loginBtnClick(emailOrUsername: string, password: string){
-    this.authenticate(emailOrUsername, password, ( loginSuccess: boolean,msg: string): void => {
+    this.authenticate(emailOrUsername, password, ( loginSuccess: boolean,msg: string, photographer: Photographer): void => {
       this.loginMsg = msg;
       if(loginSuccess){
-        this.router.navigateByUrl('/photographer-panel/locations');
+        if(photographer.authorities[0].authority === "ROLE_photographer") {
+          this.router.navigateByUrl('/photographer-panel/locations');
+        }
+        else if (photographer.authorities[0].authority === "ROLE_superadmin"){
+          this.router.navigateByUrl('/photographer-panel/admin-login');
+        }
       }
 
     });
@@ -55,5 +60,5 @@ export class LoginComponent implements OnInit {
 }
 
 interface LoginCallBack {
-  (loginSuccess: boolean, msg: string): void;
+  (loginSuccess: boolean, msg: string, data: Photographer): void;
 }

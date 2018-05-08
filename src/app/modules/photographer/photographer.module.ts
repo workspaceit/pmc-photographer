@@ -20,6 +20,7 @@ import {ShareButtonsModule} from 'ngx-sharebuttons';
 import { ReportedImageComponent } from './components/reported-image/reported-image.component';
 import {PhotographerLoginService} from "../../services/photographer-login.service";
 import {LoginService} from "../../services/login.service";
+import {AdminPhotographerLoginComponent} from "./components/admin-photographer-login/admin-photographer-login.component";
 @NgModule({
   imports: [
     CommonModule,
@@ -40,7 +41,8 @@ import {LoginService} from "../../services/login.service";
     LocationListComponent,
     EventDashboardComponent,
     EventSidepanelComponent,
-    ReportedImageComponent
+    ReportedImageComponent,
+    AdminPhotographerLoginComponent
   ],
   providers:[
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, PhotographerLoginService, LoginService

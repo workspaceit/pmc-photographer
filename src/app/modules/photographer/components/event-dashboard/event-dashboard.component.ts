@@ -38,6 +38,8 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   emailForm: FormGroup;
   smsForm: FormGroup;
   slideShowImagesOnly = false;
+  sendFromPopup = false;
+  items: number[] = [];
 
   constructor(private route: ActivatedRoute, private router: Router, private eventImageService: EventImageService,
               private eventService: EventService,private  photographerLoginService: PhotographerLoginService) { }
@@ -166,6 +168,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   resetSelected() {
     this.checkedItems = [];
   }
+
   checkBoxUpdate(eventImage,$event) {
     if($event.target.checked) {
       const index = this.checkedItems.indexOf(eventImage.id);
@@ -180,6 +183,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     }
     console.log(this.checkedItems);
   }
+
   deletePhotos() {
     if(this.checkedItems.length==0) {
       (<any>$).growl.warning({ message: 'No items selected' });
@@ -197,6 +201,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
        );
     }
   }
+
   removePhotosFromView() {
     for(const item of this.checkedItems) {
       this.eventImages = this.eventImages.filter(data=>data.id !== item);
@@ -204,7 +209,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   }
 
   sendToSlideShow() {
-    if(this.checkedItems.length==0) {
+    if(this.checkedItems.length===0) {
       (<any>$).growl.warning({ message: 'No items selected' });
     } else {
       this.eventImageService.sendToSlideShow(this.checkedItems).subscribe((data) => {
@@ -224,19 +229,22 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   }
 
   sendViaEmail() {
-    if(this.checkedItems.length==0) {
+    if(this.checkedItems.length === 0) {
       (<any>$).growl.warning({ message: 'No items selected' });
     } else {
+      this.sendFromPopup = false;
       (<any>$('#sendPhotoViaEmail')).modal('show');
     }
   }
-  sendViaSms() {
-    if(this.checkedItems.length==0) {
-      (<any>$).growl.warning({ message: 'No items selected' });
-    } else {
-      (<any>$('#sendPhotoViaSms')).modal('show');
-    }
+
+  sendSingleImage(imageId) {
+    console.log(imageId);
+    this.sendFromPopup = true;
+    this.items = [];
+    this.items += imageId;
+    (<any>$('#sendPhotoViaEmail')).modal('show');
   }
+
   send(value) {
     let email = '';
     let phoneNumber = '';
@@ -248,12 +256,20 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
       phoneNumber = value.phoneNumber;
     }
     const message = value.message;
-    if(this.checkedItems.length==0) {
+    let cItems = [];
+    if(this.sendFromPopup){
+      cItems = this.items;
+    }
+    else {
+      cItems = this.checkedItems;
+    }
+    console.log(cItems);
+    if(cItems.length === 0) {
       (<any>$).growl.warning({ message: 'No items selected' });
     } else {
-      this.eventImageService.send(this.checkedItems, username, email, phoneNumber, message,this.eventId).subscribe((data) => {
+      this.eventImageService.send(cItems, username, email, phoneNumber, message,this.eventId).subscribe((data) => {
           if(data) {
-            for(const item of this.checkedItems) {
+            for(const item of cItems) {
               $('#checkboxFiveInput'+item).prop('checked',false);
             }
             this.resetSelected();
@@ -268,6 +284,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
       );
     }
   }
+
   submitSendViaSms(value) {
     const username = value.username;
     const phoneNumber = value.phoneNumber;
