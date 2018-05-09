@@ -13,39 +13,43 @@ export class AdbannerComponent implements OnInit {
 
   constructor(private bannerAdCommunicatorService: BannerAdCommunicatorService) {
 
-    bannerAdCommunicatorService.advertiserChanged$.subscribe(command=>{
-      const commandSegments = command.split('@');
-      console.log("this.type "+this.type);
-      if(commandSegments[0] === this.type){
-        this.advertiserChanged = true;
-       // this.banner = commandSegments[1];
+    bannerAdCommunicatorService.advertiserChanged$.subscribe(adCommunicator=>{
 
+      if(adCommunicator.type !== this.type){
+        return;
+      }
+      if(adCommunicator.imagesPath!=null && adCommunicator.imagesPath.length>0){
+        this.banner = adCommunicator.imagesPath[0];
       }
 
+      this.advertiserChanged = true;
+      this.banners = adCommunicator.imagesPath;
+
+      if(!this.delayLoopStarted){
+        this.rotateGalleryAdTopBanner(0).then();
+      }
     });
   }
 
   private advertiserChanged=false;
+  private delayLoopStarted = false;
   @Input()
   type:string;
 
   @Input()
   delayDuration:number;
 
-  @Input()
-  topBanners =[];
-  @Input()
-  galleryId=0;
+  banners =[];
   banner="";
 
   ngOnInit() {
-    this.galleryId = 0;
 
-    this.rotateGalleryAdTopBanner(0);
+   // this.rotateGalleryAdTopBanner(0).then();
   }
   private async rotateGalleryAdTopBanner(startIndex?:number){
 
-    const readyFlag =  this.topBanners.length==0?false:true;
+
+    const readyFlag =  this.banners.length==0?false:true;
 
     if(!readyFlag){
       delay(3000).then(()=>{
@@ -57,25 +61,27 @@ export class AdbannerComponent implements OnInit {
     if(startIndex==undefined || startIndex==null){
       startIndex = 0;
     }
-    const id = this.galleryId;
+
     try{
-      console.log("topBanners ",this.topBanners);
-      for( let i=startIndex ;i< this.topBanners.length;i++){
-        this.banner = this.topBanners[i];
+      console.log("topBanners ",this.banners);
+      for(let i=startIndex ; i< this.banners.length; i++){
+        this.banner = this.banners[i];
         console.log('From child component',this.type,i,this.banner,this.advertiserChanged);
+
         await delay(this.delayDuration);
 
-        /*if(this.advertiserChanged){
+        if(this.advertiserChanged){
           console.log('From child component',this.type,i,this.banner,this.advertiserChanged);
 
-          /!**
-           * rotate to next advertiser's Gallery Add
-           * *!/
+           /**
+            * rotate to next advertiser's Gallery Add
+            * */
+
           this.advertiserChanged = false;
           this.rotateGalleryAdTopBanner(1).then();
           console.log("End of function from IF");
           return;
-        }*/
+        }
 
 
       }

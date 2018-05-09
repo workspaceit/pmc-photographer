@@ -10,6 +10,7 @@ import {EventImageService} from '../../../../services/event-image.service';
 import {EventImage} from '../../../../datamodel/event-image';
 import {Event} from "../../../../datamodel/event";
 import {BannerAdCommunicatorService} from '../../../../services/banner-ad-communicator.service';
+import {AdCommunicator} from '../../../../datamodel/ad-comunicator';
 
 @Component({
   selector: 'app-gallery',
@@ -48,7 +49,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       apiOffset:0,
       delay:{
         global:5000,
-        topBanner:500,
+        topBanner:1000,
         bottomBanner:1000,
       },
       banner:['top','bottom'],
@@ -466,26 +467,35 @@ export class GalleryComponent implements AfterViewInit,OnInit {
      * Top banner
      * */
     if(tbSecRes.length>0){
-
+      let tmpTopBannerArray = [];
        this.advertisementOnPage.topBanner = this.resourcePath+tbSecRes[0].fileName;
 
        this.forChildComponent.topBanner = [];
        for(const i in tbSecRes){
-        this.forChildComponent.topBanner.push(this.resourcePath+tbSecRes[i].fileName);
+       // this.forChildComponent.topBanner.push(this.resourcePath+tbSecRes[i].fileName);
+         tmpTopBannerArray.push(this.resourcePath+tbSecRes[i].fileName);
        }
-      this.bannerAdCommunicatorService.changeAdvertiser('top', this.advertisementOnPage.topBanner);
+      const  adCommunicator = new AdCommunicator();
+      adCommunicator.type = 'top';
+      adCommunicator.imagesPath = tmpTopBannerArray;
+      this.bannerAdCommunicatorService.changeAdvertiser(adCommunicator);
     }
     /**
      *  Bottom banner
      * */
     if(bbSecRes.length>0){
+      let tmpBottomBannerArray = [];
       this.advertisementOnPage.bottomBanner = this.resourcePath+bbSecRes[0].fileName;
 
       this.forChildComponent.bottomBanner = [];
       for(const i in tbSecRes){
-        this.forChildComponent.bottomBanner.push(this.resourcePath+bbSecRes[i].fileName);
+       // this.forChildComponent.bottomBanner.push(this.resourcePath+bbSecRes[i].fileName);
+        tmpBottomBannerArray.push(this.resourcePath+bbSecRes[i].fileName);
       }
-      this.bannerAdCommunicatorService.changeAdvertiser('bottom', this.advertisementOnPage.topBanner);
+      const  adCommunicator = new AdCommunicator();
+      adCommunicator.type = 'bottom';
+      adCommunicator.imagesPath = tmpBottomBannerArray;
+      this.bannerAdCommunicatorService.changeAdvertiser(adCommunicator);
 
     }
 
