@@ -17,9 +17,9 @@ export class AdbannerComponent implements OnInit {
       const commandSegments = command.split('@');
       console.log("this.type "+this.type);
       if(commandSegments[0] === this.type){
-        this.topBanner = commandSegments[1];
-        console.log(' imagePath ' +commandSegments);
         this.advertiserChanged = true;
+       // this.banner = commandSegments[1];
+
       }
 
     });
@@ -36,7 +36,7 @@ export class AdbannerComponent implements OnInit {
   topBanners =[];
   @Input()
   galleryId=0;
-  topBanner="";
+  banner="";
 
   ngOnInit() {
     this.galleryId = 0;
@@ -61,17 +61,21 @@ export class AdbannerComponent implements OnInit {
     try{
       console.log("topBanners ",this.topBanners);
       for( let i=startIndex ;i< this.topBanners.length;i++){
-        this.topBanner = this.topBanners[i];
+        this.banner = this.topBanners[i];
+        console.log('From child component',this.type,i,this.banner,this.advertiserChanged);
         await delay(this.delayDuration);
 
-        if(this.advertiserChanged ==true){
-          /**
+        /*if(this.advertiserChanged){
+          console.log('From child component',this.type,i,this.banner,this.advertiserChanged);
+
+          /!**
            * rotate to next advertiser's Gallery Add
-           * */
+           * *!/
+          this.advertiserChanged = false;
           this.rotateGalleryAdTopBanner(1).then();
           console.log("End of function from IF");
           return;
-        }
+        }*/
 
 
       }

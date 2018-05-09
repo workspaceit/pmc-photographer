@@ -48,7 +48,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       apiOffset:0,
       delay:{
         global:5000,
-        topBanner:1000,
+        topBanner:500,
         bottomBanner:1000,
       },
       banner:['top','bottom'],
@@ -468,23 +468,25 @@ export class GalleryComponent implements AfterViewInit,OnInit {
     if(tbSecRes.length>0){
 
        this.advertisementOnPage.topBanner = this.resourcePath+tbSecRes[0].fileName;
-      this.bannerAdCommunicatorService.changeAdvertiser('top', this.advertisementOnPage.topBanner);
+
        this.forChildComponent.topBanner = [];
        for(const i in tbSecRes){
         this.forChildComponent.topBanner.push(this.resourcePath+tbSecRes[i].fileName);
        }
+      this.bannerAdCommunicatorService.changeAdvertiser('top', this.advertisementOnPage.topBanner);
     }
     /**
      *  Bottom banner
      * */
     if(bbSecRes.length>0){
       this.advertisementOnPage.bottomBanner = this.resourcePath+bbSecRes[0].fileName;
-      this.bannerAdCommunicatorService.changeAdvertiser('bottom', this.advertisementOnPage.topBanner);
 
       this.forChildComponent.bottomBanner = [];
       for(const i in tbSecRes){
         this.forChildComponent.bottomBanner.push(this.resourcePath+bbSecRes[i].fileName);
       }
+      this.bannerAdCommunicatorService.changeAdvertiser('bottom', this.advertisementOnPage.topBanner);
+
     }
 
 

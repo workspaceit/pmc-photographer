@@ -13,7 +13,6 @@ export class PhotographerLoginService {
 
   setOauthCredential(data) {
     localStorage.setItem(this.oauthCredentialKey, JSON.stringify(data));
-    // console.log(localStorage.getItem(this.oauthCredentialKey));
   }
 
   setCurrentUser(photographer: Photographer){

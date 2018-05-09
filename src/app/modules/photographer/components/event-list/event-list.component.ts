@@ -64,7 +64,6 @@ export class EventListComponent implements OnInit {
 
   getEvents(): void {
     this.eventService.getAll(this.locationId, this.filterDate, this.limit, this.offset).subscribe((responseData) => {
-      console.log("auto");
       this.eventListResponseData = responseData;
       this.responseArrived = true;
     });
