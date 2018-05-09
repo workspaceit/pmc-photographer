@@ -202,12 +202,6 @@ export class GalleryComponent implements AfterViewInit,OnInit {
                                                         this.advertisements = this.advertisements.concat(data);
                                                       }
                                                       this.rotateGalleryAd().then(()=>console.log("ROTATION CALLED"));
-                                                      console.log("ad length");
-                                                      console.log(this.advertisements.length);
-
-
-
-
 
 
     });
@@ -313,13 +307,6 @@ export class GalleryComponent implements AfterViewInit,OnInit {
      await delay(this.advertisementConfig.gallery.delay.global);
     }
 
-    /*if(!this.advertisementConfig.gallery.isEndOfAd){
-      this.fetchGalleryAdvertisement();
-      console.log("gallery API CALLED");
-    } else if(this.advertisementConfig.gallery.selfLoop){
-      console.log("gallery SELF LOOP");
-      this.rotateGalleryAd().then();
-    }*/
 
     this.rotateGalleryAd().then();
   }
@@ -445,10 +432,14 @@ export class GalleryComponent implements AfterViewInit,OnInit {
 
     const galleryAds = this.currentAdvertisementDetails;
 
+    const tbSec= galleryAds.sections.TOP_BANNER;
+    const bbSec = galleryAds.sections.BOTTOM_BANNER;
+
     const logoSecRes = galleryAds.sections.LOGO.sectionResource;
     const bgSecRes = galleryAds.sections.BACKGROUND.sectionResource;
-    const tbSecRes = galleryAds.sections.TOP_BANNER.sectionResource;
-    const bbSecRes = galleryAds.sections.BOTTOM_BANNER.sectionResource;
+    const tbSecRes = tbSec.sectionResource;
+    const bbSecRes = bbSec.sectionResource;
+
 
     /**
      * Single Logo
@@ -466,42 +457,42 @@ export class GalleryComponent implements AfterViewInit,OnInit {
     /**
      * Top banner
      * */
-    if(tbSecRes.length>0){
-      let tmpTopBannerArray = [];
-       this.advertisementOnPage.topBanner = this.resourcePath+tbSecRes[0].fileName;
-
-       this.forChildComponent.topBanner = [];
-       for(const i in tbSecRes){
-       // this.forChildComponent.topBanner.push(this.resourcePath+tbSecRes[i].fileName);
-         tmpTopBannerArray.push(this.resourcePath+tbSecRes[i].fileName);
-       }
-      const  adCommunicator = new AdCommunicator();
-      adCommunicator.type = 'top';
-      adCommunicator.imagesPath = tmpTopBannerArray;
-      this.bannerAdCommunicatorService.changeAdvertiser(adCommunicator);
-    }
+   this.prepareBannerImages(tbSecRes,this.advertisementConfig.gallery.banner[0],tbSec.rotation);
     /**
      *  Bottom banner
      * */
-    if(bbSecRes.length>0){
-      let tmpBottomBannerArray = [];
-      this.advertisementOnPage.bottomBanner = this.resourcePath+bbSecRes[0].fileName;
-
-      this.forChildComponent.bottomBanner = [];
-      for(const i in tbSecRes){
-       // this.forChildComponent.bottomBanner.push(this.resourcePath+bbSecRes[i].fileName);
-        tmpBottomBannerArray.push(this.resourcePath+bbSecRes[i].fileName);
-      }
-      const  adCommunicator = new AdCommunicator();
-      adCommunicator.type = 'bottom';
-      adCommunicator.imagesPath = tmpBottomBannerArray;
-      this.bannerAdCommunicatorService.changeAdvertiser(adCommunicator);
-
-    }
+    this.prepareBannerImages(bbSecRes,this.advertisementConfig.gallery.banner[1],bbSec.rotation);
 
 
   }
+  private prepareBannerImages(secRes: SectionResource[],type:string,rotation:string){
 
+
+    let tmpTopBannerArray = [];
+    this.advertisementOnPage.topBanner = this.resourcePath+secRes[0].fileName;
+
+    this.forChildComponent.topBanner = [];
+
+    console.log("rotation",rotation);
+    if(rotation==='ROTATE'){
+      for(const i in secRes){
+        // this.forChildComponent.topBanner.push(this.resourcePath+tbSecRes[i].fileName);
+        tmpTopBannerArray.push(this.resourcePath+secRes[i].fileName);
+        console.log("rotation","IF");
+      }
+    }else if(rotation==='STATIC'){
+      const  tmpPath = (secRes.length>0) ? this.resourcePath+secRes[0].fileName:'';
+      tmpTopBannerArray.push(tmpPath);
+      console.log("rotation","ELSE");
+    }
+    console.log("rotation",tmpTopBannerArray);
+
+
+    const  adCommunicator = new AdCommunicator();
+    adCommunicator.type = type;
+    adCommunicator.imagesPath = tmpTopBannerArray;
+    this.bannerAdCommunicatorService.changeAdvertiser(adCommunicator);
+  }
   private resetPopUpAdSettings(){
     this.advertisementOnPage.popUpAd.video.ready = false;
   }
