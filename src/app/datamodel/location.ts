@@ -18,6 +18,7 @@ export class Location {
   fadeInTime: number;
   fadeOutTime: number;
   hasSlideshow: boolean;
+  breakTime:number;
 
   constructor(values: Object = {}) {
     Object.assign(this, values);

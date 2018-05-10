@@ -169,7 +169,6 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     /**
      * Takes value first time only
      *  */
-
     if(this.slideShowAdList==null || this.slideShowAdList.length==0)return;
 
     const slideShowAdData = new AdvertisementDetails(this.slideShowAdList[0]);
@@ -177,13 +176,11 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
 
     this.pageData.slideShowAd.duration =  tbSection.duration;
 
-    /**
-     *
-     * */
 
     for(let i=this.pageData.slideShowAd.duration;i>=0;i--){
       this.pageData.slideShowAd.closingCountdown=i;
       await delay(1000);
+
     }
     this.stopSlideShowAdRotation();
 
@@ -225,7 +222,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
        fileType = tbSecRes[0].fileType;
        mimeType = tbSecRes[0].mimeType;
     }
-    //debugger;
+
     if(fileType === "VIDEO"){
       this.pageData.slideShowAd.video.link = this.resourcePath+fileName;
       this.pageData.slideShowAd.video.mimeType = mimeType;
@@ -352,6 +349,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       return;
     }
 
+
     const currentIndex = this.getCurrentSlideShowIndex();
     console.log("currentIndex Of Banner ",currentIndex);
     const slideShowAdData = this.slideShowAdList[currentIndex];
@@ -379,6 +377,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       mimeType = tbSecRes[i].mimeType;
 
       if(fileType == "IMAGE"){
+
          this.pageData.slideShowAd.currentBannerImg = this.resourcePath+fileName;
         await delay(2000);
       }else{
@@ -409,6 +408,9 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
   public stopSlideShowAdRotation(){
     this.slideShowAdRotation = false;
     this.showSlideShow();
+
+    this.startAddRotation().then();
+
   }
   public getLocationAndInitJs(){
     this.locationService.getById(this.locationId).subscribe(result=>{
@@ -474,9 +476,21 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     });
 
     const slideshowComponentReff = this;
-    (<any>$("#slideShowAdDiv")).delay(10000).queue(function(next){
-      slideshowComponentReff.showSlideShowAd();
-    });
+    /*(<any>$("#slideShowAdDiv")).delay(10000).queue(function(next){
+
+      setInterval(function(){
+
+        }, 5000);
+
+    });*/
+
+   /* setInterval(()=>{
+
+    },10000);*/
+
+
+
+    this.startAddRotation().then();
 
 
     if(this.eventData===null){
@@ -504,4 +518,9 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
 
   }
 
+  private async startAddRotation(){
+    await delay(this.locationData.breakTime*1000);
+    this.slideShowAdRotation = true;
+    this.showSlideShowAd();
+  }
 }
