@@ -145,14 +145,14 @@
 
 
 <div class="modal fade modal-gallery" id="image-gallery" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="image-gallery-title"></h4>
       </div>
       <div class="modal-body clearfix">
-        <div class="col-md-12" style="padding:0px;">
-          <a (click)="sendSingleImage(currentImage.id)" target="_blank" class="action-icon pull-right" data-toggle="tooltip"
+        <div class="col-md-12" style="padding:0px;position: relative">
+          <a (click)="sendSingleImage(currentImage.id)" style="position: absolute;right: 10px;top: 10px;z-index: 99;"  class="action-icon pull-right" data-toggle="tooltip"
              data-placement="bottom" title="Send Via Email / SMS">
             <img src="assets/images/send.png" class="icon_style">
           </a>
@@ -177,12 +177,12 @@
   </div>
 </div>
 
-<div class="modal fade" id="sendPhotoViaEmail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade modal-send-email" id="sendPhotoViaEmail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">x</span>
+          <span aria-hidden="true" style="color: #fff;">x</span>
         </button>
         <h4 class="modal-title" id="myModalLabel1">Send Photo Via Email</h4>
       </div>
@@ -206,7 +206,7 @@
             <div class="row">
               <div class="col-sm-12">
                 <input type="submit" [disabled]="!emailForm.valid" name="register-submit"
-                       id="register-submit" tabindex="4" class="form-control btn btn-register"
+                       id="register-submit" tabindex="4" class="form-control btn  btn-success"
                        style="width: 130px;float: right;" value="SEND">
               </div>
             </div>

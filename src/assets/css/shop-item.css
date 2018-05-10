@@ -1625,7 +1625,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a68c2ce0', e
 
 .event-logo{
   background: transparent;
-  height: 60%;
+  height: 50%;
   width: 100%;
   text-align: center;
   display: block;
@@ -1913,6 +1913,19 @@ color: #fff;
 .center-form input[type="submit"]{
   background: #5038aa;
   height: 50px;
+}
+
+.modal-send-email .modal-content{
+  background: #2b1348 !important;
+  color: #fff;
+}
+.modal-send-email input{
+  background: #583c7b;
+  color: #fff;
+}
+.modal-send-email textarea{
+  background: #583c7b;
+  color: #fff;
 }
 /*slideshow*/
 /* Author:tanveer */
