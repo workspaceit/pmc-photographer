@@ -30,7 +30,8 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
   slideShowAdData: AdvertisementDetails;
   slideShowAdList: AdvertisementDetails[]=[];
   pageConfig = {
-    eventAndLocationFetched : false
+    eventAndLocationFetched : false,
+    slideShow:{duration:1}
   };
   locationId=0;
   eventId=0;
@@ -175,7 +176,6 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     const  tbSection = slideShowAdData.sections.TOP_BANNER;
 
     this.pageData.slideShowAd.duration =  tbSection.duration;
-    console.log("this.pageData.slideShowAd.duration",this.pageData.slideShowAd.duration);
 
     /**
      *
@@ -185,6 +185,8 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       this.pageData.slideShowAd.closingCountdown=i;
       await delay(1000);
     }
+    this.stopSlideShowAdRotation();
+
   }
   private async rotateVideo(){
     if(!this.slideShowAdRotation){
@@ -257,6 +259,44 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       this.rotateSlideShowImageBanner().then();
     }
     console.log("currentIndex ",currentIndex,slideShowAdData);
+  }
+  private async rotateSlideshow(){
+
+    for(const i in this.pageData.eventImage){
+      console.log("rotateSlideshow",i,this.pageData.eventImage);
+      (<any>$('#'+i+'slideShow')).fadeOut(500,function(){
+        $('#'+(i+1)+'slideShow').fadeIn(500);
+      });
+
+      let index= Number(i);
+      let fadeOutIndex=0;
+      let fadeInIndex =0;
+      if(index==0){
+        fadeInIndex = index;
+        fadeOutIndex = this.pageData.eventImage.length-1;
+      }else{
+        fadeInIndex = index;
+        fadeOutIndex = index -1;
+      }
+
+      if( (<any>$('#'+fadeOutIndex+'slideShow')).is(":visible") ){
+        (<any>$('#'+fadeOutIndex+'slideShow')).fadeOut(200,function(){
+          $('#'+fadeInIndex+'slideShow').fadeIn(200);
+        });
+      }else{
+        /**
+         * Need this delay not sure why
+         * Elements may be not ready first time
+         * */
+        await delay(1000);
+        (<any>$('#'+fadeInIndex+'slideShow')).fadeIn(200);
+        console.log('#'+fadeInIndex+'slideShow');
+      }
+
+
+      await delay(this.locationData.durationSpeed*1000);
+    }
+    this.rotateSlideshow().then();
   }
   private async rotateBackground(){
     const locBgImgs = this.pageData.location.locationBackgroundImages;
@@ -397,6 +437,8 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
   }
   private initJsFunction(){
 
+   // (<any>$('#eventImageParentDiv')).attr("data-wow-delay",this.pageConfig.slideShow.duration+'s');
+    console.log("eventImageParentDiv",(<any>$('#eventImageParentDiv')).attr("data-wow-delay"));
     //return;
     (<any>$('.count')).each(function () {
       (<any>$(this)).prop('Counter',0).animate({
@@ -451,6 +493,9 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       console.log(" this.pageData.location", this.pageData.location);
       this.pageData.location.locationLogo = this.resourcePath+this.pageData.location.locationLogo;
       this.rotateBackground().then();
+      delay(4000).then(value => {
+        this.rotateSlideshow().then();
+      });
     }
 
     new WOW({

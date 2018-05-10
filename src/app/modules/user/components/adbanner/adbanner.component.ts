@@ -26,6 +26,8 @@ export class AdbannerComponent implements OnInit {
       this.banners = adCommunicator.imagesPath;
 
       if(!this.delayLoopStarted){
+        debugger;
+        this.delayLoopStarted = true;
         this.rotateGalleryAdTopBanner(0).then();
       }
     });

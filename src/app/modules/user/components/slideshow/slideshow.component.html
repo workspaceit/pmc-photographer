@@ -48,13 +48,14 @@
       </div>
     </div>
     <div class="swiper-right">
-      <div class="center-swiper wow slideInRight" data-wow-delay="5s">
-        <div id="eventImageDiv" class="carousel slide cstm-carousel-slide carousel-fade" data-interval="5000" data-ride="carousel">
+
+      <div id="eventImageParentDiv" class="center-swiper"  >  <!--  data-wow-delay="1s"-->
+        <div id="eventImageDiv" class="carousel slide cstm-carousel-slide " > <!-- data-interval="1000"  data-ride="carousel" ->
 
           <!-- Wrapper for slides -->
           <div class="carousel-inner" role="listbox">
 
-            <div *ngFor="let eventImage of pageData.eventImage;let i = index" [ngClass]="(i==1)?'item active left':'item'" >
+            <div id="{{i}}slideShow" *ngFor="let eventImage of pageData.eventImage;let i = index" style="display: none;" > <!--[ngClass]="(i==1)?'item active left':'item'" -->
               <img src="{{eventImagePath}}{{eventImage.image}}" />
             </div>
 
@@ -67,8 +68,8 @@
           <div class="carousel-inner" role="listbox">
             <div class="item active">
               <!-- "-->
-              <input *ngIf="pageData.slideShowAd.closingCountdown==0" type="button" value="CLOSE" (click)="stopSlideShowAdRotation()">
-              <span *ngIf="pageData.slideShowAd.closingCountdown>0" style="background: #1CA347">Closing In ({{pageData.slideShowAd.closingCountdown}})</span>
+              <input  type="button" value="CLOSE" (click)="stopSlideShowAdRotation()">
+              <span  style="background: #1CA347">Closing In ({{pageData.slideShowAd.closingCountdown}})</span>
 
               <img *ngIf="pageData.slideShowAd.currentFileType=='IMAGE'" id="slidShowAdPmcBanner"   src="{{pageData.slideShowAd.currentBannerImg}}" >
               <video   class="video" id="slidShowAdPmc" autoplay muted style="width: 100%;" >
