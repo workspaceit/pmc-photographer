@@ -68,8 +68,8 @@
           <div class="carousel-inner" role="listbox">
             <div class="item active">
               <!-- "-->
-              <input  type="button" value="CLOSE" (click)="stopSlideShowAdRotation()">
-              <span  style="background: #1CA347">Closing In ({{pageData.slideShowAd.closingCountdown}})</span>
+              <input type="button" class="btn-close-ad" value="CLOSE" (click)="stopSlideShowAdRotation()">
+              <span  class="btn-close-alert">Closing In ({{pageData.slideShowAd.closingCountdown}})</span>
 
               <img *ngIf="pageData.slideShowAd.currentFileType=='IMAGE'" id="slidShowAdPmcBanner"   src="{{pageData.slideShowAd.currentBannerImg}}" >
               <video   class="video" id="slidShowAdPmc" autoplay muted style="width: 100%;" >
