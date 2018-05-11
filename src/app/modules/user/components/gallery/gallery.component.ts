@@ -74,7 +74,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
   eventImagePath = environment.eventPhotoUrl;
   eventImageSharingPath = environment.eventPhotoSharingUrl;
   advertisementOnPage = {
-    popUpAd: {
+      popUpAd: {
       video:{ready:false,path:"",mimeType:""},
       images:[],
       currentImage:"",

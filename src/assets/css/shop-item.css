@@ -2414,6 +2414,7 @@ input:checked + .slider:before {
   position: absolute;
   right: 30px;
   transition: all 0.5s ease;
+  z-index: 1;
 }
 .photographer-ul li:hover {
   color: #fff;
