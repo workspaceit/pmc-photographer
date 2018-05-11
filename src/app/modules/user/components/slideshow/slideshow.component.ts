@@ -14,6 +14,7 @@ import {EventImageService} from '../../../../services/event-image.service';
 import {City} from '../../../../datamodel/city';
 import {State} from '../../../../datamodel/state';
 import {LocationImage} from '../../../../datamodel/locationImage';
+import {SectionResource} from '../../../../datamodel/section-resource';
 
 
 @Component({
@@ -49,7 +50,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
         mimeType:"",
         ready:false,
       },
-      currentBannerImg:"",
+      currentBannerImg:{path:"",url:""},
       currentBackground: "",
       currentFileType:"",
       closingCountdown:0,
@@ -80,7 +81,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     this.pageData.location.locationBackgroundImages = [];
     this.pageData.currentBgImage = 'assets/images/bg.jpg';
     this.pageData.location.locationLogo = 'assets/images/dummy_transparent.png';
-
+    this.pageData.event.eventPhoto  = 'assets/images/dummy_transparent.png';
     console.log(locIdStr,eventIdStr);
 
     if(this.eventId>0){
@@ -102,7 +103,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
   }
   private locationDefaultValue(){
 
-    this.pageData.location.locationLogo = 'assets/images/pmc-stock/vendor.png';
+    this.pageData.location.locationLogo = 'assets/images/sample-location.png';
     this.pageData.location.name='Location Sample';
     this.pageData.location.address ='8825 E JEFFERSON AVE,DETROIT, MI 48214 ';
     this.pageData.location.city.name = "DETROIT";
@@ -111,7 +112,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     this.pageData.location.phone = "(313) 822-660";
   }
   private eventDefaultValue(){
-    this.pageData.event.eventPhoto = 'assets/images/pmc-stock/e1.png';
+    this.pageData.event.eventPhoto = 'assets/images/sample-event.png';
   }
 
 
@@ -153,7 +154,6 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     slideshowComponent.rotateVideo().then(()=>{slideshowComponent.initClosingCountdown();});
   }
   public showSlideShow(){
-    const slideshowComponent = this;
     (<any>$("#eventImageDiv")).show();
     (<any>$("#slideShowAdDiv")).hide();
   }
@@ -169,7 +169,6 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     /**
      * Takes value first time only
      *  */
-
     if(this.slideShowAdList==null || this.slideShowAdList.length==0)return;
 
     const slideShowAdData = new AdvertisementDetails(this.slideShowAdList[0]);
@@ -177,18 +176,18 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
 
     this.pageData.slideShowAd.duration =  tbSection.duration;
 
-    /**
-     *
-     * */
-
     for(let i=this.pageData.slideShowAd.duration;i>=0;i--){
       this.pageData.slideShowAd.closingCountdown=i;
       await delay(1000);
+      if(!this.slideShowAdRotation)break;
     }
-    this.stopSlideShowAdRotation();
+    if( this.slideShowAdRotation){
+      this.stopSlideShowAdRotation();
+    }
 
   }
   private async rotateVideo(){
+   // debugger;
     if(!this.slideShowAdRotation){
       return;
     }
@@ -225,7 +224,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
        fileType = tbSecRes[0].fileType;
        mimeType = tbSecRes[0].mimeType;
     }
-    //debugger;
+
     if(fileType === "VIDEO"){
       this.pageData.slideShowAd.video.link = this.resourcePath+fileName;
       this.pageData.slideShowAd.video.mimeType = mimeType;
@@ -236,14 +235,16 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
         const slideshowComponent = this;
 
         (<any>$('#slidShowAdPmc')).load();
-
+        (<any>$('#slidShowAdPmc')).show();
         (<any>$("#slidShowAdPmc")).off("ended").on("ended",function(){
+          $('#slidShowAdPmc').hide();
+
           console.log("End video");
           this.pause();
 
 
           delay(2000).then(()=>{
-            slideshowComponent.rotateVideo().then();
+            //slideshowComponent.rotateVideo().then();
           });
 
        //   console.log("Init Rotate");
@@ -256,7 +257,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       this.decrementCurrentSlideShowIndex();
       this.pageData.slideShowAd.video.ready = false;
       this.pageData.slideShowAd.currentFileType = "IMAGE";
-      this.rotateSlideShowImageBanner().then();
+      this.rotateSlideShowImageBannerAd().then();
     }
     console.log("currentIndex ",currentIndex,slideShowAdData);
   }
@@ -301,6 +302,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
   private async rotateBackground(){
     const locBgImgs = this.pageData.location.locationBackgroundImages;
     if(locBgImgs==null || locBgImgs.length==0)return;
+
 
     /** In millisecond */
     let fadeInTransition = 500;
@@ -347,20 +349,26 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     }
     this.rotateBackground().then();
   }
-  private async rotateSlideShowImageBanner(){
+  private async rotateSlideShowImageBannerAd(){
+   // debugger;
     if(!this.slideShowAdRotation){
       return;
     }
 
+
     const currentIndex = this.getCurrentSlideShowIndex();
-    console.log("currentIndex Of Banner ",currentIndex);
     const slideShowAdData = this.slideShowAdList[currentIndex];
     const  tbSection = slideShowAdData.sections.TOP_BANNER;
-    const  tbSecRes = tbSection.sectionResource;
+    let  tbSecRes = [];
+    if(tbSection.rotation==='ROTATE'){
+      tbSecRes = tbSection.sectionResource;
+    }else  if(tbSection.rotation==='STATIC'){
+      tbSecRes.push(tbSection.sectionResource[0]);
 
+    }
     if(tbSecRes.length==0){
       delay(3000).then(()=>{
-        this.rotateSlideShowImageBanner().then();
+        this.rotateSlideShowImageBannerAd().then();
       });
       return;
     }
@@ -370,16 +378,27 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     let fileName = "";
     let fileType = "";
     let mimeType = "";
+    let url = "";
 
 
+
+
+
+   /* if(tbSection.rotation==='ROTATE'){
+    }else if(tbSection.rotation==='STATIC'){
+      tbSecRes.push(tbSection.sectionResource[0]);
+    }*/
 
     for(const i in tbSecRes) {
       fileName = tbSecRes[i].fileName;
       fileType = tbSecRes[i].fileType;
       mimeType = tbSecRes[i].mimeType;
+      url = tbSecRes[i].url;
 
-      if(fileType == "IMAGE"){
-         this.pageData.slideShowAd.currentBannerImg = this.resourcePath+fileName;
+      if(fileType === "IMAGE"){
+
+        this.pageData.slideShowAd.currentBannerImg.path = this.resourcePath+fileName;
+        this.pageData.slideShowAd.currentBannerImg.url = url;
         await delay(2000);
       }else{
         this.decrementCurrentSlideShowIndex();
@@ -389,7 +408,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       }
     }
 
-    this.rotateSlideShowImageBanner().then();
+    this.rotateSlideShowImageBannerAd().then();
 
 
    // console.log("Roation Ends");
@@ -408,7 +427,11 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
   }
   public stopSlideShowAdRotation(){
     this.slideShowAdRotation = false;
+    this.pageData.slideShowAd.video.ready = false;
     this.showSlideShow();
+
+    this.startAddRotation().then();
+
   }
   public getLocationAndInitJs(){
     this.locationService.getById(this.locationId).subscribe(result=>{
@@ -474,9 +497,21 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     });
 
     const slideshowComponentReff = this;
-    (<any>$("#slideShowAdDiv")).delay(10000).queue(function(next){
-      slideshowComponentReff.showSlideShowAd();
-    });
+    /*(<any>$("#slideShowAdDiv")).delay(10000).queue(function(next){
+
+      setInterval(function(){
+
+        }, 5000);
+
+    });*/
+
+   /* setInterval(()=>{
+
+    },10000);*/
+
+
+
+    this.startAddRotation().then();
 
 
     if(this.eventData===null){
@@ -504,4 +539,16 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
 
   }
 
+  private async startAddRotation(){
+
+    let breakTime;
+    if(this.locationData ==null || this.locationData.breakTime==undefined || this.locationData.breakTime==0){
+      breakTime = 2;
+    }else{
+      breakTime = this.locationData.breakTime;
+    }
+    await delay(breakTime*1000);
+    this.slideShowAdRotation = true;
+    this.showSlideShowAd();
+  }
 }

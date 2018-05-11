@@ -26,7 +26,6 @@ export class AdbannerComponent implements OnInit {
       this.banners = adCommunicator.imagesPath;
 
       if(!this.delayLoopStarted){
-        debugger;
         this.delayLoopStarted = true;
         this.rotateGalleryAdTopBanner(0).then();
       }
@@ -42,7 +41,7 @@ export class AdbannerComponent implements OnInit {
   delayDuration:number;
 
   banners =[];
-  banner="";
+  banner={path:"",url:""};
 
   ngOnInit() {
 
@@ -67,13 +66,12 @@ export class AdbannerComponent implements OnInit {
     try{
       console.log("topBanners ",this.banners);
       for(let i=startIndex ; i< this.banners.length; i++){
-        this.banner = this.banners[i];
-        console.log('From child component',this.type,i,this.banner,this.advertiserChanged);
+        this.banner.path = this.banners[i].path;
+        this.banner.url = this.banners[i].url;
 
         await delay(this.delayDuration);
 
         if(this.advertiserChanged){
-          console.log('From child component',this.type,i,this.banner,this.advertiserChanged);
 
            /**
             * rotate to next advertiser's Gallery Add

@@ -70,8 +70,10 @@
               <!-- "-->
               <input type="button" class="btn-close-ad" value="CLOSE" (click)="stopSlideShowAdRotation()">
               <span  class="btn-close-alert">Closing In ({{pageData.slideShowAd.closingCountdown}})</span>
+              <a href="{{pageData.slideShowAd.currentBannerImg.url}}" target="_blank">
+                <img *ngIf="pageData.slideShowAd.currentFileType=='IMAGE'" id="slidShowAdPmcBanner"   src="{{pageData.slideShowAd.currentBannerImg.path}}" >
+              </a>
 
-              <img *ngIf="pageData.slideShowAd.currentFileType=='IMAGE'" id="slidShowAdPmcBanner"   src="{{pageData.slideShowAd.currentBannerImg}}" >
               <video   class="video" id="slidShowAdPmc" autoplay muted style="width: 100%;" >
                 <source
                   *ngIf="pageData.slideShowAd.video.ready"
