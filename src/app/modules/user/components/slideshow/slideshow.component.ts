@@ -80,7 +80,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     this.pageData.location.locationBackgroundImages = [];
     this.pageData.currentBgImage = 'assets/images/bg.jpg';
     this.pageData.location.locationLogo = 'assets/images/dummy_transparent.png';
-
+    this.pageData.event.eventPhoto  = 'assets/images/dummy_transparent.png';
     console.log(locIdStr,eventIdStr);
 
     if(this.eventId>0){
@@ -102,7 +102,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
   }
   private locationDefaultValue(){
 
-    this.pageData.location.locationLogo = 'assets/images/pmc-stock/vendor.png';
+    this.pageData.location.locationLogo = 'assets/images/sample-location.png';
     this.pageData.location.name='Location Sample';
     this.pageData.location.address ='8825 E JEFFERSON AVE,DETROIT, MI 48214 ';
     this.pageData.location.city.name = "DETROIT";
@@ -111,7 +111,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     this.pageData.location.phone = "(313) 822-660";
   }
   private eventDefaultValue(){
-    this.pageData.event.eventPhoto = 'assets/images/pmc-stock/e1.png';
+    this.pageData.event.eventPhoto = 'assets/images/sample-event.png';
   }
 
 
@@ -519,7 +519,13 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
   }
 
   private async startAddRotation(){
-    await delay(this.locationData.breakTime*1000);
+    let breakTime;
+    if(this.locationData ==null || this.locationData.breakTime==undefined || this.locationData.breakTime==0){
+      breakTime = 2;
+    }else{
+      breakTime = this.locationData.breakTime;
+    }
+    await delay(breakTime*1000);
     this.slideShowAdRotation = true;
     this.showSlideShowAd();
   }
