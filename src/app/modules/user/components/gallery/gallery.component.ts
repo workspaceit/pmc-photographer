@@ -424,10 +424,15 @@ export class GalleryComponent implements AfterViewInit,OnInit {
 
         (<any>$("#pmcGalAdVideo")).load();
         (<any>$("#pmcGalAdVideo")).off("ended").on("ended",function(){
+          console.log("Video Ended");
           this.pause();
           this.currentTime = 0;
           galleryComponent.fetchPopUpAdvertisement();
 
+        });
+        const duration =   (<any>document).getElementById('pmcGalAdVideo');
+        delay(300).then(()=>{
+          console.log("Video",(<any>document).getElementById('pmcGalAdVideo').duration);
         });
 
       });
