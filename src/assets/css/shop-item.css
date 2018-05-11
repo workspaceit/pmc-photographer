@@ -2393,3 +2393,16 @@ input:checked + .slider:before {
 .switcher_wrap .box_switch {
   float: right;
 }
+#popUpModal .modal-content {
+  border: 0px;
+  box-shadow: unset;
+  background: transparent;
+}
+#popUpModal .modal-dialog {
+  background: transparent;
+}
+#popUpModal .modal-body {
+  text-align: center;
+  padding: 0px;
+  background: rgba(202, 13, 13, 0);
+}

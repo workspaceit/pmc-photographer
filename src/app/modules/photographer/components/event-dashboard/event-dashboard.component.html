@@ -24,10 +24,10 @@
                 <!--{{ watermark.name }}-->
               <!--</option>-->
             <!--</select>-->
-            <a (click)="addWatermark()" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Add Watermark">
+            <a (click)="addWatermarkMultipleImages()" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Add Watermark">
               <img src="assets/images/add-watermark.png" class="icon_style">
             </a>
-            <a (click)="removeWatermark()" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Remove Watermark">
+            <a (click)="removeWatermarkMultipleImages()" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Remove Watermark">
               <img src="assets/images/remove-watermark.png" class="icon_style">
             </a>
             <a (click)="enableEditPhotos()" class="action-icon" data-toggle="tooltip" data-placement="bottom"
@@ -41,7 +41,7 @@
             <!--<a (click)="sendViaSms()"  target="_blank" class="action-icon" data-toggle="tooltip" data-placement="bottom"-->
                <!--title="Send Via SMS"><img src="assets/images/11.png" class="icon_style">-->
             <!--</a>-->
-            <a (click)="sendViaEmail()" target="_blank"class="action-icon" data-toggle="tooltip" data-placement="bottom"
+            <a (click)="sendViaEmailMultipleImages()" target="_blank"class="action-icon" data-toggle="tooltip" data-placement="bottom"
                title="Send Via Email / SMS"><img src="assets/images/send.png" class="icon_style">
             </a>
             <a (click)="uploadModal()" class="action-icon" data-toggle="tooltip" data-placement="bottom"
@@ -50,7 +50,8 @@
             <a (click)="print()" target="_blank" class="action-icon" data-toggle="tooltip" data-placement="bottom"
                title="Send To Printer"><img src="assets/images/44.png" class="icon_style">
             </a>
-            <a *ngIf="!slideShowImagesOnly" (click)="sendToSlideShow()" target="_blank" class="action-icon" data-toggle="tooltip"
+            <a *ngIf="!slideShowImagesOnly" (click)="sendToSlideShowMultipleImages()" target="_blank" class="action-icon"
+               data-toggle="tooltip"
                data-placement="bottom" title="Send To Slideshow"><img src="assets/images/55.png" class="icon_style">
             </a>
             <a *ngIf="slideShowImagesOnly" (click)="removeFromSlideshow()" class="action-icon" data-toggle="tooltip"
@@ -110,7 +111,7 @@
               </div>
             </div>
             <a class="thumbnail" (click)="openImageModal(eventImage)" href="#" data-image-id="" data-toggle="modal"
-               data-title="This is my title"
+               data-title=""
                data-caption="Some lovely red flowers" [attr.data-image]="imgPath + eventImage.image">
             </a>
           </div>
@@ -152,10 +153,30 @@
       </div>
       <div class="modal-body clearfix">
         <div class="col-md-12" style="padding:0px;position: relative">
-          <a (click)="sendSingleImage(currentImage.id)" style="position: absolute;right: 10px;top: 10px;z-index: 99;"  class="action-icon pull-right" data-toggle="tooltip"
+         <!-- <a (click)="sendSingleImage(currentImage.id)" style="position: absolute;right: 10px;top: 10px;z-index: 99;"  class="action-icon pull-right" data-toggle="tooltip"
              data-placement="bottom" title="Send Via Email / SMS">
             <img src="assets/images/send.png" class="icon_style">
+          </a>-->
+          <a *ngIf="!currentImage.inSlideshow" (click)="sendToSlideshowSingleImage(currentImage.id)"
+             style="position: absolute;right: 10px;top: 10px;z-index: 99;"
+             class="action-icon pull-right" data-toggle="tooltip" data-placement="bottom" title="Send to Slideshow">
+            <img src="assets/images/55.png" class="icon_style">
           </a>
+          <a *ngIf="currentImage.inSlideshow" (click)="removeFromSlideshowSingleImage(currentImage.id)"
+             style="position: absolute;right: 10px;top: 10px;z-index: 99;"
+             class="action-icon pull-right" data-toggle="tooltip" data-placement="bottom" title="Send to Slideshow">
+            <img src="assets/images/slideshow_remove.png" class="icon_style">
+          </a>
+          <!--<a *ngIf="!currentImage.watermark" (click)="addWatermarkSingleImage(currentImage.id)" style="position: absolute;right: 10px;top: 10px;z-index: 99;"
+             class="action-icon pull-right" data-toggle="tooltip"
+             data-placement="bottom" title="Add Watermark">
+            <img src="assets/images/add-watermark.png" class="icon_style">
+          </a>
+          <a *ngIf="currentImage.watermark" (click)="removeWatermarkSingleImage(currentImage.id)" style="position: absolute;right: 10px;top: 10px;z-index: 99;"
+             class="action-icon pull-right" data-toggle="tooltip"
+             data-placement="bottom" title="Remove Watermark">
+            <img src="assets/images/remove-watermark.png" class="icon_style">
+          </a>-->
           <img id="image-gallery-image" class="img-responsive" src="{{imgPath}}{{currentImage.image}}">
         </div>
       </div>

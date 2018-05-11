@@ -99,15 +99,12 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   }
 
   uploadModal() {
-    // (<any>$('#uploadModal')).modal({backdrop: 'static', keyboard: false})
     (<any>$('#uploadModal')).modal('show');
   }
   onUploadError(event) {
-    console.log("Error Occured");
     console.log(event);
   }
   onUploadSuccess(event) {
-    console.log("upload success");
     this.eventImages.unshift(event[1]);
     this.offset+=1;
     this.adjustHeight();
@@ -118,7 +115,6 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
       this.slideShowImagesOnly = false;
       this.getImages();
     }
-    console.log("ALL upload is done");
     (<any>$('#uploadModal')).modal('hide');
   }
   getEventDetails() {
@@ -136,7 +132,6 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   }
 
   getEventImages() {
-    // const thisComponent = this;
     this.eventImageService.getEventImages(this.eventId, this.limit, this.offset).subscribe((data) => {
       if(data.length === 0) {
         this.loadMore = false;
@@ -148,7 +143,6 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   }
 
   getEventImagesFromSlideshow() {
-    // const thisComponent = this;
     this.eventImageService.getEventImagesFromSlideshow(this.eventId, this.limit, this.offset).subscribe((data) => {
       if(data.length === 0) {
         this.loadMore = false;
@@ -185,7 +179,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   }
 
   deletePhotos() {
-    if(this.checkedItems.length==0) {
+    if(this.checkedItems.length === 0) {
       (<any>$).growl.warning({ message: 'No items selected' });
     } else {
        this.eventImageService.deleteEventImages(this.checkedItems).subscribe((data) => {
@@ -208,28 +202,19 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  sendToSlideShow() {
-    if(this.checkedItems.length===0) {
-      (<any>$).growl.warning({ message: 'No items selected' });
-    } else {
-      this.eventImageService.sendToSlideShow(this.checkedItems).subscribe((data) => {
-          if(data) {
-            for(const item of this.checkedItems) {
-              $('#checkboxFiveInput'+item).prop('checked',false);
-            }
-            this.resetSelected();
-            (<any>$).growl.notice({ message: 'Successfully send to slideshow!' });
-          }
-        },(err)=> {
-          console.log(err.error);
-          (<any>$).growl.error({ message: err.error });
-        }
-      );
-    }
+  sendToSlideShowMultipleImages() {
+    this.sendFromPopup = false;
+    this.sendToSlideShow();
   }
 
-  sendViaEmail() {
-    if(this.checkedItems.length === 0) {
+  removeFromSlideShowMultipleImages() {
+    this.sendFromPopup = false;
+    this.removeFromSlideshow();
+  }
+
+  sendViaEmailMultipleImages() {
+    let cItems = this.getCheckedItems();
+    if(cItems.length === 0) {
       (<any>$).growl.warning({ message: 'No items selected' });
     } else {
       this.sendFromPopup = false;
@@ -238,11 +223,38 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   }
 
   sendSingleImage(imageId) {
-    console.log(imageId);
     this.sendFromPopup = true;
     this.items = [];
     this.items += imageId;
     (<any>$('#sendPhotoViaEmail')).modal('show');
+  }
+
+  addWatermarkSingleImage(imageId) {
+    this.sendFromPopup = true;
+    this.items = [];
+    this.items += imageId;
+    this.addWatermark();
+  }
+
+  removeWatermarkSingleImage(imageId) {
+    this.sendFromPopup = true;
+    this.items = [];
+    this.items += imageId;
+    this.removeWatermark();
+  }
+
+  sendToSlideshowSingleImage(imageId) {
+    this.sendFromPopup = true;
+    this.items = [];
+    this.items += imageId;
+    this.sendToSlideShow();
+  }
+
+  removeFromSlideshowSingleImage(imageId) {
+    this.sendFromPopup = true;
+    this.items = [];
+    this.items += imageId;
+    this.removeFromSlideshow();
   }
 
   send(value) {
@@ -266,7 +278,8 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     console.log(cItems);
     if(cItems.length === 0) {
       (<any>$).growl.warning({ message: 'No items selected' });
-    } else {
+    }
+    else {
       this.eventImageService.send(cItems, username, email, phoneNumber, message,this.eventId).subscribe((data) => {
           if(data) {
             for(const item of cItems) {
@@ -285,42 +298,18 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  submitSendViaSms(value) {
-    const username = value.username;
-    const phoneNumber = value.phoneNumber;
-    const message = value.message;
-    if(this.checkedItems.length==0) {
-      (<any>$).growl.warning({ message: 'No items selected' });
-    } else {
-      this.eventImageService.sendViaSms(this.checkedItems,username,phoneNumber,message,this.eventId).subscribe((data) => {
-          if(data) {
-            for(const item of this.checkedItems) {
-              $('#checkboxFiveInput'+item).prop('checked',false);
-            }
-            this.resetSelected();
-            (<any>$('#sendPhotoViaSms')).modal('hide');
-            (<any>$).growl.notice({ message: 'Successfully send to sms!' });
-            this.smsForm.reset();
-          }
-        },(err)=> {
-          console.log(err.error);
-          (<any>$).growl.error({ message: err.error });
-        }
-      );
-    }
-  }
-
   openImageModal(image) {
     if(this.enableEdit){
       return;
     }
     console.log("Image Modal Opened");
     this.currentImage = image;
-    (<any>$('#image-gallery-image')).attr('src',this.imgPath+image.image);
+    // (<any>$('#image-gallery-image')).attr('src',this.imgPath+image.image);
     (<any>$('#image-gallery')).modal('show');
     const currentImageIndex = this.eventImages.indexOf(this.currentImage);
     this.displayPrevNext(currentImageIndex);
   }
+
   showNextImage() {
     const currentImageIndex = this.eventImages.indexOf(this.currentImage);
     const nextImageIndex = currentImageIndex+1;
@@ -330,6 +319,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
       this.displayPrevNext(nextImageIndex);
     }
   }
+
   showPreviousImage() {
     const currentImageIndex = this.eventImages.indexOf(this.currentImage);
     const previousImageIndex = currentImageIndex-1;
@@ -338,26 +328,29 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
       this.displayPrevNext(previousImageIndex);
     }
   }
+
   displayPrevNext(index) {
     const totalImage = this.eventImages.length;
     this.nextBtn = true;
     this.prevBtn = true;
-    if(index==0) {
+    if(index === 0) {
       this.prevBtn = false;
     }
-    if(index==totalImage-1) {
+    if(index === totalImage-1) {
       this.nextBtn = false;
     }
   }
+
   print() {
-    if(this.checkedItems.length==0) {
+    let cItems = this.getCheckedItems();
+    if(cItems.length === 0) {
       (<any>$).growl.warning({ message: 'No items selected' });
     } else {
       let images: EventImage[] = [];
-      for (const item of this.checkedItems) {
+      for (const item of cItems) {
         images = images.concat(this.eventImages.filter(data => data.id === item));
       }
-      let html:string = '';
+      let html = '';
       for (const image of images) {
         html += "<img src='" + this.imgPath + image.image + "'/>";
       }
@@ -378,11 +371,12 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
       );
       popupWin.document.close();
     }
-    for(const item of this.checkedItems) {
+    for(const item of cItems) {
       $('#checkboxFiveInput'+item).prop('checked',false);
     }
     this.resetSelected();
   }
+
   initialize() {
     const  thisComponent = this;
     (<any>$("#content-2")).mCustomScrollbar({
@@ -401,13 +395,6 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
               }
           }
         },
-        // onTotalScroll:function() {
-        //   console.log("scrolling done . . .");
-        //   if(thisComponent.loadMore) {
-        //     thisComponent.offset += thisComponent.limit;
-        //     thisComponent.getEventImages();
-        //   }
-        // }
       }
     });
 
@@ -433,18 +420,46 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
+  getCheckedItems(){
+    let cItems = [];
+    if(this.sendFromPopup){
+      cItems = this.items;
+    }
+    else {
+      cItems = this.checkedItems;
+    }
+    console.log(cItems);
+    return cItems;
+  }
+
+  addWatermarkMultipleImages(){
+    this.sendFromPopup = false;
+    this.addWatermark();
+  }
+
+  removeWatermarkMultipleImages(){
+    this.sendFromPopup = false;
+    this.removeWatermark();
+  }
+
   addWatermark() {
-    if(this.checkedItems.length==0) {
+    let cItems = this.getCheckedItems();
+
+    if(cItems.length === 0) {
       (<any>$).growl.warning({ message: 'No photo selected' });
-    } else if(this.eventDetailsResponseData.event.watermarks.length == 0) {
+    } else if(this.eventDetailsResponseData.event.watermarks.length === 0) {
       (<any>$).growl.warning({ message: 'No watermark assigned for this event' });
     } else {
-      this.eventImageService.addWatermark(this.checkedItems, this.eventDetailsResponseData.event.watermarks[0].id).subscribe((data) => {
+      this.eventImageService.addWatermark(cItems, this.eventDetailsResponseData.event.watermarks[0].id).subscribe((data) => {
         if (data) {
           for(let j = 0; j < data.length; j++) {
             for (let i = 0; i < this.eventImages.length; i++) {
-              if (this.eventImages[i].id == data[j].id) {
+              if (this.eventImages[i].id === data[j].id) {
                 this.eventImages[i] = data[j];
+                if(this.sendFromPopup){
+                  this.currentImage = this.eventImages[i];
+                  (<any>$('#image-gallery-image')).attr('src',this.imgPath + this.currentImage.image);
+                }
                 break;
               }
             }
@@ -465,15 +480,20 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   }
 
   removeWatermark() {
-    if(this.checkedItems.length==0) {
+    let cItems = this.getCheckedItems();
+    if(cItems.length === 0) {
       (<any>$).growl.warning({ message: 'No photo selected' });
     } else {
-      this.eventImageService.removeWatermark(this.checkedItems).subscribe((data) => {
+      this.eventImageService.removeWatermark(cItems).subscribe((data) => {
           if (data) {
             for(let j = 0; j < data.length; j++) {
               for (let i = 0; i < this.eventImages.length; i++) {
-                if (this.eventImages[i].id == data[j].id) {
+                if (this.eventImages[i].id === data[j].id) {
                   this.eventImages[i] = data[j];
+                  if(this.sendFromPopup) {
+                    this.currentImage = this.eventImages[i];
+                    (<any>$('#image-gallery-image')).attr('src', this.imgPath + this.currentImage.image);
+                  }
                   break;
                 }
               }
@@ -494,17 +514,59 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
+  sendToSlideShow() {
+    let cItems = this.getCheckedItems();
+    if(cItems.length === 0) {
+      (<any>$).growl.warning({ message: 'No items selected' });
+    } else {
+      this.eventImageService.sendToSlideShow(cItems).subscribe((data) => {
+          if(data) {
+            for(let j = 0; j < data.length; j++) {
+              for (let i = 0; i < this.eventImages.length; i++) {
+                if (this.eventImages[i].id === data[j].id) {
+                  this.eventImages[i] = data[j];
+                  this.currentImage = this.eventImages[i];
+                  break;
+                }
+              }
+            }
+            for(const item of cItems) {
+              $('#checkboxFiveInput'+item).prop('checked',false);
+            }
+            this.resetSelected();
+            this.adjustHeight();
+            (<any>$).growl.notice({ message: 'Successfully send to slideshow!' });
+          }
+        },(err)=> {
+          console.log(err.error);
+          (<any>$).growl.error({ message: err.error });
+        }
+      );
+    }
+  }
+
   removeFromSlideshow() {
-    if(this.checkedItems.length==0) {
+    let cItems = this.getCheckedItems();
+    if(cItems.length === 0) {
       (<any>$).growl.warning({ message: 'No photo selected' });
     } else {
-      this.eventImageService.removeFromSlideShow(this.checkedItems).subscribe((data) => {
+      this.eventImageService.removeFromSlideShow(cItems).subscribe((data) => {
           if(data) {
-            for(const item of this.checkedItems) {
+            for(let j = 0; j < data.length; j++) {
+              for (let i = 0; i < this.eventImages.length; i++) {
+                if (this.eventImages[i].id === data[j].id) {
+                  this.eventImages[i] = data[j];
+                  this.currentImage = this.eventImages[i];
+                  break;
+                }
+              }
+            }
+            for(const item of cItems) {
               $('#checkboxFiveInput'+item).prop('checked',false);
             }
             this.removePhotosFromView();
             this.resetSelected();
+            this.adjustHeight();
             (<any>$).growl.notice({ message: 'Successfully removed from Slideshow!' });
           }
         },(err)=> {
