@@ -153,7 +153,6 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     slideshowComponent.rotateVideo().then(()=>{slideshowComponent.initClosingCountdown();});
   }
   public showSlideShow(){
-    const slideshowComponent = this;
     (<any>$("#eventImageDiv")).show();
     (<any>$("#slideShowAdDiv")).hide();
   }
@@ -180,9 +179,11 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     for(let i=this.pageData.slideShowAd.duration;i>=0;i--){
       this.pageData.slideShowAd.closingCountdown=i;
       await delay(1000);
-
+      if(!this.slideShowAdRotation)break;
     }
-    this.stopSlideShowAdRotation();
+    if( this.slideShowAdRotation){
+      this.stopSlideShowAdRotation();
+    }
 
   }
   private async rotateVideo(){
@@ -519,6 +520,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
   }
 
   private async startAddRotation(){
+    debugger;
     let breakTime;
     if(this.locationData ==null || this.locationData.breakTime==undefined || this.locationData.breakTime==0){
       breakTime = 2;

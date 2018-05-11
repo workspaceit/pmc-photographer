@@ -79,11 +79,12 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       images:[],
       currentImage:"",
       currentFileType:"",
+      currentUrl:""
     },
-    logo:"",
-    topBanner:"",
-    bottomBanner:"",
-    background:""
+    logo:{path:"",url:""},
+    topBanner:{path:"",url:""},
+    bottomBanner:{path:"",url:""},
+    background:{path:"",url:""},
   };
   fileType: FILE_TYPE;
 
@@ -393,7 +394,8 @@ export class GalleryComponent implements AfterViewInit,OnInit {
   private async rotatePopUpImages(){
     const images = this.advertisementOnPage.popUpAd.images;
     for(const i in images){
-      this.advertisementOnPage.popUpAd.currentImage =this.resourcePath+images[i];
+      this.advertisementOnPage.popUpAd.currentImage =this.resourcePath+images[i].path;
+      this.advertisementOnPage.popUpAd.currentUrl =images[i].url;
       await delay(this.advertisementConfig.popUpAd.image.delay);
     }
     this.fetchPopUpAdvertisement();
@@ -405,7 +407,9 @@ export class GalleryComponent implements AfterViewInit,OnInit {
     this.advertisementOnPage.popUpAd.currentFileType = FILE_TYPE.IMAGE;
     this.advertisementOnPage.popUpAd.images = [];
     for(const index in secRes){
-      this.advertisementOnPage.popUpAd.images.push(secRes[index].fileName);
+
+      let secResObj = {url:secRes[index].url,path:secRes[index].fileName};
+      this.advertisementOnPage.popUpAd.images.push(secResObj);
     }
   }
   private preparePopUpAdVideo(secRes: SectionResource[]){
@@ -445,13 +449,16 @@ export class GalleryComponent implements AfterViewInit,OnInit {
      * Single Logo
      * */
     if(logoSecRes.length>0){
-      this.advertisementOnPage.logo = this.resourcePath+logoSecRes[0].fileName;
+      this.advertisementOnPage.logo.path = this.resourcePath+logoSecRes[0].fileName;
+      this.advertisementOnPage.logo.url = logoSecRes[0].url;
+
     }
     /**
      * Single Background
      * */
     if(bgSecRes.length>0){
-      this.advertisementOnPage.background = this.resourcePath+bgSecRes[0].fileName;
+      this.advertisementOnPage.background.path = this.resourcePath+bgSecRes[0].fileName;
+      this.advertisementOnPage.background.url = bgSecRes[0].url;
     }
 
     /**
@@ -469,23 +476,23 @@ export class GalleryComponent implements AfterViewInit,OnInit {
 
 
     let tmpTopBannerArray = [];
-    this.advertisementOnPage.topBanner = this.resourcePath+secRes[0].fileName;
+    this.advertisementOnPage.topBanner.path = this.resourcePath+secRes[0].fileName;
+    this.advertisementOnPage.topBanner.url = this.resourcePath+secRes[0].url;
 
     this.forChildComponent.topBanner = [];
 
     console.log("rotation",rotation);
     if(rotation==='ROTATE'){
       for(const i in secRes){
-        // this.forChildComponent.topBanner.push(this.resourcePath+tbSecRes[i].fileName);
-        tmpTopBannerArray.push(this.resourcePath+secRes[i].fileName);
-        console.log("rotation","IF");
+        const imageObj = {path:this.resourcePath+secRes[i].fileName,url:secRes[i].url};
+        tmpTopBannerArray.push(imageObj);
       }
     }else if(rotation==='STATIC'){
+
       const  tmpPath = (secRes.length>0) ? this.resourcePath+secRes[0].fileName:'';
-      tmpTopBannerArray.push(tmpPath);
-      console.log("rotation","ELSE");
+      const imageObj = {path:tmpPath,url:secRes[0].url};
+      tmpTopBannerArray.push(imageObj);
     }
-    console.log("rotation",tmpTopBannerArray);
 
 
     const  adCommunicator = new AdCommunicator();
