@@ -748,7 +748,7 @@ input:checked + .slider:before {
   z-index: 999;
   background: transparent;
   padding: 10px;
-  width: 100%;
+  /*width: 100%;*/
   display: none;
 }
 .social-foot a {
@@ -2405,4 +2405,43 @@ input:checked + .slider:before {
   text-align: center;
   padding: 0px;
   background: rgba(202, 13, 13, 0);
+}
+#popUpModal .close:hover{
+  color: #2f1b4f;
+}
+#popUpModal .close{
+  color: #fff !important;
+  position: absolute;
+  right: 30px;
+  transition: all 0.5s ease;
+}
+.photographer-ul li:hover {
+  color: #fff;
+  background: #3c3769;
+  transform: scale(1.1);
+}
+.photographer-ul li {
+  margin: 10px 0px;
+  font-size: 17px;
+  text-align: left;
+  background: #130a63;
+  padding: 10px 0px;
+  text-align: center;
+  list-style: none;
+  transition: all 0.5s ease;
+}
+.photographer-ul {
+  padding: 0px;
+}
+.ar_login_fix{
+  text-align: center;
+}
+
+
+.action-buttons-container {
+  display: none;
+}
+
+.modal-gallery .modal-content:hover .action-buttons-container{
+  display: block;
 }

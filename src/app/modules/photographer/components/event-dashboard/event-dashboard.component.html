@@ -152,31 +152,42 @@
         <h4 class="modal-title" id="image-gallery-title"></h4>
       </div>
       <div class="modal-body clearfix">
+        <div class="social-foot ornobio">
+          <share-button button="facebook" [url]="eventImageSharingPath + currentImage.image + shareSuffix">
+            <img src="assets/images/social/facebook.png" width="30">
+          </share-button>
+          <share-button button="twitter" [url]="eventImageSharingPath + currentImage.image + shareSuffix">
+            <img src="assets/images/social/twitter.png" width="30">
+          </share-button>
+          <share-button button="google" [url]="eventImageSharingPath + currentImage.image + shareSuffix">
+            <img src="assets/images/social/gplus.png" width="30">
+          </share-button>
+        </div>
         <div class="col-md-12" style="padding:0px;position: relative">
-         <!-- <a (click)="sendSingleImage(currentImage.id)" style="position: absolute;right: 10px;top: 10px;z-index: 99;"  class="action-icon pull-right" data-toggle="tooltip"
-             data-placement="bottom" title="Send Via Email / SMS">
-            <img src="assets/images/send.png" class="icon_style">
-          </a>-->
-          <a *ngIf="!currentImage.inSlideshow" (click)="sendToSlideshowSingleImage(currentImage.id)"
-             style="position: absolute;right: 10px;top: 10px;z-index: 99;"
-             class="action-icon pull-right" data-toggle="tooltip" data-placement="bottom" title="Send to Slideshow">
-            <img src="assets/images/55.png" class="icon_style">
-          </a>
-          <a *ngIf="currentImage.inSlideshow" (click)="removeFromSlideshowSingleImage(currentImage.id)"
-             style="position: absolute;right: 10px;top: 10px;z-index: 99;"
-             class="action-icon pull-right" data-toggle="tooltip" data-placement="bottom" title="Send to Slideshow">
-            <img src="assets/images/slideshow_remove.png" class="icon_style">
-          </a>
-          <!--<a *ngIf="!currentImage.watermark" (click)="addWatermarkSingleImage(currentImage.id)" style="position: absolute;right: 10px;top: 10px;z-index: 99;"
-             class="action-icon pull-right" data-toggle="tooltip"
-             data-placement="bottom" title="Add Watermark">
-            <img src="assets/images/add-watermark.png" class="icon_style">
-          </a>
-          <a *ngIf="currentImage.watermark" (click)="removeWatermarkSingleImage(currentImage.id)" style="position: absolute;right: 10px;top: 10px;z-index: 99;"
-             class="action-icon pull-right" data-toggle="tooltip"
-             data-placement="bottom" title="Remove Watermark">
-            <img src="assets/images/remove-watermark.png" class="icon_style">
-          </a>-->
+          <div class="ar_btn_hold action-buttons-container"  style="position: absolute;right: 10px;top: 10px;z-index: 99;">
+            <a (click)="sendSingleImage(currentImage.id)"  class="action-icon pull-right" data-toggle="tooltip"
+               data-placement="bottom" title="Send Via Email / SMS">
+              <img src="assets/images/send.png" class="icon_style">
+            </a>
+            <a *ngIf="!currentImage.inSlideshow" (click)="sendToSlideshowSingleImage(currentImage.id)"
+               class="action-icon pull-right" data-toggle="tooltip" data-placement="bottom" title="Send to Slideshow">
+              <img src="assets/images/55.png" class="icon_style">
+            </a>
+            <a *ngIf="currentImage.inSlideshow" (click)="removeFromSlideshowSingleImage(currentImage.id)"
+               class="action-icon pull-right" data-toggle="tooltip" data-placement="bottom" title="Send to Slideshow">
+              <img src="assets/images/slideshow_remove.png" class="icon_style">
+            </a>
+            <a *ngIf="!currentImage.watermark" (click)="addWatermarkSingleImage(currentImage.id)"
+               class="action-icon pull-right" data-toggle="tooltip"
+               data-placement="bottom" title="Add Watermark">
+              <img src="assets/images/add-watermark.png" class="icon_style">
+            </a>
+            <a *ngIf="currentImage.watermark" (click)="removeWatermarkSingleImage(currentImage.id)"
+               class="action-icon pull-right" data-toggle="tooltip"
+               data-placement="bottom" title="Remove Watermark">
+              <img src="assets/images/remove-watermark.png" class="icon_style">
+            </a>
+          </div>
           <img id="image-gallery-image" class="img-responsive" src="{{imgPath}}{{currentImage.image}}">
         </div>
       </div>

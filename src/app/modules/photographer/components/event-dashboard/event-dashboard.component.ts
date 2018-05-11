@@ -40,6 +40,8 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   slideShowImagesOnly = false;
   sendFromPopup = false;
   items: number[] = [];
+  eventImageSharingPath = environment.eventPhotoSharingUrl;
+  shareSuffix = '/share';
 
   constructor(private route: ActivatedRoute, private router: Router, private eventImageService: EventImageService,
               private eventService: EventService,private  photographerLoginService: PhotographerLoginService) { }

@@ -27,7 +27,9 @@
                 </div>
               </div>
               <div class="col-lg-12 text-center">
-                <h3 class="event-name" style="color:#fff;margin-top:5px;font-size:26px;margin-bottom:5px;text-shadow: 1px 1px 1px #111;">{{ event.name }}</h3>
+                <h3 class="event-name" style="color:#fff;margin-top:5px;font-size:26px;margin-bottom:5px;text-shadow: 1px 1px 1px #111;">
+                  {{ event.name }}
+                </h3>
                 <p class="e-date" style="color:#fff;margin-bottom:5px;margin-top:0px;font-size:18px;text-shadow: 1px 1px 1px #111;">
                   Date: {{ event.startsAt | date:'MMM d, yyyy' }}
                 </p>
@@ -94,12 +96,13 @@
   <div class="modal fade modal-video modal-noborder" id="popUpModal" tabindex="-1" role="dialog" aria-labelledby="popUpModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        <div class="modal-header">
-          <!-- <a href="#image-gallery" class="close" data-dismiss="modal" aria-label="Close">&times;</a> -->
-          <a *ngIf="advertisementConfig.popUpAd.showClosePopUp"  class="close" data-toggle="modal" data-dismiss="modal" (click)="switchedOffRotation()" >x</a>
-          <h4 class="modal-title hidden-xs" id="popUpModalLabel">Please Close If you Don't Like Ad</h4>
-        </div>
+        <!--<div class="modal-header">-->
+          <!--&lt;!&ndash; <a href="#image-gallery" class="close" data-dismiss="modal" aria-label="Close">&times;</a> &ndash;&gt;-->
+          <!---->
+          <!--<h4 class="modal-title hidden-xs" id="popUpModalLabel">Please Close If you Don't Like Ad</h4>-->
+        <!--</div>-->
         <div class="modal-body">
+          <a *ngIf="advertisementConfig.popUpAd.showClosePopUp"  class="close" data-toggle="modal" data-dismiss="modal" (click)="switchedOffRotation()" >x</a>
           <a href="{{advertisementOnPage.popUpAd.currentUrl}}" target="_blank">
             <img class="fix-modal-mob-pop" *ngIf="advertisementOnPage.popUpAd.currentFileType == 'IMAGE'"
                  src="{{advertisementOnPage.popUpAd.currentImage}}"
@@ -149,7 +152,7 @@
             <a (click)="reportImage()" style="float:right;background:transparent;color:red !important;"><i class="fa fa-2x fa-warning"></i></a>
           </div>
           <div class="col-md-12" style="padding:0px;">
-            <img id="image-gallery-image" class="img-responsive" src="{{eventImagePath}}{{currentImage.image}}">
+            <img id="image-gallery-image" class="image-gallery-image img-responsive" src="{{eventImagePath}}{{currentImage.image}}">
           </div>
         </div>
         <div class="modal-footer">
