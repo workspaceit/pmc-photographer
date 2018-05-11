@@ -1,6 +1,6 @@
 export class AdCommunicator{
   type:string;
-  imagesPath=[];
+  images=[];
   constructor(values: Object = {}) {
     Object.assign(this, values);
   }
