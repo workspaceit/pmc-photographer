@@ -48,9 +48,9 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       selfLoop:true,
       apiOffset:0,
       delay:{
-        global:5000,
-        topBanner:1000,
-        bottomBanner:1000,
+        global:10000,
+        topBanner:5000,
+        bottomBanner:5000,
       },
       banner:['top','bottom'],
       arrayOffset:0
@@ -497,7 +497,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
 
     const  adCommunicator = new AdCommunicator();
     adCommunicator.type = type;
-    adCommunicator.imagesPath = tmpTopBannerArray;
+    adCommunicator.images = tmpTopBannerArray;
     this.bannerAdCommunicatorService.changeAdvertiser(adCommunicator);
   }
   private resetPopUpAdSettings(){

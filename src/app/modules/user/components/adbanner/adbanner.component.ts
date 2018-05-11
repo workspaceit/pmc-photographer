@@ -18,12 +18,13 @@ export class AdbannerComponent implements OnInit {
       if(adCommunicator.type !== this.type){
         return;
       }
-      if(adCommunicator.imagesPath!=null && adCommunicator.imagesPath.length>0){
-        this.banner = adCommunicator.imagesPath[0];
+      if(adCommunicator.images!=null && adCommunicator.images.length>0){
+        this.banner.url = adCommunicator.images[0].url;
+        this.banner.path = adCommunicator.images[0].path;
       }
 
       this.advertiserChanged = true;
-      this.banners = adCommunicator.imagesPath;
+      this.banners = adCommunicator.images;
 
       if(!this.delayLoopStarted){
         this.delayLoopStarted = true;
