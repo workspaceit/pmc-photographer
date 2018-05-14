@@ -74,7 +74,7 @@
                 <img *ngIf="pageData.slideShowAd.currentFileType=='IMAGE'" id="slidShowAdPmcBanner"   src="{{pageData.slideShowAd.currentBannerImg.path}}" >
               </a>
 
-              <video   class="video" id="slidShowAdPmc" autoplay muted style="width: 100%;" >
+              <video   class="video" id="slidShowVideoAdPmc" autoplay muted style="width: 100%;" >
                 <source
                   *ngIf="pageData.slideShowAd.video.ready"
                   src="{{pageData.slideShowAd.video.link}}" type="{{pageData.slideShowAd.video.mimeType}}"

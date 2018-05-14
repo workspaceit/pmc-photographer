@@ -337,6 +337,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
   }
 
   private changePupUpAdd(){
+
     this.delayPopUpCloseIconShow();
     if(this.advertisementConfig.popUpAd.rotateSwitchedOff){
       console.log('Switched OFF');
@@ -347,7 +348,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
     let i= this.getPopUpRotationStarIndex();
     console.log('POPUP Index '+i);
 
-    if(this.globalPopUpAdSection[i]==undefined){
+    if(this.globalPopUpAdSection[i]===undefined){
       delay(3000).then(()=>{
         this.changePupUpAdd();
         console.log('No advertisement found');
@@ -356,20 +357,30 @@ export class GalleryComponent implements AfterViewInit,OnInit {
     }
 
     let  secRes: SectionResource[] = [];
-    if(this.globalPopUpAdSection[i].sectionResource.length>0){
-      secRes = this.globalPopUpAdSection[i].sectionResource;
+    if(this.globalPopUpAdSection[i].sectionResource.length===0){
+      return;
     }
 
-    if(secRes.length>0){
-      const fileType = secRes[0].fileType;
+    if(this.globalPopUpAdSection[i].rotation==='ROTATE'){
+      secRes = this.globalPopUpAdSection[i].sectionResource;
+
+    }else if(this.globalPopUpAdSection[i].rotation==='STATIC'){
+      secRes.push(this.globalPopUpAdSection[i].sectionResource[0]);
+
+    }
+
+    if(secRes.length===0){
+      return;
+    }
+
+    const fileType = secRes[0].fileType;
 
 
-      if(fileType==FILE_TYPE.IMAGE){
-        this.preparePopUpAdImage(secRes);
-        this.rotatePopUpImages().then();
-      } else  if(fileType==FILE_TYPE.VIDEO){
-        this.preparePopUpAdVideo(secRes);
-      }
+    if(fileType===FILE_TYPE.IMAGE){
+      this.preparePopUpAdImage(secRes);
+      this.rotatePopUpImages().then();
+    } else  if(fileType===FILE_TYPE.VIDEO){
+      this.preparePopUpAdVideo(secRes).then();
     }
 
   }
@@ -412,30 +423,43 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       this.advertisementOnPage.popUpAd.images.push(secResObj);
     }
   }
-  private preparePopUpAdVideo(secRes: SectionResource[]){
+  private async preparePopUpAdVideo(secRes: SectionResource[]){
       this.advertisementOnPage.popUpAd.currentFileType = FILE_TYPE.VIDEO;
 
       this.advertisementOnPage.popUpAd.video.path = this.resourcePath+secRes[0].fileName;
       this.advertisementOnPage.popUpAd.video.mimeType = secRes[0].mimeType;
       this.advertisementOnPage.popUpAd.video.ready = true;
 
-      delay(300).then(()=>{
-        const galleryComponent = this;
+      await delay(300);
 
-        (<any>$("#pmcGalAdVideo")).load();
-        (<any>$("#pmcGalAdVideo")).off("ended").on("ended",function(){
-          console.log("Video Ended");
-          this.pause();
-          this.currentTime = 0;
-          galleryComponent.fetchPopUpAdvertisement();
 
-        });
-        const duration =   (<any>document).getElementById('pmcGalAdVideo');
-        delay(300).then(()=>{
-          console.log("Video",(<any>document).getElementById('pmcGalAdVideo').duration);
-        });
+    (<any>$("#pmcGalAdVideo")).load();
+    (<any>$("#pmcGalAdVideo")).off("ended").on("ended",function(){
+     /* console.log("Video Ended");
+      this.pause();
+      this.currentTime = 0;*/
 
-      });
+
+    });
+    await delay(300);
+
+    /**
+     * Duration can  be NaN if video does not load
+     * For slow internet connection loop is present
+     * */
+
+    let duration =  (<any>document).getElementById('pmcGalAdVideo').duration;
+    for(let i=0;isNaN(duration) && i<10;i++){
+      await delay(500);
+      duration =  (<any>document).getElementById('pmcGalAdVideo').duration;
+      console.log("Duration ",duration);
+    }
+
+
+
+    await delay(duration*1000);
+    (<any>document).getElementById('pmcGalAdVideo').pause();
+    this.fetchPopUpAdvertisement();
   }
   private prepareGalleryAdForPage(){
 

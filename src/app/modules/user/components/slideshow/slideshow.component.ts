@@ -146,12 +146,13 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       });
   }
   public showSlideShowAd(){
-    const slideshowComponent = this;
+
     (<any>$("#eventImageDiv")).hide();
     (<any>$("#slideShowAdDiv")).show();
 
-    slideshowComponent.pageData.slideShowAd.currentFileType="VIDEO";
-    slideshowComponent.rotateVideo().then(()=>{slideshowComponent.initClosingCountdown();});
+    this.pageData.slideShowAd.currentFileType="VIDEO";
+    this.rotateVideo().then();
+    this.initClosingCountdown().then();
   }
   public showSlideShow(){
     (<any>$("#eventImageDiv")).show();
@@ -230,28 +231,13 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       this.pageData.slideShowAd.video.mimeType = mimeType;
 
 
-      delay(300).then(()=>{
-        this.pageData.slideShowAd.video.ready = true;
-        const slideshowComponent = this;
-
-        (<any>$('#slidShowAdPmc')).load();
-        (<any>$('#slidShowAdPmc')).show();
-        (<any>$("#slidShowAdPmc")).off("ended").on("ended",function(){
-          $('#slidShowAdPmc').hide();
-
-          console.log("End video");
-          this.pause();
 
 
-          delay(2000).then(()=>{
-            //slideshowComponent.rotateVideo().then();
-          });
 
-       //   console.log("Init Rotate");
-
-        });
-
-      });
+      await delay(300);
+      this.pageData.slideShowAd.video.ready = true;
+      (<any>$('#slidShowVideoAdPmc')).load();
+      (<any>$('#slidShowVideoAdPmc')).show();
 
     }else{
       this.decrementCurrentSlideShowIndex();
@@ -261,13 +247,10 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     }
     console.log("currentIndex ",currentIndex,slideShowAdData);
   }
-  private async rotateSlideshow(){
+  private async rotateSlideShow(){
 
     for(const i in this.pageData.eventImage){
-      console.log("rotateSlideshow",i,this.pageData.eventImage);
-      (<any>$('#'+i+'slideShow')).fadeOut(500,function(){
-        $('#'+(i+1)+'slideShow').fadeIn(500);
-      });
+
 
       let index= Number(i);
       let fadeOutIndex=0;
@@ -290,14 +273,16 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
          * Elements may be not ready first time
          * */
         await delay(1000);
-        (<any>$('#'+fadeInIndex+'slideShow')).fadeIn(200);
-        console.log('#'+fadeInIndex+'slideShow');
+        debugger;
+        (<any>$('#'+fadeInIndex+'slideShow')).fadeIn(200,function(){
+          $('#'+fadeOutIndex+'slideShow').fadeOut(200);
+        });
       }
 
 
       await delay(this.locationData.durationSpeed*1000);
     }
-    this.rotateSlideshow().then();
+    this.rotateSlideShow().then();
   }
   private async rotateBackground(){
     const locBgImgs = this.pageData.location.locationBackgroundImages;
@@ -390,6 +375,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     }*/
 
     for(const i in tbSecRes) {
+      if(!this.slideShowAdRotation)return;
       fileName = tbSecRes[i].fileName;
       fileType = tbSecRes[i].fileType;
       mimeType = tbSecRes[i].mimeType;
@@ -426,11 +412,16 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     return this.slideShowAdListIndex++;
   }
   public stopSlideShowAdRotation(){
-    this.slideShowAdRotation = false;
+    if((<any>document).getElementById('slidShowVideoAdPmc')!==undefined){
+      (<any>document).getElementById('slidShowVideoAdPmc').pause();
+    }
+    $('#slidShowVideoAdPmc').hide();
     this.pageData.slideShowAd.video.ready = false;
-    this.showSlideShow();
 
-    this.startAddRotation().then();
+    this.slideShowAdRotation = false;
+
+    this.showSlideShow();
+    this.initStartAdRotationAfterDelay().then();
 
   }
   public getLocationAndInitJs(){
@@ -511,7 +502,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
 
 
 
-    this.startAddRotation().then();
+    this.initStartAdRotationAfterDelay().then();
 
 
     if(this.eventData===null){
@@ -529,7 +520,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       this.pageData.location.locationLogo = this.resourcePath+this.pageData.location.locationLogo;
       this.rotateBackground().then();
       delay(4000).then(value => {
-        this.rotateSlideshow().then();
+        this.rotateSlideShow().then();
       });
     }
 
@@ -539,7 +530,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
 
   }
 
-  private async startAddRotation(){
+  private async initStartAdRotationAfterDelay(){
 
     let breakTime;
     if(this.locationData ==null || this.locationData.breakTime==undefined || this.locationData.breakTime==0){
