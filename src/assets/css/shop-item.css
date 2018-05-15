@@ -1712,9 +1712,14 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a68c2ce0', e
 .cstm-carousel-slide .item{
   height: 100% !important;
 }
-.cstm-carousel-slide img{
+/*.cstm-carousel-slide img{
   margin: auto;
   height: 100% !important;
+}*/
+.cstm-carousel-slide img {
+  margin: auto;
+  height: auto !important;
+  max-width: 100%;
 }
 .cstm-carousel-slide .carousel-inner{
   height: 100% !important;

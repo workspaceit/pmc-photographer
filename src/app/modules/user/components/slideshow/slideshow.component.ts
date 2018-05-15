@@ -273,7 +273,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
          * Elements may be not ready first time
          * */
         await delay(1000);
-        debugger;
+        // debugger;
         (<any>$('#'+fadeInIndex+'slideShow')).fadeIn(200,function(){
           $('#'+fadeOutIndex+'slideShow').fadeOut(200);
         });

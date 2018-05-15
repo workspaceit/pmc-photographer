@@ -306,7 +306,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     }
     console.log("Image Modal Opened");
     this.currentImage = image;
-    // (<any>$('#image-gallery-image')).attr('src',this.imgPath+image.image);
+    (<any>$('#image-gallery-image')).attr('src',this.imgPath + image.image);
     (<any>$('#image-gallery')).modal('show');
     const currentImageIndex = this.eventImages.indexOf(this.currentImage);
     this.displayPrevNext(currentImageIndex);
@@ -446,7 +446,6 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
 
   addWatermark() {
     let cItems = this.getCheckedItems();
-
     if(cItems.length === 0) {
       (<any>$).growl.warning({ message: 'No photo selected' });
     } else if(this.eventDetailsResponseData.event.watermarks.length === 0) {
