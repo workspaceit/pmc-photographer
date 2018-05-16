@@ -7,6 +7,7 @@ import {LocationListComponent} from './components/location-list/location-list.co
 import {EventDashboardComponent} from './components/event-dashboard/event-dashboard.component';
 import {ReportedImageComponent} from "./components/reported-image/reported-image.component";
 import {AdminPhotographerLoginComponent} from "./components/admin-photographer-login/admin-photographer-login.component";
+import {AdminPhotographerGuard} from "./guards/admin-photographer.guard";
 
 const routes: Routes = [
   {
@@ -14,7 +15,7 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'locations', component: LocationListComponent },
-      { path: 'admin-login', component: AdminPhotographerLoginComponent },
+      { path: 'admin-login', component: AdminPhotographerLoginComponent, canActivate: [AdminPhotographerGuard] },
       { path: 'locations/:locationId/events', component: EventListComponent },
       { path: 'locations/:locationId/events/:eventId', component: EventDashboardComponent },
       { path: 'locations/:locationId/events/:eventId/reported-images', component: ReportedImageComponent },

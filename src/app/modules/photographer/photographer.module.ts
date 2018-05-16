@@ -21,6 +21,9 @@ import { ReportedImageComponent } from './components/reported-image/reported-ima
 import {PhotographerLoginService} from "../../services/photographer-login.service";
 import {LoginService} from "../../services/login.service";
 import {AdminPhotographerLoginComponent} from "./components/admin-photographer-login/admin-photographer-login.component";
+import { FilteredPhotographersPipe } from './pipes/filtered-photographers.pipe';
+import {AdminPhotographerGuard} from "./guards/admin-photographer.guard";
+
 @NgModule({
   imports: [
     CommonModule,
@@ -42,9 +45,11 @@ import {AdminPhotographerLoginComponent} from "./components/admin-photographer-l
     EventDashboardComponent,
     EventSidepanelComponent,
     ReportedImageComponent,
-    AdminPhotographerLoginComponent
+    AdminPhotographerLoginComponent,
+    FilteredPhotographersPipe
   ],
   providers:[
+    AdminPhotographerGuard,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, PhotographerLoginService, LoginService
   ]
 })

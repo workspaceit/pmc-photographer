@@ -45,8 +45,10 @@
   <div class="login ar_login_fix">
     <img src="assets/images/logo.png" style="text-align: center">
     <h4>Login as:</h4>
+    <input type="text" [(ngModel)]="searchTerm" placeholder="Search photographer" class="form-control">
     <ul class="photographer-ul">
-      <li *ngFor="let photographer of photographers" (click)="loginAsPhotographer(photographer)" style="cursor: pointer;">
+      <li *ngFor="let photographer of photographers  | filteredPhotographers: searchTerm"
+          (click)="loginAsPhotographer(photographer)" style="cursor: pointer;">
         {{ photographer.fullName }}
       </li>
     </ul>

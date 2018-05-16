@@ -9,7 +9,9 @@
               <div class="noteditable-desc ">
                 <div class="col-lg-12 text-left">
                   <h3 class="event-name">{{ eventDetailsResponseData.event.name }}
-                    <small>( {{ eventDetailsResponseData.imageCount }} Images )</small></h3>
+                    <small *ngIf="!slideShowImagesOnly">({{ eventDetailsResponseData.imageCount }} Images)</small>
+                    <small *ngIf="slideShowImagesOnly">({{ eventDetailsResponseData.slideshowImageCount }} Images)</small>
+                  </h3>
                   <p class="e-date" style="color:#fff;">
                     Date: {{ eventDetailsResponseData.event.startsAt | date:'d MMM, yyyy'}}
                   </p>
@@ -38,9 +40,6 @@
                title="Delete Photos" id="doneEdit">
               <img src="assets/images/garbage.png" class="icon_style">
             </a>
-            <!--<a (click)="sendViaSms()"  target="_blank" class="action-icon" data-toggle="tooltip" data-placement="bottom"-->
-               <!--title="Send Via SMS"><img src="assets/images/11.png" class="icon_style">-->
-            <!--</a>-->
             <a (click)="sendViaEmailMultipleImages()" target="_blank"class="action-icon" data-toggle="tooltip" data-placement="bottom"
                title="Send Via Email / SMS"><img src="assets/images/send.png" class="icon_style">
             </a>
@@ -50,7 +49,7 @@
             <a (click)="print()" target="_blank" class="action-icon" data-toggle="tooltip" data-placement="bottom"
                title="Send To Printer"><img src="assets/images/44.png" class="icon_style">
             </a>
-            <a *ngIf="!slideShowImagesOnly" (click)="sendToSlideShowMultipleImages()" target="_blank" class="action-icon"
+            <a *ngIf="!slideShowImagesOnly" (click)="sendToSlideShowMultipleImages()" class="action-icon"
                data-toggle="tooltip"
                data-placement="bottom" title="Send To Slideshow"><img src="assets/images/55.png" class="icon_style">
             </a>
@@ -58,13 +57,14 @@
                data-placement="bottom" title="Remove fom slideshow">
               <img src="assets/images/slideshow_remove.png" class="icon_style">
             </a>
-            <a routerLink="/user-panel/slideshow" [queryParams]="{eventId: eventId}" target="_blank"
+            <a routerLink="/user-panel/slideshow" [queryParams]="{eventId: eventId}"
                class="action-icon-preview" style="color:#fff;text-transform:uppercase"
-               data-toggle="tooltip" data-placement="bottom" title="Show Preview" target="_blank">Preview
+               data-toggle="tooltip" data-placement="bottom" title="SlideShow Preview" target="_blank">Preview
             </a>
-            <a routerLink="/photographer-panel/locations/{{locationId}}/events/{{eventId}}/reported-images"
+            <a [ngClass]="{'btn-red': eventDetailsResponseData.reportedImageCount > 0}"
+              routerLink="/photographer-panel/locations/{{locationId}}/events/{{eventId}}/reported-images"
                class="action-icon-preview" style="color:#fff;text-transform:uppercase" data-toggle="tooltip" data-placement="bottom"
-               title="Show Reported Images">Reported Images
+               title="Show Reported Images">Reported Images<span> ({{ eventDetailsResponseData.reportedImageCount }})</span>
             </a>
           </div>
         </div>
@@ -85,7 +85,6 @@
         <div class="row clearfix">
           <div class="col-md-12 col-sm-12 col-xs-12 clearfix">
             <div class="switcher_wrap">
-
               <div class="box_switch">
                 <!-- Rounded switch -->
                 <label class="switch">

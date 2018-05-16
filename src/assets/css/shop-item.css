@@ -2474,3 +2474,7 @@ input:checked + .slider:before {
 .modal-gallery .modal-content:hover .action-buttons-container{
   display: block;
 }
+
+.btn-red {
+  background: red !important;
+}

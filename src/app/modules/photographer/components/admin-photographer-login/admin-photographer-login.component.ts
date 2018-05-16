@@ -13,6 +13,7 @@ import {LoginService} from "../../../../services/login.service";
 export class AdminPhotographerLoginComponent implements OnInit {
 
   photographers: Photographer[];
+  searchTerm = '';
 
   constructor(private adminPhotographerLoginService: AdminPhotographerLoginService, private router: Router,
               private loginService: LoginService) { }
