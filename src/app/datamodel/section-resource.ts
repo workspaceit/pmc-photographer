@@ -6,6 +6,7 @@ export class SectionResource{
   fileType: string;
   mimeType: string;
   createdAt: string;
+  selectedStatic:boolean;
 
   constructor(values: Object = {}) {
     Object.assign(this, values);

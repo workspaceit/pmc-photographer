@@ -518,8 +518,17 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       }
     }else if(rotation==='STATIC'){
 
-      const  tmpPath = (secRes.length>0) ? this.resourcePath+secRes[0].fileName:'';
-      const imageObj = {path:tmpPath,url:secRes[0].url};
+      let  tmpPath = (secRes.length>0) ? this.resourcePath+secRes[0].fileName:'';
+      let imageObj = {path:tmpPath,url:secRes[0].url};
+
+      for(let i=0;i<secRes.length;i++){
+        if(!secRes[i].selectedStatic)continue;
+
+        tmpPath = (secRes.length>0) ? this.resourcePath+secRes[i].fileName:'';
+        imageObj = {path:tmpPath,url:secRes[i].url};
+        break;
+      }
+
       tmpTopBannerArray.push(imageObj);
     }
 
