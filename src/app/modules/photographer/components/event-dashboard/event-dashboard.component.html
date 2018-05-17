@@ -236,13 +236,32 @@
           <div class="form-group">
             <div class="row">
               <div class="col-sm-12">
-                <input type="submit" [disabled]="!emailForm.valid" name="register-submit"
+                <input type="submit" name="register-submit"
                        id="register-submit" tabindex="4" class="form-control btn  btn-success"
                        style="width: 130px;float: right;" value="SEND">
+<!--                <input type="submit" [disabled]="!emailForm.valid" name="register-submit"
+                       id="register-submit" tabindex="4" class="form-control btn  btn-success"
+                       style="width: 130px;float: right;" value="SEND">-->
               </div>
             </div>
           </div>
         </form>
+
+        <div>
+          <label>Watermark: </label>
+          <input type="radio" name="watermarkCheck" value="add" [(ngModel)]="watermarkCheck">Add
+          <input type="radio" name="watermarkCheck" value="remove" [(ngModel)]="watermarkCheck">Remove
+        </div>
+        <div>
+          <label>Slideshow: </label>
+          <input type="radio" name="slideshowCheck" value="send" [(ngModel)]="slideshowCheck">Send
+          <input type="radio" name="slideshowCheck" value="remove" [(ngModel)]="slideshowCheck">Remove
+        </div>
+        <!--<div>-->
+          <!--<label>Print: </label>-->
+          <!--<input type="radio" name="printCheck" value="print" [(ngModel)]="printCheck">Print-->
+        <!--</div>-->
+
       </div>
     </div>
   </div>

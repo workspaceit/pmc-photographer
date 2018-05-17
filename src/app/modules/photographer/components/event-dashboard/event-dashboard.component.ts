@@ -8,6 +8,7 @@ import {EventService} from '../../../../services/event.service';
 import { DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {PhotographerLoginService} from "../../../../services/photographer-login.service";
+import {el} from "@angular/platform-browser/testing/src/browser_util";
 
 @Component({
   selector: 'app-event-dashboard',
@@ -42,6 +43,11 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   items: number[] = [];
   eventImageSharingPath = environment.eventPhotoSharingUrl;
   shareSuffix = '/share';
+
+  // checkboxes
+  slideshowCheck = '';
+  watermarkCheck = '';
+  printCheck = '';
 
   constructor(private route: ActivatedRoute, private router: Router, private eventImageService: EventImageService,
               private eventService: EventService,private  photographerLoginService: PhotographerLoginService) { }
@@ -298,6 +304,29 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
         }
       );
     }
+
+
+    // Watermark check
+    if(this.watermarkCheck === 'add') {
+      this.addWatermark();
+    }
+    else if(this.watermarkCheck === 'remove'){
+      this.removeWatermark();
+    }
+
+    // Slideshow check
+    if(this.slideshowCheck === 'send'){
+      this.sendToSlideShow();
+    }
+    else if(this.slideshowCheck ==='remove') {
+      this.removeFromSlideshow();
+    }
+
+    // print check
+    if(this.printCheck === 'print') {
+      this.print();
+    }
+
   }
 
   openImageModal(image) {
@@ -349,9 +378,11 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
       (<any>$).growl.warning({ message: 'No items selected' });
     } else {
       let images: EventImage[] = [];
+      console.log(this.eventImages);
       for (const item of cItems) {
         images = images.concat(this.eventImages.filter(data => data.id === item));
       }
+      console.log(images);
       let html = '';
       for (const image of images) {
         html += "<img src='" + this.imgPath + image.image + "'/>";
