@@ -447,7 +447,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
 
     }
     console.log("Duration ",duration);
-    (<any>document).getElementById('pmcGalAdVideo').load();
+   // (<any>document).getElementById('pmcGalAdVideo').load();
     (<any>document).getElementById('pmcGalAdVideo').play();
     await delay(duration*1000);
     console.log("Video Close ",);

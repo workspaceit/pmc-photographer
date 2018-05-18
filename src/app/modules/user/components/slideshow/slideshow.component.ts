@@ -235,7 +235,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
 
       this.pageData.slideShowAd.video.ready = true;
       await delay(1000);
-      (<any>document).getElementById('slidShowVideoAdPmc').load();
+      //(<any>document).getElementById('slidShowVideoAdPmc').load();
       (<any>document).getElementById('slidShowVideoAdPmc').play();
       //(<any>$('#slidShowVideoAdPmc')).show();
 
