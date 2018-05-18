@@ -15,6 +15,7 @@ import {City} from '../../../../datamodel/city';
 import {State} from '../../../../datamodel/state';
 import {LocationImage} from '../../../../datamodel/locationImage';
 import {SectionResource} from '../../../../datamodel/section-resource';
+import {SectionResourceHelper} from '../../../../helper/section.resource.helper';
 
 
 @Component({
@@ -348,7 +349,8 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     if(tbSection.rotation==='ROTATE'){
       tbSecRes = tbSection.sectionResource;
     }else  if(tbSection.rotation==='STATIC'){
-      tbSecRes.push(tbSection.sectionResource[0]);
+      let secResObj = SectionResourceHelper.getSelectedStaticSectionResource(tbSection.sectionResource);
+      tbSecRes.push(secResObj);
 
     }
     if(tbSecRes.length==0){
@@ -502,7 +504,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
 
 
 
-    this.initStartAdRotationAfterDelay().then();
+
 
 
     if(this.eventData===null){
@@ -527,14 +529,16 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     new WOW({
       live: false
     }).init();
-
+    delay(5000).then(()=>{
+      this.showSlideShowAd();
+    });
   }
 
   private async initStartAdRotationAfterDelay(){
 
     let breakTime;
     if(this.locationData ==null || this.locationData.breakTime==undefined || this.locationData.breakTime==0){
-      breakTime = 2;
+      breakTime = 5;
     }else{
       breakTime = this.locationData.breakTime;
     }

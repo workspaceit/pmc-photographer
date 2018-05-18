@@ -11,6 +11,7 @@ import {EventImage} from '../../../../datamodel/event-image';
 import {Event} from "../../../../datamodel/event";
 import {BannerAdCommunicatorService} from '../../../../services/banner-ad-communicator.service';
 import {AdCommunicator} from '../../../../datamodel/ad-comunicator';
+import {SectionResourceHelper} from '../../../../helper/section.resource.helper';
 
 @Component({
   selector: 'app-gallery',
@@ -365,7 +366,8 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       secRes = this.globalPopUpAdSection[i].sectionResource;
 
     }else if(this.globalPopUpAdSection[i].rotation==='STATIC'){
-      secRes.push(this.globalPopUpAdSection[i].sectionResource[0]);
+      let imageObj = SectionResourceHelper.getSelectedStaticSectionResource(this.globalPopUpAdSection[i].sectionResource);
+      secRes.push(imageObj);
 
     }
 
@@ -430,17 +432,18 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       this.advertisementOnPage.popUpAd.video.mimeType = secRes[0].mimeType;
       this.advertisementOnPage.popUpAd.video.ready = true;
 
-      await delay(300);
+      await delay(1000);
 
-
-    (<any>$("#pmcGalAdVideo")).load();
-    (<any>$("#pmcGalAdVideo")).off("ended").on("ended",function(){
-     /* console.log("Video Ended");
+     (<any>document).getElementById('pmcGalAdVideo').load();
+    //(<any>$("#pmcGalAdVideo")).load();
+   // (<any>document).getElementById('pmcGalAdVideo').load();
+ /*   (<any>$("#pmcGalAdVideo")).off("ended").on("ended",function(){
+     /!* console.log("Video Ended");
       this.pause();
-      this.currentTime = 0;*/
+      this.currentTime = 0;*!/
 
 
-    });
+    });*/
     await delay(300);
 
     /**
@@ -459,6 +462,8 @@ export class GalleryComponent implements AfterViewInit,OnInit {
 
     await delay(duration*1000);
     (<any>document).getElementById('pmcGalAdVideo').pause();
+    this.advertisementOnPage.popUpAd.video.ready = true;
+
     this.fetchPopUpAdvertisement();
   }
   private prepareGalleryAdForPage(){
@@ -518,17 +523,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       }
     }else if(rotation==='STATIC'){
 
-      let  tmpPath = (secRes.length>0) ? this.resourcePath+secRes[0].fileName:'';
-      let imageObj = {path:tmpPath,url:secRes[0].url};
-
-      for(let i=0;i<secRes.length;i++){
-        if(!secRes[i].selectedStatic)continue;
-
-        tmpPath = (secRes.length>0) ? this.resourcePath+secRes[i].fileName:'';
-        imageObj = {path:tmpPath,url:secRes[i].url};
-        break;
-      }
-
+      let imageObj = SectionResourceHelper.getGalleryBannerSelectedStatic(secRes);
       tmpTopBannerArray.push(imageObj);
     }
 
