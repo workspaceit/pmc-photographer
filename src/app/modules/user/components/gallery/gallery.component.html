@@ -111,7 +111,7 @@
 
           </a>
 
-          <video *ngIf="advertisementOnPage.popUpAd.currentFileType == 'VIDEO'" muted  class="video" id="pmcGalAdVideo" autoplay style="width: 100%;"  >
+          <video *ngIf="advertisementOnPage.popUpAd.video.ready && advertisementOnPage.popUpAd.currentFileType == 'VIDEO'"  autoplay class="video" id="pmcGalAdVideo" autoplay  style="width: 100%;"  >
             <source *ngIf="advertisementOnPage.popUpAd.video.ready"
                     src="{{advertisementOnPage.popUpAd.video.path}}"
                     type="{{advertisementOnPage.popUpAd.video.mimeType}}" />
