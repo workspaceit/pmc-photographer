@@ -16,6 +16,7 @@ import {State} from '../../../../datamodel/state';
 import {LocationImage} from '../../../../datamodel/locationImage';
 import {SectionResource} from '../../../../datamodel/section-resource';
 import {SectionResourceHelper} from '../../../../helper/section.resource.helper';
+import {NavigationHelper} from '../../../../helper/navigation.helper';
 
 
 @Component({
@@ -232,13 +233,11 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       this.pageData.slideShowAd.video.mimeType = mimeType;
 
 
-
-
-
-      await delay(300);
       this.pageData.slideShowAd.video.ready = true;
-      (<any>$('#slidShowVideoAdPmc')).load();
-      (<any>$('#slidShowVideoAdPmc')).show();
+      await delay(1000);
+      (<any>document).getElementById('slidShowVideoAdPmc').load();
+      (<any>document).getElementById('slidShowVideoAdPmc').play();
+      //(<any>$('#slidShowVideoAdPmc')).show();
 
     }else{
       this.decrementCurrentSlideShowIndex();
@@ -545,5 +544,8 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     await delay(breakTime*1000);
     this.slideShowAdRotation = true;
     this.showSlideShowAd();
+  }
+  public openAdUrl(url:string){
+    NavigationHelper.openAdUrl(url);
   }
 }

@@ -3,6 +3,7 @@ import {delay} from 'q';
 import {BannerAdCommunicatorService} from '../../../../services/banner-ad-communicator.service';
 import {AdvertisementService} from '../../../../services/advertisement.service';
 import {EventImageService} from '../../../../services/event-image.service';
+import {NavigationHelper} from '../../../../helper/navigation.helper';
 
 @Component({
   selector: 'app-adbanner',
@@ -65,7 +66,7 @@ export class AdbannerComponent implements OnInit {
     }
 
     try{
-      console.log("topBanners ",this.banners);
+
       for(let i=startIndex ; i< this.banners.length; i++){
         this.banner.path = this.banners[i].path;
         this.banner.url = this.banners[i].url;
@@ -80,7 +81,6 @@ export class AdbannerComponent implements OnInit {
 
           this.advertiserChanged = false;
           this.rotateGalleryAdTopBanner(1).then();
-          console.log("End of function from IF");
           return;
         }
 
@@ -89,9 +89,11 @@ export class AdbannerComponent implements OnInit {
     }catch(e) {
       console.log(e);
     }
-    console.log("End of function");
     this.rotateGalleryAdTopBanner(0).then();
   }
+  public openAdUrl(url:string){
+    NavigationHelper.openAdUrl(url);
 
+  }
 
 }

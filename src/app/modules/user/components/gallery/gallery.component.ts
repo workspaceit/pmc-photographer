@@ -12,6 +12,7 @@ import {Event} from "../../../../datamodel/event";
 import {BannerAdCommunicatorService} from '../../../../services/banner-ad-communicator.service';
 import {AdCommunicator} from '../../../../datamodel/ad-comunicator';
 import {SectionResourceHelper} from '../../../../helper/section.resource.helper';
+import {NavigationHelper} from '../../../../helper/navigation.helper';
 
 @Component({
   selector: 'app-gallery',
@@ -134,7 +135,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       this.fetchEventImage();
 
     } else if(this.preview.popUpId>0){
-      console.log(this.preview.galleryId,this.preview.popUpId);
+
       this.fetchPopUpAdvertisementById();
     } else if(this.preview.galleryId>0) {
       this.fetchGalleryAdvertisementById();
@@ -150,7 +151,6 @@ export class GalleryComponent implements AfterViewInit,OnInit {
   }
 
   openImageModal(image) {
-    console.log("Image Modal Opened");
     this.currentImage = image;
     (<any>$('#image-gallery-image')).attr('src',this.eventImagePath+this.currentImage.image);
     (<any>$('#image-gallery')).modal('show');
@@ -182,13 +182,13 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       this.advertisementConfig.gallery.isEndOfAd = true;
       this.advertisementConfig.gallery.selfLoop = true;
       this.advertisements.push(data);
-      this.rotateGalleryAd().then(()=>console.log("ROTATION CALLED"));
+      this.rotateGalleryAd().then();
     });
 
   }
   public fetchGalleryAdvertisement() {
     if(this.advertisementConfig.gallery.isEndOfAd){
-      this.rotateGalleryAd().then(()=>console.log("ROTATION CALLED"));
+      this.rotateGalleryAd().then();
       return;
     }
 
@@ -203,7 +203,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
                                                       } else {
                                                         this.advertisements = this.advertisements.concat(data);
                                                       }
-                                                      this.rotateGalleryAd().then(()=>console.log("ROTATION CALLED"));
+                                                      this.rotateGalleryAd().then();
 
 
     });
@@ -225,8 +225,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       this.currentImage = this.eventImages[nextImageIndex];
       this.displayPrevNext(nextImageIndex);
     }
-    console.log("currentImageIndex "+this.currentImage.id);
-    console.log("currentImageIndex "+this.currentImage.image);
+
   }
   reportImage() {
     const r = confirm("Do you really want to report this image?");
@@ -322,7 +321,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
    return i;
   }
   private getPopUpRotationStarIndex():number{
-    console.log(this.globalPopUpAdSection);
+
     const offset = this.advertisementConfig.popUpAd.arrayOffset;
     const length = this.popAds.length;
     let i = 0;
@@ -341,18 +340,19 @@ export class GalleryComponent implements AfterViewInit,OnInit {
 
     this.delayPopUpCloseIconShow();
     if(this.advertisementConfig.popUpAd.rotateSwitchedOff){
-      console.log('Switched OFF');
+
+
       return;
     }
 
     this.resetPopUpAdSettings();
     let i= this.getPopUpRotationStarIndex();
-    console.log('POPUP Index '+i);
+
 
     if(this.globalPopUpAdSection[i]===undefined){
       delay(3000).then(()=>{
         this.changePupUpAdd();
-        console.log('No advertisement found');
+
       });
       return;
     }
@@ -387,7 +387,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
 
   }
   public switchedOffRotation(){
-    console.log("rotateSwitchedOff");
+
 
     if(this.eventImagesFetchingComplete){
       this.advertisementConfig.popUpAd.rotateSwitchedOff = true;
@@ -432,19 +432,8 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       this.advertisementOnPage.popUpAd.video.mimeType = secRes[0].mimeType;
       this.advertisementOnPage.popUpAd.video.ready = true;
 
-      await delay(1000);
 
-     (<any>document).getElementById('pmcGalAdVideo').load();
-    //(<any>$("#pmcGalAdVideo")).load();
-   // (<any>document).getElementById('pmcGalAdVideo').load();
- /*   (<any>$("#pmcGalAdVideo")).off("ended").on("ended",function(){
-     /!* console.log("Video Ended");
-      this.pause();
-      this.currentTime = 0;*!/
-
-
-    });*/
-    await delay(300);
+    await delay(1000);
 
     /**
      * Duration can  be NaN if video does not load
@@ -455,14 +444,15 @@ export class GalleryComponent implements AfterViewInit,OnInit {
     for(let i=0;isNaN(duration) && i<10;i++){
       await delay(500);
       duration =  (<any>document).getElementById('pmcGalAdVideo').duration;
-      console.log("Duration ",duration);
+
     }
-
-
-
+    console.log("Duration ",duration);
+    (<any>document).getElementById('pmcGalAdVideo').load();
+    (<any>document).getElementById('pmcGalAdVideo').play();
     await delay(duration*1000);
+    console.log("Video Close ",);
     (<any>document).getElementById('pmcGalAdVideo').pause();
-    this.advertisementOnPage.popUpAd.video.ready = true;
+    this.advertisementOnPage.popUpAd.video.ready = false;
 
     this.fetchPopUpAdvertisement();
   }
@@ -515,7 +505,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
 
     this.forChildComponent.topBanner = [];
 
-    console.log("rotation",rotation);
+
     if(rotation==='ROTATE'){
       for(const i in secRes){
         const imageObj = {path:this.resourcePath+secRes[i].fileName,url:secRes[i].url};
@@ -539,7 +529,8 @@ export class GalleryComponent implements AfterViewInit,OnInit {
   private checkNullUndefiend(data):boolean{
     return (data==undefined || data==null)?false:true;
   }
-
-
+  public openAdUrl(url:string){
+    NavigationHelper.openAdUrl(url);
+  }
 
 }
