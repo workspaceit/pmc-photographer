@@ -1,11 +1,8 @@
 import {HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse, HttpErrorResponse} from "@angular/common/http";
-
-
 import { Observable } from 'rxjs/Observable';
 import {Injectable} from "@angular/core";
-import {LoginService} from "../login.service";
 import {PhotographerLoginService} from "../photographer-login.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router, RouterStateSnapshot} from "@angular/router";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -29,7 +26,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if (err.status === 401) {
           this.photographerLoginService.removeLocalOauthCredential();
           this.photographerLoginService.removeLocalUserDetails();
-          this.router.navigate(['/login']);
+          this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.routerState.snapshot.url } });
         }
       }
     });

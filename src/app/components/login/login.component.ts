@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {LoginService} from '../../services/login.service';
 import {OauthCredential} from '../../datamodel/oauth.creadential';
 import {Photographer} from '../../datamodel/photographer';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {PhotographerLoginService} from "../../services/photographer-login.service";
 
 @Component({
@@ -16,7 +16,10 @@ export class LoginComponent implements OnInit {
   authCredential: OauthCredential;
   photographer: Photographer;
   loginMsg = '';
-  constructor(private router: Router, private loginService: LoginService, private photographerLoginService: PhotographerLoginService) {
+  returnUrl = '';
+
+  constructor(private router: Router, private loginService: LoginService, private photographerLoginService: PhotographerLoginService,
+              private route: ActivatedRoute) {
 
   }
 
@@ -24,6 +27,8 @@ export class LoginComponent implements OnInit {
     if(this.photographerLoginService.isLoggedIn()){
       this.router.navigate(['/photographer-panel/locations']);
     }
+    // get return url from route parameters or default to '/'
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
   private authenticate(emailOrUsername: string, password: string, loginCallBack: LoginCallBack ){
@@ -47,7 +52,13 @@ export class LoginComponent implements OnInit {
       this.loginMsg = msg;
       if(loginSuccess){
         if(photographer.authorities[0].authority === "ROLE_photographer") {
-          this.router.navigateByUrl('/photographer-panel/locations');
+          if(this.returnUrl !== '/'){
+            this.router.navigate([this.returnUrl]);
+          }
+          else {
+            this.router.navigate(['/photographer-panel/locations']);
+          }
+
         }
         else if (photographer.authorities[0].authority === "ROLE_superadmin"){
           this.router.navigateByUrl('/photographer-panel/admin-login');

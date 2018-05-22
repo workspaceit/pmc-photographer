@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {CanActivate, Router} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {LoginService} from "./services/login.service";
 import {PhotographerLoginService} from "./services/photographer-login.service";
 
@@ -8,11 +8,11 @@ export class OnlyLoggedInUsersGuard implements CanActivate {
 
   constructor(private photographerLoginService: PhotographerLoginService, private router: Router) {}
 
-  canActivate() {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     if (this.photographerLoginService.isLoggedIn()) {
       return true;
     } else {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
       return false;
     }
   }
