@@ -30,11 +30,12 @@
           </h3>
         </div>
       </div>
-      <div class="swiper_bottom" style="height: 50%; width: 100%; padding-top: 10%;  position: relative">
-        <div class="event-ad wow bounceInUp" data-wow-delay="4s" style=" align-items: self-start;   position: absolute; top: 10%; text-align: center; height: 100%;">
+      <div class="swiper_bottom text-center" style="height: 50%; width: 100%; padding-top: 10%;  position: relative">
+        <div class="event-ad wow bounceInUp hidden-xs" data-wow-delay="4s" style=" align-items: self-start;   position: absolute; top: 10%; text-align: center; height: 100%;">
           <!--<img onerror="this.src='assets/images/event-default.png'" src="{{pageData.event.eventPhoto}}" />-->
           <img onerror="this.src='assets/images/event-default.png'" src="{{pageData.event.eventPhoto}}" style="width: 100%; display: block; max-height: 100%;">
         </div>
+        <img class="wow bounceInUp visible-xs hidden-lg hidden-md hidden-sm" data-wow-delay="4s" onerror="this.src='assets/images/event-default.png'" style="height: 90%; margin: 0 auto;" src="{{pageData.event.eventPhoto}}"/>
       </div>
     </div>
     <div class="swiper-right">
@@ -52,7 +53,7 @@
           </div>
 
         </div>
-        <div id="slideShowAdDiv"  style="display: none; height: 100%;">
+        <div id="slideShowAdDiv" class="fifix_slideShowAdDiv"  style="display: none;">
 
           <!-- Wrapper for slides -->
           <div class="carousel-inner" role="listbox" style="height: 100%;">

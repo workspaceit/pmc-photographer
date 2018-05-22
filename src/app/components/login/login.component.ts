@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
 
         }
         else if (photographer.authorities[0].authority === "ROLE_superadmin"){
-          this.router.navigateByUrl('/photographer-panel/admin-login');
+          this.router.navigate(['/photographer-panel/admin-login']);
         }
       }
 
