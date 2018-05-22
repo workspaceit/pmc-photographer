@@ -34,11 +34,19 @@
         </div>
       </div>
       <div class="form-group panel-right-block content" id="content-2">
-        <div class="row clearfix">
-          <div class="col-md-12 col-sm-12 col-xs-12 clearfix">
-            <div class="switcher_wrap">
-
-            </div>
+        <div class="desc-div row">
+          <div class="container-fluid">
+            <ol class="breadcrumb breadcrumb-arrow">
+              <li><a routerLink="/photographer-panel/locations">Locations</a></li>
+              <li><a routerLink="/photographer-panel/locations/{{eventDetailsResponseData.event.location.id}}/events">
+                {{eventDetailsResponseData.event.location.name}}
+              </a>
+              </li>
+              <li><a routerLink="/photographer-panel/locations/{{eventDetailsResponseData.event.location.id}}/events/
+                {{eventDetailsResponseData.event.id}}">
+                {{eventDetailsResponseData.event.name}}</a></li>
+              <li><a>Reported Images</a></li>
+            </ol>
           </div>
         </div>
         <div class="event-gallery thumb-container">

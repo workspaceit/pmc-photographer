@@ -124,6 +124,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
       this.getImages();
     }
   }
+
   getEventDetails() {
     this.eventService.getEventDetails(this.eventId).subscribe((data) => {
       this.eventDetailsResponseData = data;

@@ -52,6 +52,8 @@ export class ReportedImageComponent implements OnInit, AfterViewInit  {
     this.initialize();
   }
 
+
+
   ngAfterViewInit() {
     const  thisComponent = this;
     setTimeout(function() {
