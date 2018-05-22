@@ -1958,8 +1958,8 @@ color: #fff;
 .btn-close-ad{
   border: 0px;
   color: #fff;
-  background: #c31515;
-  padding: 5px 15px;
+  background: #101010d9;
+  padding: 9px 15px;
 }
 .btn-close-alert{
   background: rgba(0,0,0,0.5);
@@ -2477,7 +2477,13 @@ input:checked + .slider:before {
 
 .btn-red {
   background: red !important;
+  color: #fff;
+  text-transform: uppercase;
+  padding: 0px 10px;
+  border-radius: 3px;
+  margin-left: 7px;
 }
+
 .fifix_slideshow img {
   height: 100% !important;
   width: auto;
@@ -2488,7 +2494,7 @@ input:checked + .slider:before {
   text-align: center;
 }
 .fifix_closer{
-  font-size: 19px;
+  font-size: 22px;
   margin: -3px;
   padding-bottom: 10px;
   border-radius: 0px;

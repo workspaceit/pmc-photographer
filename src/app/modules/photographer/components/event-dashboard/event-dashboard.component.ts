@@ -44,16 +44,16 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   eventImageSharingPath = environment.eventPhotoSharingUrl;
   shareSuffix = '/share';
 
-  // checkboxes
-  slideshowCheck = '';
-  watermarkCheck = '';
-  printCheck = '';
+  // switches' values on modal
+  slideshowCheck = false;
+  watermarkCheck = false;
+  printCheck = false;
 
   constructor(private route: ActivatedRoute, private router: Router, private eventImageService: EventImageService,
               private eventService: EventService,private  photographerLoginService: PhotographerLoginService) { }
 
   ngOnInit() {
-    console.log(this.currentImage);
+    // console.log(this.currentImage);
     this.emailForm = new FormGroup({
       email:new FormControl('',[]),
       phoneNumber:new FormControl('',[]),
@@ -82,8 +82,8 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
         clickable: true,
         acceptedFiles: 'image/*',
         createImageThumbnails: true,
-        autoReset: 1,
-        errorReset: 1,
+        // autoReset: 1,
+        // errorReset: 1,
         headers:{
           'Authorization': 'Bearer '+this.photographerLoginService.getLocalOauthCredential().access_token
         }
@@ -110,7 +110,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     (<any>$('#uploadModal')).modal('show');
   }
   onUploadError(event) {
-    console.log(event);
+    // console.log(event);
   }
   onUploadSuccess(event) {
     this.eventImages.unshift(event[1]);
@@ -123,7 +123,6 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
       this.slideShowImagesOnly = false;
       this.getImages();
     }
-    (<any>$('#uploadModal')).modal('hide');
   }
   getEventDetails() {
     this.eventService.getEventDetails(this.eventId).subscribe((data) => {
@@ -183,7 +182,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
         this.checkedItems.splice(index, 1);
       }
     }
-    console.log(this.checkedItems);
+    // console.log(this.checkedItems);
   }
 
   deletePhotos() {
@@ -194,10 +193,10 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
          if(data) {
             this.removePhotosFromView();
             this.resetSelected();
-           (<any>$).growl.notice({ message: 'Image removed!' });
+           (<any>$).growl.notice({ message: 'Image removed' });
          }
        },(err)=> {
-          console.log(err.error);
+          // console.log(err.error);
          (<any>$).growl.error({ message: err.error });
          }
        );
@@ -233,35 +232,37 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
   sendSingleImage(imageId) {
     this.sendFromPopup = true;
     this.items = [];
-    this.items += imageId;
+    this.items.push(imageId);
     (<any>$('#sendPhotoViaEmail')).modal('show');
   }
+
+
 
   addWatermarkSingleImage(imageId) {
     this.sendFromPopup = true;
     this.items = [];
-    this.items += imageId;
+    this.items.push(imageId);
     this.addWatermark();
   }
 
   removeWatermarkSingleImage(imageId) {
     this.sendFromPopup = true;
     this.items = [];
-    this.items += imageId;
+    this.items.push(imageId);
     this.removeWatermark();
   }
 
   sendToSlideshowSingleImage(imageId) {
     this.sendFromPopup = true;
     this.items = [];
-    this.items += imageId;
+    this.items.push(imageId);
     this.sendToSlideShow();
   }
 
   removeFromSlideshowSingleImage(imageId) {
     this.sendFromPopup = true;
     this.items = [];
-    this.items += imageId;
+    this.items.push(imageId);
     this.removeFromSlideshow();
   }
 
@@ -283,7 +284,6 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     else {
       cItems = this.checkedItems;
     }
-    console.log(cItems);
     if(cItems.length === 0) {
       (<any>$).growl.warning({ message: 'No items selected' });
     }
@@ -295,11 +295,10 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
             }
             this.resetSelected();
             (<any>$('#sendPhotoViaEmail')).modal('hide');
-            (<any>$).growl.notice({ message: 'Sent successfully!' });
+            (<any>$).growl.notice({ message: 'Images sent' });
             this.emailForm.reset();
           }
         },(err)=> {
-          console.log(err.error);
           (<any>$).growl.error({ message: err.error });
         }
       );
@@ -307,23 +306,23 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
 
 
     // Watermark check
-    if(this.watermarkCheck === 'add') {
+    if(this.watermarkCheck) {
       this.addWatermark();
     }
-    else if(this.watermarkCheck === 'remove'){
-      this.removeWatermark();
-    }
+    // else {
+    //   this.removeWatermark();
+    // }
 
     // Slideshow check
-    if(this.slideshowCheck === 'send'){
+    if(this.slideshowCheck){
       this.sendToSlideShow();
     }
-    else if(this.slideshowCheck ==='remove') {
-      this.removeFromSlideshow();
-    }
+    // else if(this.slideshowCheck) {
+    //   this.removeFromSlideshow();
+    // }
 
     // print check
-    if(this.printCheck === 'print') {
+    if(this.printCheck) {
       this.print();
     }
 
@@ -333,7 +332,6 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     if(this.enableEdit){
       return;
     }
-    console.log("Image Modal Opened");
     this.currentImage = image;
     (<any>$('#image-gallery-image')).attr('src',this.imgPath + image.image);
     (<any>$('#image-gallery')).modal('show');
@@ -372,17 +370,25 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
+  printSingleImage(imageId){
+    this.sendFromPopup = true;
+    this.items = [];
+    this.items.push(imageId);
+    this.print();
+  }
+
   print() {
     let cItems = this.getCheckedItems();
+    console.log(cItems);
     if(cItems.length === 0) {
       (<any>$).growl.warning({ message: 'No items selected' });
     } else {
       let images: EventImage[] = [];
-      console.log(this.eventImages);
+      // console.log(this.eventImages);
       for (const item of cItems) {
         images = images.concat(this.eventImages.filter(data => data.id === item));
       }
-      console.log(images);
+      // console.log(images);
       let html = '';
       for (const image of images) {
         html += "<img src='" + this.imgPath + image.image + "'/>";
@@ -412,6 +418,12 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
 
   initialize() {
     const  thisComponent = this;
+    (<any>$('#sendPhotoViaEmail')).on('shown.bs.modal', function (e) {
+      thisComponent.watermarkCheck = false;
+      thisComponent.slideshowCheck= false;
+      thisComponent.printCheck= false;
+    });
+
     (<any>$("#content-2")).mCustomScrollbar({
       autoHideScrollbar:true,
       mouseWheel:{ scrollAmount: 200 },
@@ -461,7 +473,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
     else {
       cItems = this.checkedItems;
     }
-    console.log(cItems);
+    // console.log(cItems);
     return cItems;
   }
 
@@ -496,7 +508,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
               }
             }
           }
-          (<any>$).growl.notice({title: 'Success!', message: 'Watermark added'});
+          (<any>$).growl.notice({title: 'Success', message: 'Watermark added'});
           this.adjustHeight();
           setTimeout(function() {
             for(let i = 0; i < data.length; i++) {
@@ -505,7 +517,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
           }, 0);
         }
       }, (err) => {
-        console.log(err.error);
+        // console.log(err.error);
         (<any>$).growl.error({message: err.error});
       });
     }
@@ -530,7 +542,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
                 }
               }
             }
-            (<any>$).growl.notice({title: 'Success!', message: 'Watermark removed'});
+            (<any>$).growl.notice({title: 'Success', message: 'Watermark removed'});
             this.adjustHeight();
             setTimeout(function() {
               for(let i = 0; i < data.length; i++) {
@@ -539,7 +551,7 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
             }, 0);
           }
         }, (err) => {
-          console.log(err.error);
+          // console.log(err.error);
           (<any>$).growl.error({message: err.error});
         }
       );
@@ -567,10 +579,10 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
             }
             this.resetSelected();
             this.adjustHeight();
-            (<any>$).growl.notice({ message: 'Successfully send to slideshow!' });
+            (<any>$).growl.notice({ message: 'Sent to slideshow' });
           }
         },(err)=> {
-          console.log(err.error);
+          // console.log(err.error);
           (<any>$).growl.error({ message: err.error });
         }
       );
@@ -599,10 +611,10 @@ export class EventDashboardComponent implements OnInit, AfterViewInit {
             this.removePhotosFromView();
             this.resetSelected();
             this.adjustHeight();
-            (<any>$).growl.notice({ message: 'Successfully removed from Slideshow!' });
+            (<any>$).growl.notice({ message: 'Removed from Slideshow' });
           }
         },(err)=> {
-          console.log(err.error);
+          // console.log(err.error);
           (<any>$).growl.error({ message: err.error });
         }
       );

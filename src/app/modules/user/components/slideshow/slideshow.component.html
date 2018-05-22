@@ -7,15 +7,15 @@
          style="position:  absolute;width: 100%;height: 100%;display:none;">
 
     <div class="swiper-left wow slideInDown" >
-      <div class="event-logo">
-        <div class="center-flex">
+      <div class="swiper_top" style="height: 50%; width: 100%; padding-bottom: 10%; position: relative;     border-bottom: 1px solid #fff;">
+        <div class="center-flex" style="    position: absolute; bottom: 10%; text-align: center;">
           <img  src="{{pageData.location.locationLogo}}"
-               style="width: 61%;height: 50%"
-               class="wow bounceInDown"
-               data-wow-duration="1s"  data-wow-delay="1s">
+                style="width: 61%;height: 50%"
+                class="wow bounceInDown"
+                data-wow-duration="1s"  data-wow-delay="1s">
 
           <h2 class="wow bounceInLeft"   data-wow-delay="2s">
-           {{pageData.location.name}}
+            {{pageData.location.name}}
           </h2>
 
           <h3 class="wow bounceInLeft"   data-wow-delay="2s">
@@ -26,24 +26,14 @@
               {{pageData.location.state.name}}
               <label   *ngIf="pageData.location.state.name!=null && pageData.location.state.name!=''">,</label>
               {{pageData.location.zip}}</span>
-              <span> {{pageData.location.phone}}</span>
+            <span> {{pageData.location.phone}}</span>
           </h3>
         </div>
-        <!-- <div class="divider" style="margin-top:0px;padding:1px;"></div> -->
       </div>
-      <div class="event-ad wow bounceInUp" data-wow-delay="4s">
-        <div  class="carousel slide  carousel-fade ad-carousel" data-interval="10000" data-ride="carousel">
-
-          <!-- Wrapper for slides -->
-          <div class="carousel-inner" role="listbox">
-            <div class="item active">
-              <img onerror="this.src='assets/images/event-default.png'" src="{{pageData.event.eventPhoto}}" />
-            </div>
-            <!--<div class="item">
-              <img src="assets/images/pmc-stock/e1.png" />
-            </div>-->
-          </div>
-
+      <div class="swiper_bottom" style="height: 50%; width: 100%; padding-top: 10%;  position: relative">
+        <div class="event-ad wow bounceInUp" data-wow-delay="4s" style=" align-items: self-start;   position: absolute; top: 10%; text-align: center; height: 100%;">
+          <!--<img onerror="this.src='assets/images/event-default.png'" src="{{pageData.event.eventPhoto}}" />-->
+          <img onerror="this.src='assets/images/event-default.png'" src="{{pageData.event.eventPhoto}}" style="width: 100%; display: block; max-height: 100%;">
         </div>
       </div>
     </div>
@@ -62,16 +52,16 @@
           </div>
 
         </div>
-        <div id="slideShowAdDiv"  style="display: none;">
+        <div id="slideShowAdDiv"  style="display: none; height: 100%;">
 
           <!-- Wrapper for slides -->
-          <div class="carousel-inner" role="listbox">
-            <div class="item active" style="text-align: center;">
+          <div class="carousel-inner" role="listbox" style="height: 100%;">
+            <div class="item active" style="text-align: center;height: 100%;">
               <!-- "-->
               <input type="button" class="btn-close-ad" value="X" (click)="stopSlideShowAdRotation()">
               <span class="btn-close-alert fifix_closer">Closing In ({{pageData.slideShowAd.closingCountdown}})</span>
-              <a href="javascript:void(0)" target="_blank" (click)="openAdUrl(pageData.slideShowAd.currentBannerImg.url)">
-                <img *ngIf="pageData.slideShowAd.currentFileType=='IMAGE'" id="slidShowAdPmcBanner" style="width: 100%;"  src="{{pageData.slideShowAd.currentBannerImg.path}}" >
+              <a href="javascript:void(0)" target="_blank" (click)="openAdUrl(pageData.slideShowAd.currentBannerImg.url)" style="display: block;height: 100%; overflow: hidden">
+                <img *ngIf="pageData.slideShowAd.currentFileType=='IMAGE'" id="slidShowAdPmcBanner" style="height: 100%;     margin: 0 auto; width: auto"  src="{{pageData.slideShowAd.currentBannerImg.path}}" >
               </a>
 
               <video *ngIf="pageData.slideShowAd.video.ready"  class="video" id="slidShowVideoAdPmc"  muted style="width: 100%;" >

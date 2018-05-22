@@ -413,7 +413,8 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     return this.slideShowAdListIndex++;
   }
   public stopSlideShowAdRotation(){
-    if((<any>document).getElementById('slidShowVideoAdPmc')!==undefined){
+    if((<any>document).getElementById('slidShowVideoAdPmc')!==undefined
+      && (<any>document).getElementById('slidShowVideoAdPmc')!==null){
       (<any>document).getElementById('slidShowVideoAdPmc').pause();
     }
     $('#slidShowVideoAdPmc').hide();

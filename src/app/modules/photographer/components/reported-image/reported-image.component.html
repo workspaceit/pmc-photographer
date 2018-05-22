@@ -13,8 +13,6 @@
                   <p class="e-date" style="color:#fff;">
                     Date: {{eventDetailsResponseData.event.startsAt | date:'d MMM, yyyy'}}
                   </p>
-                  <!--Set color and icon-->
-
                 </div>
               </div>
             </div>
@@ -44,18 +42,18 @@
           </div>
         </div>
         <div class="event-gallery thumb-container">
-
           <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 thumb" *ngFor="let reportedImage of reportedImages"
                [ngStyle]="{'background-image': 'url(' + imgPath + reportedImage.eventImage.image + ')', 'background-repeat': 'no-repeat'}">
             <div class="chk-div toggler" *ngIf="enableEdit">
               <div class="checkboxFive">
-                <input type="checkbox" (change)="checkBoxUpdate(reportedImage,$event)" value="1" id="checkboxFiveInput{{reportedImage.eventImage.id}}"/>
+                <input type="checkbox" (change)="checkBoxUpdate(reportedImage,$event)" value="1"
+                       id="checkboxFiveInput{{reportedImage.eventImage.id}}"/>
                 <label for="checkboxFiveInput{{reportedImage.eventImage.id}}">
                 </label>
               </div>
             </div>
-            <a class="thumbnail" (click)="openImageModal(reportedImage)" href="#" data-image-id="" data-toggle="modal" data-title="This is my title"
-               data-caption="Some lovely red flowers" [attr.data-image]="imgPath + reportedImage.eventImage.image">
+            <a class="thumbnail" (click)="openImageModal(reportedImage)" style="cursor: pointer;"
+               [attr.data-image]="imgPath + reportedImage.eventImage.image">
             </a>
           </div>
         </div>
@@ -64,9 +62,8 @@
   </div>
 </div>
 
-
 <div class="modal fade modal-gallery" id="image-gallery" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span><span class="sr-only">Close</span></button>

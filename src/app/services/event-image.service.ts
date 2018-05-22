@@ -23,7 +23,6 @@ export class EventImageService extends  BaseService {
   }
 
   public getEventImages(eventId: number, limit: number , offset: number): Observable<EventImage[]> {
-    console.log(offset);
     const data = new FormData();
     data.append('eventId', eventId.toString());
     data.append('eventId', eventId.toString());
@@ -34,7 +33,6 @@ export class EventImageService extends  BaseService {
   }
 
   public getEventImagesFromSlideshow(eventId: number, limit: number , offset: number): Observable<EventImage[]> {
-    console.log(offset);
     const data = new FormData();
     data.append('eventId', eventId.toString());
     data.append('eventId', eventId.toString());

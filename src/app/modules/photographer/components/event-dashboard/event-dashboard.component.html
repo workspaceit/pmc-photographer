@@ -20,16 +20,12 @@
             </div>
           </div>
           <div class="col-md-8 mb-fix-text">
-            <!--<select class="watermark-select" [(ngModel)]="selectedWatermarkId" (change)="watermarkedChanged()">-->
-              <!--<option value="0">Choose Watermark</option>-->
-              <!--<option *ngFor="let watermark of eventDetailsResponseData.event.watermarks" [value]="watermark.id">-->
-                <!--{{ watermark.name }}-->
-              <!--</option>-->
-            <!--</select>-->
-            <a (click)="addWatermarkMultipleImages()" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Add Watermark">
+            <a (click)="addWatermarkMultipleImages()" class="action-icon" data-toggle="tooltip" data-placement="bottom"
+               title="Add Watermark">
               <img src="assets/images/add-watermark.png" class="icon_style">
             </a>
-            <a (click)="removeWatermarkMultipleImages()" class="action-icon" data-toggle="tooltip" data-placement="bottom" title="Remove Watermark">
+            <a (click)="removeWatermarkMultipleImages()" class="action-icon" data-toggle="tooltip" data-placement="bottom"
+               title="Remove Watermark">
               <img src="assets/images/remove-watermark.png" class="icon_style">
             </a>
             <a (click)="enableEditPhotos()" class="action-icon" data-toggle="tooltip" data-placement="bottom"
@@ -40,7 +36,8 @@
                title="Delete Photos" id="doneEdit">
               <img src="assets/images/garbage.png" class="icon_style">
             </a>
-            <a (click)="sendViaEmailMultipleImages()" target="_blank"class="action-icon" data-toggle="tooltip" data-placement="bottom"
+            <a (click)="sendViaEmailMultipleImages()" target="_blank"class="action-icon" data-toggle="tooltip"
+               data-placement="bottom"
                title="Send Via Email / SMS"><img src="assets/images/send.png" class="icon_style">
             </a>
             <a (click)="uploadModal()" class="action-icon" data-toggle="tooltip" data-placement="bottom"
@@ -63,8 +60,8 @@
             </a>
             <a [ngClass]="{'btn-red': eventDetailsResponseData.reportedImageCount > 0}"
               routerLink="/photographer-panel/locations/{{locationId}}/events/{{eventId}}/reported-images"
-               class="action-icon-preview" style="color:#fff;text-transform:uppercase" data-toggle="tooltip" data-placement="bottom"
-               title="Show Reported Images">Reported Images<span> ({{ eventDetailsResponseData.reportedImageCount }})</span>
+               class="action-icon" style="color:#fff;text-transform:uppercase" data-toggle="tooltip" data-placement="bottom"
+               title="Show Reported Images">Reported Images<label> ({{ eventDetailsResponseData.reportedImageCount }})</label>
             </a>
           </div>
         </div>
@@ -109,9 +106,8 @@
                 </label>
               </div>
             </div>
-            <a class="thumbnail" (click)="openImageModal(eventImage)" href="#" data-image-id="" data-toggle="modal"
-               data-title=""
-               data-caption="Some lovely red flowers" [attr.data-image]="imgPath + eventImage.image">
+            <a class="thumbnail" (click)="openImageModal(eventImage)" style="cursor: pointer;"
+               [attr.data-image]="imgPath + eventImage.image">
             </a>
           </div>
         </div>
@@ -142,7 +138,6 @@
     </div>
   </div>
 </div>
-
 
 <div class="modal fade modal-gallery" id="image-gallery" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -176,15 +171,19 @@
                class="action-icon pull-right" data-toggle="tooltip" data-placement="bottom" title="Send to Slideshow">
               <img src="assets/images/slideshow_remove.png" class="icon_style">
             </a>
-            <a *ngIf="!currentImage.watermark" (click)="addWatermarkSingleImage(currentImage.id)"
-               class="action-icon pull-right" data-toggle="tooltip"
-               data-placement="bottom" title="Add Watermark">
-              <img src="assets/images/add-watermark.png" class="icon_style">
-            </a>
-            <a *ngIf="currentImage.watermark" (click)="removeWatermarkSingleImage(currentImage.id)"
-               class="action-icon pull-right" data-toggle="tooltip"
-               data-placement="bottom" title="Remove Watermark">
-              <img src="assets/images/remove-watermark.png" class="icon_style">
+            <!--<a *ngIf="!currentImage.watermark" (click)="addWatermarkSingleImage(currentImage.id)"-->
+               <!--class="action-icon pull-right" data-toggle="tooltip"-->
+               <!--data-placement="bottom" title="Add Watermark">-->
+              <!--<img src="assets/images/add-watermark.png" class="icon_style">-->
+            <!--</a>-->
+            <!--<a *ngIf="currentImage.watermark" (click)="removeWatermarkSingleImage(currentImage.id)"-->
+               <!--class="action-icon pull-right" data-toggle="tooltip"-->
+               <!--data-placement="bottom" title="Remove Watermark">-->
+              <!--<img src="assets/images/remove-watermark.png" class="icon_style">-->
+            <!--</a>-->
+            <a  (click)="printSingleImage(currentImage.id)" class="action-icon pull-right" data-toggle="tooltip"
+               data-placement="bottom" title="Send to printer">
+              <img src="assets/images/44.png" class="icon_style">
             </a>
           </div>
           <img id="image-gallery-image" class="img-responsive" src="{{imgPath}}{{currentImage.image}}">
@@ -215,11 +214,11 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true" style="color: #fff;">x</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel1">Send Photo Via Email</h4>
+        <h4 class="modal-title" id="myModalLabel1">Send Photos Via Email or SMS</h4>
       </div>
       <div class="modal-body clearfix">
-        <form role="form" class="col-md-12 " [formGroup]="emailForm" (submit)="send(emailForm.value)">
-          <h4 class="text-capitalize text-center">Please Fill up this information</h4>
+        <form role="form" class="col-md-12 clearfix" [formGroup]="emailForm" (submit)="send(emailForm.value)">
+          <h4 class="text-capitalize text-center">Please fill up these information</h4>
           <div class="form-group">
             <input type="text" formControlName="username" name="username" id="username" tabindex="1" class="form-control"
                    placeholder="Customer Name" value="">
@@ -239,29 +238,40 @@
                 <input type="submit" name="register-submit"
                        id="register-submit" tabindex="4" class="form-control btn  btn-success"
                        style="width: 130px;float: right;" value="SEND">
-<!--                <input type="submit" [disabled]="!emailForm.valid" name="register-submit"
-                       id="register-submit" tabindex="4" class="form-control btn  btn-success"
-                       style="width: 130px;float: right;" value="SEND">-->
               </div>
             </div>
           </div>
         </form>
-
-        <div>
-          <label>Watermark: </label>
-          <input type="radio" name="watermarkCheck" value="add" [(ngModel)]="watermarkCheck">Add
-          <input type="radio" name="watermarkCheck" value="remove" [(ngModel)]="watermarkCheck">Remove
+        <div class="row clearfix" style="float: left;width: 100%;margin-left: 0px; text-align: right;">
+          <hr>
+          <div class="col-md-12 col-xs-12">
+            <label class="pull-left" style="margin-top: 5px;margin-right: 13px;">Add watermark</label>
+            <div class="box_switch">
+              <label class="switch">
+                <input type="checkbox" [(ngModel)]="watermarkCheck" [checked]="watermarkCheck">
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12 col-xs-12 pull-right">
+            <label class="pull-left" style="margin-top: 5px;margin-right: 13px;">Send to printer</label>
+            <div class="box_switch">
+              <label class="switch">
+                <input type="checkbox" [(ngModel)]="printCheck" [checked]="printCheck">
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12 col-xs-12">
+            <label class="pull-left" style="margin-top: 5px;margin-right: 13px;">Send to slideshow</label>
+            <div class="box_switch">
+              <label class="switch">
+                <input type="checkbox" [(ngModel)]="slideshowCheck" [checked]="slideshowCheck">
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
         </div>
-        <div>
-          <label>Slideshow: </label>
-          <input type="radio" name="slideshowCheck" value="send" [(ngModel)]="slideshowCheck">Send
-          <input type="radio" name="slideshowCheck" value="remove" [(ngModel)]="slideshowCheck">Remove
-        </div>
-        <!--<div>-->
-          <!--<label>Print: </label>-->
-          <!--<input type="radio" name="printCheck" value="print" [(ngModel)]="printCheck">Print-->
-        <!--</div>-->
-
       </div>
     </div>
   </div>
