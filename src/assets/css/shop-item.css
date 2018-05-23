@@ -2484,6 +2484,15 @@ input:checked + .slider:before {
   margin-left: 7px;
 }
 
+.btn-not-red {
+  background: #5038aa !important;
+  color: #fff;
+  text-transform: uppercase;
+  padding: 0px 10px;
+  border-radius: 3px;
+  margin-left: 7px;
+}
+
 .fifix_slideshow img {
   height: 100% !important;
   width: auto;

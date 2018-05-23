@@ -58,9 +58,9 @@
                class="action-icon-preview" style="color:#fff;text-transform:uppercase"
                data-toggle="tooltip" data-placement="bottom" title="SlideShow Preview" target="_blank">Preview
             </a>
-            <a [ngClass]="{'btn-red': eventDetailsResponseData.reportedImageCount > 0}"
+            <a [ngClass]="[ eventDetailsResponseData.reportedImageCount > 0 ? 'btn-red': 'btn-not-red' ]"
               routerLink="/photographer-panel/locations/{{locationId}}/events/{{eventId}}/reported-images"
-               class="action-icon" style="color:#fff;text-transform:uppercase" data-toggle="tooltip" data-placement="bottom"
+               class="action-icon" style="color:#fff; text-transform:uppercase" data-toggle="tooltip" data-placement="bottom"
                title="Show Reported Images">Reported Images<label> ({{ eventDetailsResponseData.reportedImageCount }})</label>
             </a>
           </div>
