@@ -9,6 +9,7 @@
               <div class="noteditable-desc ">
                 <div class="col-lg-12 text-left">
                   <h3 class="event-name">{{ eventDetailsResponseData.event.name }}
+                    <span *ngIf="slideShowImagesOnly"> - Slideshow</span>
                     <small *ngIf="!slideShowImagesOnly">({{ eventDetailsResponseData.imageCount }} Images)</small>
                     <small *ngIf="slideShowImagesOnly">({{ eventDetailsResponseData.slideshowImageCount }} Images)</small>
                   </h3>
