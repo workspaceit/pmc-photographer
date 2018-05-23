@@ -21,6 +21,7 @@ import {ResetpasswordService} from "./services/resetpassword.service";
 import { PasswordTokenVerifyComponent } from './components/password-token-verify/password-token-verify.component';
 import { UpdatePasswordComponent } from './components/update-password/update-password.component';
 import {LoginService} from "./services/login.service";
+import { FourZeroFourComponent } from './components/four-zero-four/four-zero-four.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import {LoginService} from "./services/login.service";
     LoginComponent,
     ResetPasswordComponentComponent,
     PasswordTokenVerifyComponent,
-    UpdatePasswordComponent
+    UpdatePasswordComponent,
+    FourZeroFourComponent,
   ],
   imports: [
     BrowserModule,

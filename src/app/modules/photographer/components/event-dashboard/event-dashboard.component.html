@@ -9,6 +9,7 @@
               <div class="noteditable-desc ">
                 <div class="col-lg-12 text-left">
                   <h3 class="event-name">{{ eventDetailsResponseData.event.name }}
+                    <span *ngIf="slideShowImagesOnly"> - Slideshow</span>
                     <small *ngIf="!slideShowImagesOnly">({{ eventDetailsResponseData.imageCount }} Images)</small>
                     <small *ngIf="slideShowImagesOnly">({{ eventDetailsResponseData.slideshowImageCount }} Images)</small>
                   </h3>
@@ -58,9 +59,9 @@
                class="action-icon-preview" style="color:#fff;text-transform:uppercase"
                data-toggle="tooltip" data-placement="bottom" title="SlideShow Preview" target="_blank">Preview
             </a>
-            <a [ngClass]="{'btn-red': eventDetailsResponseData.reportedImageCount > 0}"
+            <a [ngClass]="[ eventDetailsResponseData.reportedImageCount > 0 ? 'btn-red': 'btn-not-red' ]"
               routerLink="/photographer-panel/locations/{{locationId}}/events/{{eventId}}/reported-images"
-               class="action-icon" style="color:#fff;text-transform:uppercase" data-toggle="tooltip" data-placement="bottom"
+               class="action-icon" style="color:#fff; text-transform:uppercase" data-toggle="tooltip" data-placement="bottom"
                title="Show Reported Images">Reported Images<label> ({{ eventDetailsResponseData.reportedImageCount }})</label>
             </a>
           </div>
