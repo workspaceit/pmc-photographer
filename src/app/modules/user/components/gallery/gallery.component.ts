@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {AdvertisementService} from '../../../../services/advertisement.service';
 import {environment} from '../../../../../environments/environment';
 import {SectionResource} from '../../../../datamodel/section-resource';
@@ -44,7 +44,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
   eventImages: EventImage[] = [];
   currentAdvertisementDetails: AdvertisementDetails;
   advertisements:AdvertisementDetails[] = [];
-  popAds = [];
+  popAds:AdvertisementDetails[] = [];
   globalPopUpAdSection = [];
   advertisementConfig={
     gallery:{
@@ -71,7 +71,8 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       showClosePopUp:false,
       video:{},
       image:{delay:2000},
-      rotateSwitchedOff:false
+      rotateSwitchedOff:false,
+      currentIndex:0,
     }
   };
   identifier = "";
@@ -95,8 +96,8 @@ export class GalleryComponent implements AfterViewInit,OnInit {
 
   };
   fileType: FILE_TYPE;
-
-
+  roundWiserPopUpAds: SectionResource[][];
+  roundWiserPopUpAdsSectionResource: SectionResource[];
 
   constructor(private rout: ActivatedRoute,
               private advertisementService: AdvertisementService,
@@ -253,18 +254,16 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       this.advertisementConfig.popUpAd.isEndOfAd = true;
       this.popAds.push(data);
       this.preparePopUpAd();
-      this.changePupUpAdd();
+      this.initPopupAd();
 
     });
   }
   public fetchPopUpAdvertisement() {
     if(this.advertisementConfig.popUpAd.isEndOfAd){
-      this.changePupUpAdd();
+      this.initPopupAd();
       return;
     }
 
-    const offset = this.advertisementConfig.popUpAd.apiOffset++;
-    const limit = this.advertisementConfig.popUpAd.limit;
     let popUpTypeReqParam ='';
     switch(this.popUpType){
       case 'email':
@@ -273,18 +272,16 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       case 'sms':
         popUpTypeReqParam = AdvertisementService.advTypeReqParamenter.POPUP_SMS;
     }
-    this.advertisementService.getBySentSlideShowIdentifierAndType(this.identifier,
-      popUpTypeReqParam
-      ,limit
-      ,offset).subscribe((data)=>{
-
-      if(data.length==0){
+    this.advertisementService.getAllBySentSlideShowIdentifierAndType(this.identifier,
+      popUpTypeReqParam).subscribe((data)=>{
+      this.advertisementConfig.popUpAd.isEndOfAd = true;
+      if(data.length===0){
         this.advertisementConfig.popUpAd.isEndOfAd = true;
       } else {
         this.popAds = this.popAds.concat(data);
         this.preparePopUpAd();
       }
-      this.changePupUpAdd();
+      this.initPopupAd();
 
     });
   }
@@ -309,70 +306,49 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       this.globalPopUpAdSection.push(popupAds.sections.BANNER);
     }
   }
-  private getPopUpRotationStarIndex():number{
-
-    const offset = this.advertisementConfig.popUpAd.arrayOffset;
-    const length = this.popAds.length;
-    let i = 0;
-
-    if(offset<length){
-      i = offset;
-    }else{
-      this.advertisementConfig.popUpAd.arrayOffset =0;
-    }
-
-    this.advertisementConfig.popUpAd.arrayOffset++;
-    return i;
-  }
-  private changePupUpAdd(){
-
+  private initPopupAd(){
     this.delayPopUpCloseIconShow();
+    this.changesPopupAdRound().then();
+  }
+  private async changesPopupAdRound(){
+
+
+
+    this.roundWiserPopUpAds = <[SectionResource[]]>SectionResourceUtil.getRoundWiseSectionResource(this.popAds,SECTION_TYPE.BANNER);
+    console.log('roundWiserPopUpAds',this.roundWiserPopUpAds);
+    for(const k in this.roundWiserPopUpAds){
+      this.roundWiserPopUpAdsSectionResource = this.roundWiserPopUpAds[k];
+      await this.rotatePopUpAd().then();
+    }
     if(this.advertisementConfig.popUpAd.rotateSwitchedOff){
-
-
       return;
     }
+    this.changesPopupAdRound().then();
+  }
+  private async rotatePopUpAd(){
+    let sectionResources:SectionResource[] = this.roundWiserPopUpAdsSectionResource;
+    for(let k=0;k<sectionResources.length;k++){
 
-    this.resetPopUpAdSettings();
-    let i= this.getPopUpRotationStarIndex();
+      if(this.advertisementConfig.popUpAd.rotateSwitchedOff){
+        return;
+      }
 
 
-    if(this.globalPopUpAdSection[i]===undefined){
-      delay(3000).then(()=>{
-        this.changePupUpAdd();
+      if(sectionResources.length===0){
+        return;
+      }
 
-      });
-      return;
+      const fileType = sectionResources[k].fileType;
+
+
+      if(fileType===FILE_TYPE.IMAGE){
+        await this.preparePopUpAdImage(sectionResources[k]);
+        //this.rotatePopUpImages().then();
+      } else  if(fileType===FILE_TYPE.VIDEO){
+        await this.preparePopUpAdVideo(sectionResources[k]);
+      }
+
     }
-
-    let  secRes: SectionResource[] = [];
-    if(this.globalPopUpAdSection[i].sectionResource.length===0){
-      return;
-    }
-
-    if(this.globalPopUpAdSection[i].rotation==='ROTATE'){
-      secRes = this.globalPopUpAdSection[i].sectionResource;
-
-    }else if(this.globalPopUpAdSection[i].rotation==='STATIC'){
-      let imageObj = SectionResourceUtil.getSelectedStaticSectionResource(this.globalPopUpAdSection[i].sectionResource);
-      secRes.push(imageObj);
-
-    }
-
-    if(secRes.length===0){
-      return;
-    }
-
-    const fileType = secRes[0].fileType;
-
-
-    if(fileType===FILE_TYPE.IMAGE){
-      this.preparePopUpAdImage(secRes);
-      this.rotatePopUpImages().then();
-    } else  if(fileType===FILE_TYPE.VIDEO){
-      this.preparePopUpAdVideo(secRes).then();
-    }
-
   }
   public switchedOffRotation(){
 
@@ -398,11 +374,11 @@ export class GalleryComponent implements AfterViewInit,OnInit {
     }
     this.fetchPopUpAdvertisement();
   }
-  private async preparePopUpAdVideo(secRes: SectionResource[]){
+  private async preparePopUpAdVideo(secRes: SectionResource){
     this.advertisementOnPage.popUpAd.currentFileType = FILE_TYPE.VIDEO;
 
-    this.advertisementOnPage.popUpAd.video.path = this.resourcePath+secRes[0].fileName;
-    this.advertisementOnPage.popUpAd.video.mimeType = secRes[0].mimeType;
+    this.advertisementOnPage.popUpAd.video.path = this.resourcePath+secRes.fileName;
+    this.advertisementOnPage.popUpAd.video.mimeType = secRes.mimeType;
     this.advertisementOnPage.popUpAd.video.ready = true;
 
 
@@ -420,24 +396,23 @@ export class GalleryComponent implements AfterViewInit,OnInit {
 
     }
     console.log("Duration sd",duration);
-    // (<any>document).getElementById('pmcGalAdVideo').load();
+    (<any>document).getElementById('pmcGalAdVideo').load();
     (<any>document).getElementById('pmcGalAdVideo').muted=true;
     (<any>document).getElementById('pmcGalAdVideo').play();
     await delay(duration*1000);
-    console.log("Video Close ",);
+    console.log("Video Close ");
     (<any>document).getElementById('pmcGalAdVideo').pause();
     this.advertisementOnPage.popUpAd.video.ready = false;
-
-    this.fetchPopUpAdvertisement();
   }
-  private preparePopUpAdImage(secRes: SectionResource[]){
+  private async preparePopUpAdImage(sectionResource: SectionResource){
     this.advertisementOnPage.popUpAd.currentFileType = FILE_TYPE.IMAGE;
     this.advertisementOnPage.popUpAd.images = [];
-    for(const index in secRes){
+    let secResObj = {url:sectionResource.url,path:sectionResource.fileName};
 
-      let secResObj = {url:secRes[index].url,path:secRes[index].fileName};
-      this.advertisementOnPage.popUpAd.images.push(secResObj);
-    }
+
+    this.advertisementOnPage.popUpAd.currentImage =this.resourcePath+secResObj.path;
+    this.advertisementOnPage.popUpAd.currentUrl =sectionResource.url;
+    await delay(this.advertisementConfig.popUpAd.image.delay);
   }
   private resetPopUpAdSettings(){
     this.advertisementOnPage.popUpAd.video.ready = false;

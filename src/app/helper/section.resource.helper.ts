@@ -33,6 +33,9 @@ export class SectionResourceUtil{
     }
     return imageObj;
   }
+  /**
+   * Advertiser wise section resources
+   * */
   public static getRoundWiseSectionResource(advertisements:AdvertisementDetails[],sectionType:string){
 
     let sectionResources = [[]];
@@ -63,7 +66,6 @@ export class SectionResourceUtil{
       }
       sectionResources[roundCount] = perRoundSection;
     }
-    console.log(sectionResources);
     return sectionResources;
   }
   private static getMaxRound(advertisements:AdvertisementDetails[],sectionType:string){

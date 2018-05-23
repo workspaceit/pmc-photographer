@@ -18,7 +18,7 @@ export class AdBannerComponent implements OnInit {
         return;
       }
       const  rotationalBanners: RotationalBanner[] = adCommunicator.rotationalBanners;
-      console.log("rotationalBanners",rotationalBanners);
+
       this.initGalleryBannerRotation(rotationalBanners);
     });
   }
