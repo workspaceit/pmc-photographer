@@ -137,7 +137,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
     if(this.identifier!==null && this.identifier!==''){
 
       this.fetchGalleryAdvertisement();
-      //this.fetchPopUpAdvertisement();
+      this.fetchPopUpAdvertisement();
       this.fetchEventImage();
 
     } else if(this.preview.popUpId>0){
