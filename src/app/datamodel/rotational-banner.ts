@@ -1,5 +1,4 @@
-export class AdCommunicator{
-  type:string;
+export class RotationalBanner{
   images=[];
   constructor(values: Object = {}) {
     Object.assign(this, values);

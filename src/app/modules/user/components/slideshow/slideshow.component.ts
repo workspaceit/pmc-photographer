@@ -15,7 +15,7 @@ import {City} from '../../../../datamodel/city';
 import {State} from '../../../../datamodel/state';
 import {LocationImage} from '../../../../datamodel/locationImage';
 import {SectionResource} from '../../../../datamodel/section-resource';
-import {SectionResourceHelper} from '../../../../helper/section.resource.helper';
+import {SectionResourceUtil} from '../../../../helper/section.resource.helper';
 import {NavigationHelper} from '../../../../helper/navigation.helper';
 
 
@@ -348,7 +348,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     if(tbSection.rotation==='ROTATE'){
       tbSecRes = tbSection.sectionResource;
     }else  if(tbSection.rotation==='STATIC'){
-      let secResObj = SectionResourceHelper.getSelectedStaticSectionResource(tbSection.sectionResource);
+      let secResObj = SectionResourceUtil.getSelectedStaticSectionResource(tbSection.sectionResource);
       tbSecRes.push(secResObj);
 
     }

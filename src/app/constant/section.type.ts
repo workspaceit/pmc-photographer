@@ -1,7 +1,7 @@
-export enum SECTION_TYPE{
-  LOGO,
-  TOP_BANNER,
-  BACKGROUND,
-  BOTTOM_BANNER
+export class SECTION_TYPE{
+  public static LOGO:string ="LOGO";
+  public static TOP_BANNER:string ="TOP_BANNER";
+  public static BACKGROUND:string ="BACKGROUND";
+  public static BOTTOM_BANNER:string ="BOTTOM_BANNER";
 
 }

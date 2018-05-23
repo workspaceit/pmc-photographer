@@ -1,41 +1,28 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {delay} from 'q';
 import {BannerAdCommunicatorService} from '../../../../services/banner-ad-communicator.service';
-import {AdvertisementService} from '../../../../services/advertisement.service';
-import {EventImageService} from '../../../../services/event-image.service';
 import {NavigationHelper} from '../../../../helper/navigation.helper';
+import {RotationalBanner} from '../../../../datamodel/rotational-banner';
 
 @Component({
   selector: 'app-adbanner',
   templateUrl: './adbanner.component.html',
   styleUrls: ['./adbanner.component.css']
 })
-export class AdbannerComponent implements OnInit {
+export class AdBannerComponent implements OnInit {
 
   constructor(private bannerAdCommunicatorService: BannerAdCommunicatorService) {
 
-    bannerAdCommunicatorService.advertiserChanged$.subscribe(adCommunicator=>{
-
+    bannerAdCommunicatorService.onInitiationFromParent.subscribe(adCommunicator=>{
       if(adCommunicator.type !== this.type){
         return;
       }
-      if(adCommunicator.images!=null && adCommunicator.images.length>0){
-        this.banner.url = adCommunicator.images[0].url;
-        this.banner.path = adCommunicator.images[0].path;
-      }
-
-      this.advertiserChanged = true;
-      this.banners = adCommunicator.images;
-
-      if(!this.delayLoopStarted){
-        this.delayLoopStarted = true;
-        this.rotateGalleryAdTopBanner(0).then();
-      }
+      const  rotationalBanners: RotationalBanner[] = adCommunicator.rotationalBanners;
+      console.log("rotationalBanners",rotationalBanners);
+      this.initGalleryBannerRotation(rotationalBanners);
     });
   }
 
-  private advertiserChanged=false;
-  private delayLoopStarted = false;
   @Input()
   type:string;
 
@@ -43,54 +30,40 @@ export class AdbannerComponent implements OnInit {
   delayDuration:number;
 
   banners =[];
+  rotationalBanners:RotationalBanner[];
   banner={path:"",url:""};
 
   ngOnInit() {
 
    // this.rotateGalleryAdTopBanner(0).then();
   }
-  private async rotateGalleryAdTopBanner(startIndex?:number){
-
-
-    const readyFlag =  this.banners.length==0?false:true;
-
-    if(!readyFlag){
-      delay(3000).then(()=>{
-        this.rotateGalleryAdTopBanner().then();
-      });
-      return;
-    }
-
-    if(startIndex==undefined || startIndex==null){
-      startIndex = 0;
-    }
-
-    try{
-
-      for(let i=startIndex ; i< this.banners.length; i++){
-        this.banner.path = this.banners[i].path;
-        this.banner.url = this.banners[i].url;
-
-        await delay(this.delayDuration);
-
-        if(this.advertiserChanged){
-
-           /**
-            * rotate to next advertiser's Gallery Add
-            * */
-
-          this.advertiserChanged = false;
-          this.rotateGalleryAdTopBanner(1).then();
-          return;
-        }
-
-
-      }
-    }catch(e) {
-      console.log(e);
-    }
-    this.rotateGalleryAdTopBanner(0).then();
+  private initGalleryBannerRotation(rotationalBanners:RotationalBanner[]){
+    this.rotationalBanners = rotationalBanners;
+    this.rotateGalleryAdBanner().then();
   }
+  private async rotateGalleryAdBanner(){
+
+    for(const k in this.rotationalBanners) {
+      const banners:any[] = this.rotationalBanners[k].images;
+
+
+      try {
+
+        for (let i = 0; i < banners.length; i++) {
+          this.banner.path = banners[i].path;
+          this.banner.url = banners[i].url;
+
+          await delay(this.delayDuration);
+
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    this.rotateGalleryAdBanner().then();
+
+  }
+
   public openAdUrl(url:string){
     NavigationHelper.openAdUrl(url);
 

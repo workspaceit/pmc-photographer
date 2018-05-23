@@ -6,7 +6,7 @@ import { GalleryComponent } from './components/gallery/gallery.component';
 import { UserComponent } from './components/user/user.component';
 import { TopDockComponent } from './components/top-dock/top-dock.component';
 import { SlideshowComponent } from './components/slideshow/slideshow.component';
-import { AdbannerComponent } from './components/adbanner/adbanner.component';
+import { AdBannerComponent } from './components/adbanner/adbanner.component';
 import {ShareButtonsModule} from 'ngx-sharebuttons';
 import {HttpClientModule} from "@angular/common/http";
 
@@ -17,6 +17,6 @@ import {HttpClientModule} from "@angular/common/http";
     HttpClientModule,
     ShareButtonsModule
   ],
-  declarations: [GalleryComponent, UserComponent, TopDockComponent, SlideshowComponent, AdbannerComponent]
+  declarations: [GalleryComponent, UserComponent, TopDockComponent, SlideshowComponent, AdBannerComponent]
 })
 export class UserModule { }

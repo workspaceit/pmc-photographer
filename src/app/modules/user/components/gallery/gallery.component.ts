@@ -10,9 +10,12 @@ import {EventImageService} from '../../../../services/event-image.service';
 import {EventImage} from '../../../../datamodel/event-image';
 import {Event} from "../../../../datamodel/event";
 import {BannerAdCommunicatorService} from '../../../../services/banner-ad-communicator.service';
-import {AdCommunicator} from '../../../../datamodel/ad-comunicator';
-import {SectionResourceHelper} from '../../../../helper/section.resource.helper';
+import {RotationalBanner} from '../../../../datamodel/rotational-banner';
+import {SectionResourceUtil} from '../../../../helper/section.resource.helper';
 import {NavigationHelper} from '../../../../helper/navigation.helper';
+import {NumberHelper} from '../../../../helper/number.helper';
+import {SECTION_TYPE} from '../../../../constant/section.type';
+import {AdCommunicator} from '../../../../datamodel/ad-communicator';
 
 @Component({
   selector: 'app-gallery',
@@ -37,9 +40,10 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       popUpId:0
   };
   eventImagesFetchingComplete = false;
+  roundWiseSectionResource ={TOP_BANNER:[[]],BOTTOM_BANNER:[[]]};
   eventImages: EventImage[] = [];
   currentAdvertisementDetails: AdvertisementDetails;
-  advertisements = [];
+  advertisements:AdvertisementDetails[] = [];
   popAds = [];
   globalPopUpAdSection = [];
   advertisementConfig={
@@ -83,10 +87,12 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       currentFileType:"",
       currentUrl:""
     },
-    logo:{path:"",url:""},
-    topBanner:{path:"",url:""},
-    bottomBanner:{path:"",url:""},
-    background:{path:"",url:""},
+    gallery:{
+      logo:{path:"",url:""},
+      background:{path:"",url:""},
+      currentIndex:{},
+    }
+
   };
   fileType: FILE_TYPE;
 
@@ -131,7 +137,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
     if(this.identifier!==null && this.identifier!==''){
 
       this.fetchGalleryAdvertisement();
-      this.fetchPopUpAdvertisement();
+      //this.fetchPopUpAdvertisement();
       this.fetchEventImage();
 
     } else if(this.preview.popUpId>0){
@@ -163,10 +169,10 @@ export class GalleryComponent implements AfterViewInit,OnInit {
     this.nextBtn = true;
     this.prevBtn = true;
 
-    if(index==0) {
+    if(index===0) {
       this.prevBtn = false;
     }
-    if(index==totalImage-1) {
+    if(index===totalImage-1) {
       this.nextBtn = false;
     }
   }
@@ -182,31 +188,35 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       this.advertisementConfig.gallery.isEndOfAd = true;
       this.advertisementConfig.gallery.selfLoop = true;
       this.advertisements.push(data);
-      this.rotateGalleryAd().then();
     });
 
   }
   public fetchGalleryAdvertisement() {
-    if(this.advertisementConfig.gallery.isEndOfAd){
-      this.rotateGalleryAd().then();
-      return;
+        this.advertisementService.getAllBySentSlideShowIdentifierAndType(
+                                      this.identifier,
+                                      AdvertisementService.advTypeReqParamenter.GALLERY)
+                              .subscribe((data)=>{ this.initGalleryAd(data); });
+
+  }
+  private initGalleryAd(data:AdvertisementDetails[]){
+    if(data.length === 0){
+      this.advertisementConfig.gallery.isEndOfAd = true;
+      this.advertisementConfig.gallery.selfLoop = true;
+    } else {
+      this.advertisements = this.advertisements.concat(data);
     }
+    this.roundWiseSectionResource.TOP_BANNER = SectionResourceUtil.getRoundWiseSectionResource(this.advertisements,SECTION_TYPE.TOP_BANNER);
+    this.roundWiseSectionResource.BOTTOM_BANNER = SectionResourceUtil.getRoundWiseSectionResource(this.advertisements,SECTION_TYPE.BOTTOM_BANNER);
 
-    const offset = this.advertisementConfig.gallery.apiOffset++;
-    const limit = this.advertisementConfig.gallery.limit;
-    this.advertisementService.getAllBySentSlideShowIdentifierAndType(this.identifier,
-                                                  AdvertisementService.advTypeReqParamenter.GALLERY).subscribe((data)=>{
-
-                                                      if(data.length==0){
-                                                        this.advertisementConfig.gallery.isEndOfAd = true;
-                                                        this.advertisementConfig.gallery.selfLoop = true;
-                                                      } else {
-                                                        this.advertisements = this.advertisements.concat(data);
-                                                      }
-                                                      this.rotateGalleryAd().then();
-
-
-    });
+    this.setGalleryAdLogoAndBackground();
+    /**
+     * Top banner
+     * */
+    this.initBannerImagesRotation(<[SectionResource[]]>this.roundWiseSectionResource.TOP_BANNER,this.advertisementConfig.gallery.banner[0]);
+    /**
+     *  Bottom banner
+     * */
+    this.initBannerImagesRotation(<[SectionResource[]]>this.roundWiseSectionResource.BOTTOM_BANNER,this.advertisementConfig.gallery.banner[1]);
 
   }
   showPreviousImage() {
@@ -236,6 +246,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       });
     }
   }
+
   public fetchPopUpAdvertisementById() {
 
     this.advertisementService.getById(this.preview.popUpId).subscribe((data)=>{
@@ -298,28 +309,6 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       this.globalPopUpAdSection.push(popupAds.sections.BANNER);
     }
   }
-  async rotateGalleryAd() {
-  //  const startIndex = this.getRotationStarIndex();
-    for(let i = 0;i<this.advertisements.length;i++){
-
-      this.currentAdvertisementDetails = new AdvertisementDetails( this.advertisements[i] );
-      this.prepareGalleryAdForPage();
-
-     await delay(this.advertisementConfig.gallery.delay.global);
-    }
-
-
-    this.rotateGalleryAd().then();
-  }
-  private getRotationStarIndex():number{
-    let i = 0;
-    if(this.advertisementConfig.gallery.arrayOffset<this.advertisements.length){
-      i =  this.advertisementConfig.gallery.arrayOffset++;
-    }else{
-      this.advertisementConfig.gallery.arrayOffset=0;
-    }
-   return i;
-  }
   private getPopUpRotationStarIndex():number{
 
     const offset = this.advertisementConfig.popUpAd.arrayOffset;
@@ -335,7 +324,6 @@ export class GalleryComponent implements AfterViewInit,OnInit {
     this.advertisementConfig.popUpAd.arrayOffset++;
     return i;
   }
-
   private changePupUpAdd(){
 
     this.delayPopUpCloseIconShow();
@@ -366,7 +354,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       secRes = this.globalPopUpAdSection[i].sectionResource;
 
     }else if(this.globalPopUpAdSection[i].rotation==='STATIC'){
-      let imageObj = SectionResourceHelper.getSelectedStaticSectionResource(this.globalPopUpAdSection[i].sectionResource);
+      let imageObj = SectionResourceUtil.getSelectedStaticSectionResource(this.globalPopUpAdSection[i].sectionResource);
       secRes.push(imageObj);
 
     }
@@ -401,9 +389,6 @@ export class GalleryComponent implements AfterViewInit,OnInit {
 
 
   }
-
-
-
   private async rotatePopUpImages(){
     const images = this.advertisementOnPage.popUpAd.images;
     for(const i in images){
@@ -413,24 +398,12 @@ export class GalleryComponent implements AfterViewInit,OnInit {
     }
     this.fetchPopUpAdvertisement();
   }
-
-
-
-  private preparePopUpAdImage(secRes: SectionResource[]){
-    this.advertisementOnPage.popUpAd.currentFileType = FILE_TYPE.IMAGE;
-    this.advertisementOnPage.popUpAd.images = [];
-    for(const index in secRes){
-
-      let secResObj = {url:secRes[index].url,path:secRes[index].fileName};
-      this.advertisementOnPage.popUpAd.images.push(secResObj);
-    }
-  }
   private async preparePopUpAdVideo(secRes: SectionResource[]){
-      this.advertisementOnPage.popUpAd.currentFileType = FILE_TYPE.VIDEO;
+    this.advertisementOnPage.popUpAd.currentFileType = FILE_TYPE.VIDEO;
 
-      this.advertisementOnPage.popUpAd.video.path = this.resourcePath+secRes[0].fileName;
-      this.advertisementOnPage.popUpAd.video.mimeType = secRes[0].mimeType;
-      this.advertisementOnPage.popUpAd.video.ready = true;
+    this.advertisementOnPage.popUpAd.video.path = this.resourcePath+secRes[0].fileName;
+    this.advertisementOnPage.popUpAd.video.mimeType = secRes[0].mimeType;
+    this.advertisementOnPage.popUpAd.video.ready = true;
 
 
     await delay(1000);
@@ -446,8 +419,9 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       duration =  (<any>document).getElementById('pmcGalAdVideo').duration;
 
     }
-    console.log("Duration ",duration);
-   // (<any>document).getElementById('pmcGalAdVideo').load();
+    console.log("Duration sd",duration);
+    // (<any>document).getElementById('pmcGalAdVideo').load();
+    (<any>document).getElementById('pmcGalAdVideo').muted=true;
     (<any>document).getElementById('pmcGalAdVideo').play();
     await delay(duration*1000);
     console.log("Video Close ",);
@@ -456,78 +430,87 @@ export class GalleryComponent implements AfterViewInit,OnInit {
 
     this.fetchPopUpAdvertisement();
   }
-  private prepareGalleryAdForPage(){
+  private preparePopUpAdImage(secRes: SectionResource[]){
+    this.advertisementOnPage.popUpAd.currentFileType = FILE_TYPE.IMAGE;
+    this.advertisementOnPage.popUpAd.images = [];
+    for(const index in secRes){
 
-    const galleryAds = this.currentAdvertisementDetails;
+      let secResObj = {url:secRes[index].url,path:secRes[index].fileName};
+      this.advertisementOnPage.popUpAd.images.push(secResObj);
+    }
+  }
+  private resetPopUpAdSettings(){
+    this.advertisementOnPage.popUpAd.video.ready = false;
+  }
 
-    const tbSec= galleryAds.sections.TOP_BANNER;
-    const bbSec = galleryAds.sections.BOTTOM_BANNER;
+  private setGalleryAdLogoAndBackground(){
+
+
+    const index  = NumberHelper.getRandomInt(0,this.advertisements.length-1);
+    const galleryAds = this.advertisements[index];
 
     const logoSecRes = galleryAds.sections.LOGO.sectionResource;
     const bgSecRes = galleryAds.sections.BACKGROUND.sectionResource;
-    const tbSecRes = tbSec.sectionResource;
-    const bbSecRes = bbSec.sectionResource;
 
 
     /**
      * Single Logo
      * */
     if(logoSecRes.length>0){
-      this.advertisementOnPage.logo.path = this.resourcePath+logoSecRes[0].fileName;
-      this.advertisementOnPage.logo.url = logoSecRes[0].url;
+      this.advertisementOnPage.gallery.logo.path = (logoSecRes[0].fileName!==null
+        && logoSecRes[0].fileName.trim()!=='')
+        ?this.resourcePath+logoSecRes[0].fileName:'';
+      this.advertisementOnPage.gallery.logo.url = logoSecRes[0].url;
 
+    }else{
+      this.advertisementOnPage.gallery.logo.path = '';
+      this.advertisementOnPage.gallery.logo.url = '';
     }
     /**
      * Single Background
      * */
     if(bgSecRes.length>0){
-      this.advertisementOnPage.background.path = this.resourcePath+bgSecRes[0].fileName;
-      this.advertisementOnPage.background.url = bgSecRes[0].url;
+      this.advertisementOnPage.gallery.background.path = (bgSecRes[0].fileName!==null
+        && bgSecRes[0].fileName.trim()!=='')
+        ?this.resourcePath+bgSecRes[0].fileName:null;
+      this.advertisementOnPage.gallery.background.url = bgSecRes[0].url;
+    }else{
+      this.advertisementOnPage.gallery.background.path = '';
+      this.advertisementOnPage.gallery.background.url = '';
     }
 
-    /**
-     * Top banner
-     * */
-   this.prepareBannerImages(tbSecRes,this.advertisementConfig.gallery.banner[0],tbSec.rotation);
-    /**
-     *  Bottom banner
-     * */
-    this.prepareBannerImages(bbSecRes,this.advertisementConfig.gallery.banner[1],bbSec.rotation);
-
-
   }
-  private prepareBannerImages(secRes: SectionResource[],type:string,rotation:string){
 
-
-    let tmpTopBannerArray = [];
-    this.advertisementOnPage.topBanner.path = this.resourcePath+secRes[0].fileName;
-    this.advertisementOnPage.topBanner.url = this.resourcePath+secRes[0].url;
+  private initBannerImagesRotation(advertiserWiseSectionResources: [SectionResource[]], type:string){
 
     this.forChildComponent.topBanner = [];
+    let rotationalBanners: RotationalBanner[] = [];
+    /**
+     * Advertiser wise section resource
+     * Each contains Section resources from each advertisers
+     * */
+    for(const a in advertiserWiseSectionResources){
+      const secRes: SectionResource[] =  advertiserWiseSectionResources[a];
+      let tmpTopBannerArray = [];
 
-
-    if(rotation==='ROTATE'){
+      /**
+       * Section resources of each advertisers
+      * */
       for(const i in secRes){
         const imageObj = {path:this.resourcePath+secRes[i].fileName,url:secRes[i].url};
         tmpTopBannerArray.push(imageObj);
       }
-    }else if(rotation==='STATIC'){
 
-      let imageObj = SectionResourceHelper.getGalleryBannerSelectedStatic(secRes);
-      tmpTopBannerArray.push(imageObj);
+      const  rotationalBanner = new RotationalBanner();
+      rotationalBanner.images = tmpTopBannerArray;
+      rotationalBanners.push(rotationalBanner);
     }
 
-
-    const  adCommunicator = new AdCommunicator();
+    const adCommunicator = new AdCommunicator();
     adCommunicator.type = type;
-    adCommunicator.images = tmpTopBannerArray;
-    this.bannerAdCommunicatorService.changeAdvertiser(adCommunicator);
-  }
-  private resetPopUpAdSettings(){
-    this.advertisementOnPage.popUpAd.video.ready = false;
-  }
-  private checkNullUndefiend(data):boolean{
-    return (data==undefined || data==null)?false:true;
+    adCommunicator.rotationalBanners = rotationalBanners;
+
+    this.bannerAdCommunicatorService.initRotation(adCommunicator);
   }
   public openAdUrl(url:string){
     NavigationHelper.openAdUrl(url);
