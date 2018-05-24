@@ -360,6 +360,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     (<any>$("#eventImageDiv")).fadeOut(500);
      await delay(500);
     (<any>$("#slideShowAdDiv")).show();
+    if(this.roundWiseSectionResource.length==0)return;
 
     this.pageData.slideShowAd.currentFileType="VIDEO";
 

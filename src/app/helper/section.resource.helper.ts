@@ -37,7 +37,7 @@ export class SectionResourceUtil{
    * Advertiser wise section resources
    * */
   public static getRoundWiseSectionResource(advertisements:AdvertisementDetails[],sectionType:string){
-
+    debugger;
     let sectionResources = [];
     const maxRoundCount = SectionResourceUtil.getMaxRound(advertisements,sectionType);
     for(let roundCount=0;roundCount<maxRoundCount;roundCount++) {
@@ -66,6 +66,7 @@ export class SectionResourceUtil{
       }
       sectionResources[roundCount] = perRoundSection;
     }
+    console.log(sectionResources);
     return sectionResources;
   }
   private static getMaxRound(advertisements:AdvertisementDetails[],sectionType:string){
@@ -75,6 +76,16 @@ export class SectionResourceUtil{
       const section:Section= advertiserDetails.sections[sectionType];
       if(section.rotation==='ROTATE' && maxRound < section.quantity){
         maxRound = section.quantity;
+      }
+    }
+    /**
+     * Need refactoring
+     * */
+    if(maxRound===0 && advertisements.length===1){
+      const advertiserDetails:AdvertisementDetails = advertisements[0];
+      const section:Section= advertiserDetails.sections[sectionType];
+      if(section.rotation==='STATIC'){
+        maxRound = 1;
       }
     }
     return maxRound;
