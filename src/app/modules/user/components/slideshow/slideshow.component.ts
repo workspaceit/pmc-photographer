@@ -17,6 +17,7 @@ import {LocationImage} from '../../../../datamodel/locationImage';
 import {SectionResource} from '../../../../datamodel/section-resource';
 import {SectionResourceUtil} from '../../../../helper/section.resource.helper';
 import {NavigationHelper} from '../../../../helper/navigation.helper';
+import {debug} from 'util';
 
 
 @Component({
@@ -28,13 +29,20 @@ import {NavigationHelper} from '../../../../helper/navigation.helper';
 export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
   locationData:Location;
   eventData:Event;
-  slideShowAdRotation = true;
+  isSlideShowAdRotating = true;
   slideShowAdListIndex:number;
   slideShowAdData: AdvertisementDetails;
   slideShowAdList: AdvertisementDetails[]=[];
   pageConfig = {
     eventAndLocationFetched : false,
     slideShow:{duration:1}
+  };
+  defaultValue={
+    breakTime:2,
+    fadeInTransition:500,
+    fadeOutTransition:500,
+    durationSpeed:5000,
+    bannerImageAdDelay:3000
   };
   locationId=0;
   eventId=0;
@@ -59,6 +67,9 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       duration:0
     }
   };
+  roundConfig = {index:{round:0,secRes:0}};
+  eventConfig = {index:0};
+  roundWiseSectionResource: SectionResource[][];
   constructor(private activatedRoute: ActivatedRoute,
               private locationService:LocationService,
               private eventService: EventService,
@@ -84,7 +95,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     this.pageData.currentBgImage = 'assets/images/bg.jpg';
     this.pageData.location.locationLogo = 'assets/images/dummy_transparent.png';
     this.pageData.event.eventPhoto  = 'assets/images/dummy_transparent.png';
-    console.log(locIdStr,eventIdStr);
+
 
     if(this.eventId>0){
       /**
@@ -130,10 +141,10 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
   }
   public fetchSlideShowAdById(){
     this.advertisementService.getById(this.slideShowAdId).subscribe(result=>{
-      console.log("fetchSlideShowAdById ",result);
+
       this.slideShowAdList.push(result);
     },error => {},()=>{
-      this.initJsFunction();
+      this.initJsFunction().then();
     });
   }
   public fetchSlideShowAdByEventId(){
@@ -147,15 +158,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
 
       });
   }
-  public showSlideShowAd(){
 
-    (<any>$("#eventImageDiv")).hide();
-    (<any>$("#slideShowAdDiv")).show();
-
-    this.pageData.slideShowAd.currentFileType="VIDEO";
-    this.rotateVideo().then();
-    this.initClosingCountdown().then();
-  }
   public showSlideShow(){
     (<any>$("#eventImageDiv")).show();
     (<any>$("#slideShowAdDiv")).hide();
@@ -164,7 +167,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
   private getEventImages(){
     this.eventImagesService.getEventImagesByEventIdWhereIsSentSlideShowTrue(this.eventId).subscribe((result)=>{
       this.pageData.eventImage = result;
-      console.log("Event Images",this.pageData.eventImage );
+
       this.getEventAndIntiJs();
     });
   }
@@ -182,76 +185,83 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     for(let i=this.pageData.slideShowAd.duration;i>=0;i--){
       this.pageData.slideShowAd.closingCountdown=i;
       await delay(1000);
-      if(!this.slideShowAdRotation)break;
+      if(!this.isSlideShowAdRotating)break;
     }
-    if( this.slideShowAdRotation){
+    if( this.isSlideShowAdRotating ){
       this.stopSlideShowAdRotation();
     }
 
   }
-  private async rotateVideo(){
-   // debugger;
-    if(!this.slideShowAdRotation){
-      return;
-    }
+  private async rotateVideo(sectionResource: SectionResource){
+    if(!this.isSlideShowAdRotating)return false;
+    this.pageData.slideShowAd.currentFileType="VIDEO";
+
     this.pageData.slideShowAd.video.link = "";
     this.pageData.slideShowAd.video.mimeType = "";
     this.pageData.slideShowAd.video.ready = false;
 
-    const currentIndex = this.getCurrentSlideShowIndex();
-    const slideShowAdData = new AdvertisementDetails(this.slideShowAdList[currentIndex]);
-    console.log("currentIndex ",currentIndex,slideShowAdData);
-
-    const  tbSection = slideShowAdData.sections.TOP_BANNER;
-    const  tbSecRes = tbSection.sectionResource;
-
-    if(tbSecRes.length==0){
-      delay(3000).then(()=>{
-        this.rotateVideo().then();
-      });
-      return;
-    }
-
-    /**
-     * Only one video
-     * */
-    let fileName = "";
-    let fileType = "";
-    let mimeType = "";
-
-
-
-
-    if(tbSecRes.length>0) {
-       fileName = tbSecRes[0].fileName;
-       fileType = tbSecRes[0].fileType;
-       mimeType = tbSecRes[0].mimeType;
-    }
+    const fileName = sectionResource.fileName;
+    const fileType = sectionResource.fileType;
+    const mimeType = sectionResource.mimeType;
 
     if(fileType === "VIDEO"){
       this.pageData.slideShowAd.video.link = this.resourcePath+fileName;
       this.pageData.slideShowAd.video.mimeType = mimeType;
 
-
       this.pageData.slideShowAd.video.ready = true;
       await delay(1000);
-      //(<any>document).getElementById('slidShowVideoAdPmc').load();
-      (<any>document).getElementById('slidShowVideoAdPmc').play();
-      //(<any>$('#slidShowVideoAdPmc')).show();
+      /**
+       * Duration can  be NaN if video does not load
+       * For slow internet connection loop is present
+       * */
 
+      let duration =  (<any>document).getElementById('slidShowVideoAdPmc').duration;
+      for(let i=0;isNaN(duration) && i<10;i++){
+        await delay(500);
+        duration =  (<any>document).getElementById('slidShowVideoAdPmc').duration;
+
+      }
+
+      console.log(sectionResource);
+      (<any>document).getElementById('slidShowVideoAdPmc').muted = true;
+     // (<any>document).getElementById('slidShowVideoAdPmc').load();
+      (<any>document).getElementById('slidShowVideoAdPmc').play();
+
+      await delay(duration*1000);
+      (<any>document).getElementById('slidShowVideoAdPmc').pause();
+
+      this.pageData.slideShowAd.video.ready = false;
+      await delay(500);
     }else{
-      this.decrementCurrentSlideShowIndex();
       this.pageData.slideShowAd.video.ready = false;
       this.pageData.slideShowAd.currentFileType = "IMAGE";
-      this.rotateSlideShowImageBannerAd().then();
     }
-    console.log("currentIndex ",currentIndex,slideShowAdData);
+
+  }
+  private initSlideShowAd(){
+    if(this.slideShowAdList.length===0)return;
+
+    this.roundWiseSectionResource = SectionResourceUtil.getRoundWiseSectionResource(this.slideShowAdList,"TOP_BANNER");
+    this.rotateSlideShowAd();
+  }
+  private rotateSlideShowAd(){
+    this.initClosingCountdown().then();
+    this.startSlideShowAdRoundRotation().then();
   }
   private async rotateSlideShow(){
 
-    for(const i in this.pageData.eventImage){
+    if(this.eventConfig.index>=this.pageData.eventImage.length-1){
+      this.eventConfig.index=0;
+    }
 
+    if(this.pageData.eventImage.length==0){return;}
 
+    for(let i=this.eventConfig.index;i<this.pageData.eventImage.length;this.eventConfig.index=i,i++){
+
+      if(this.isSlideShowAdRotating){
+        $("#eventImageDiv").find(".dev-event-image").hide();
+        return;
+      }
       let index= Number(i);
       let fadeOutIndex=0;
       let fadeInIndex =0;
@@ -272,13 +282,13 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
          * Need this delay not sure why
          * Elements may be not ready first time
          * */
-        await delay(1000);
+        await delay(500);
         // debugger;
         (<any>$('#'+fadeInIndex+'slideShow')).fadeIn(200,function(){
           $('#'+fadeOutIndex+'slideShow').fadeOut(200);
         });
       }
-
+      this.eventConfig.index = 0;
 
       await delay(this.locationData.durationSpeed*1000);
     }
@@ -290,9 +300,9 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
 
 
     /** In millisecond */
-    let fadeInTransition = 500;
-    let fadeOutTransition = 500;
-    let durationSpeed = 5000;
+    let fadeInTransition = this.defaultValue.fadeInTransition;
+    let fadeOutTransition = this.defaultValue.fadeOutTransition;
+    let durationSpeed = this.defaultValue.durationSpeed;
 
     if(this.pageData.location.hasSlideshow){
        fadeInTransition = this.pageData.location.fadeInTime*1000;
@@ -303,7 +313,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     for(const i in locBgImgs){
       /*this.pageData.currentBgImage = this.pageData.currentBgImage =  this.resourcePath+locBgImgs[i].image;
       console.log(this.pageData.currentBgImage);*/
-      console.log("BG ROTATE",i);
+
       let index= Number(i);
       let fadeOutIndex=0;
       let fadeInIndex =0;
@@ -326,7 +336,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
          * */
         await delay(1000);
         (<any>$('#'+fadeInIndex+'Bg')).fadeIn(fadeInTransition);
-        console.log('#'+fadeInIndex+'Bg');
+
       }
 
 
@@ -334,95 +344,74 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     }
     this.rotateBackground().then();
   }
-  private async rotateSlideShowImageBannerAd(){
-   // debugger;
-    if(!this.slideShowAdRotation){
-      return;
-    }
+  private async rotateSlideShowImageBannerAd(sectionResource: SectionResource){
+    if(!this.isSlideShowAdRotating)return false;
+    this.pageData.slideShowAd.currentFileType="IMAGE";
+
+    const fileName = sectionResource.fileName;
+    const url = sectionResource.url;
+
+    this.pageData.slideShowAd.currentBannerImg.path = this.resourcePath+fileName;
+    this.pageData.slideShowAd.currentBannerImg.url = url;
+    await delay(this.defaultValue.bannerImageAdDelay);
+  }
+
+  private async startSlideShowAdRoundRotation(){
+    (<any>$("#eventImageDiv")).fadeOut(500);
+     await delay(500);
+    (<any>$("#slideShowAdDiv")).show();
+
+    this.pageData.slideShowAd.currentFileType="VIDEO";
 
 
-    const currentIndex = this.getCurrentSlideShowIndex();
-    const slideShowAdData = this.slideShowAdList[currentIndex];
-    const  tbSection = slideShowAdData.sections.TOP_BANNER;
-    let  tbSecRes = [];
-    if(tbSection.rotation==='ROTATE'){
-      tbSecRes = tbSection.sectionResource;
-    }else  if(tbSection.rotation==='STATIC'){
-      let secResObj = SectionResourceUtil.getSelectedStaticSectionResource(tbSection.sectionResource);
-      tbSecRes.push(secResObj);
-
-    }
-    if(tbSecRes.length==0){
-      delay(3000).then(()=>{
-        this.rotateSlideShowImageBannerAd().then();
-      });
-      return;
-    }
     /**
-     * Multiple banner image
+     * Check index
      * */
-    let fileName = "";
-    let fileType = "";
-    let mimeType = "";
-    let url = "";
+    if(this.roundConfig.index.round>=this.roundWiseSectionResource.length){
+      this.roundConfig.index.round=0;
+    }
+
+    const tmpSectionResource = this.roundWiseSectionResource[this.roundConfig.index.round];
+
+    if(this.roundConfig.index.secRes>=tmpSectionResource.length){
+      this.roundConfig.index.secRes=0;
+    }
 
 
+    for (let k = this.roundConfig.index.round
+      ; k < this.roundWiseSectionResource.length
+      ;k++,this.roundConfig.index.round=k){
 
+      const sectionResources: SectionResource[] = this.roundWiseSectionResource[k];
 
+      for (let i= this.roundConfig.index.secRes
+        ; i <  sectionResources.length
+        ;i++, this.roundConfig.index.secRes = i){
 
-   /* if(tbSection.rotation==='ROTATE'){
-    }else if(tbSection.rotation==='STATIC'){
-      tbSecRes.push(tbSection.sectionResource[0]);
-    }*/
+        if(!this.isSlideShowAdRotating)return false;
 
-    for(const i in tbSecRes) {
-      if(!this.slideShowAdRotation)return;
-      fileName = tbSecRes[i].fileName;
-      fileType = tbSecRes[i].fileType;
-      mimeType = tbSecRes[i].mimeType;
-      url = tbSecRes[i].url;
+        const sectionResource: SectionResource = sectionResources[i];
+        const fileType = sectionResource.fileType;
 
-      if(fileType === "IMAGE"){
-
-        this.pageData.slideShowAd.currentBannerImg.path = this.resourcePath+fileName;
-        this.pageData.slideShowAd.currentBannerImg.url = url;
-        await delay(2000);
-      }else{
-        this.decrementCurrentSlideShowIndex();
-        this.pageData.slideShowAd.currentFileType = "VIDEO";
-        this.rotateVideo().then();
-        return;
+        if(fileType === "IMAGE"){
+          await this.rotateSlideShowImageBannerAd(sectionResource);
+        }else if(fileType === "VIDEO"){
+          await this.rotateVideo(sectionResource);
+        }
+        console.log();
       }
+      this.roundConfig.index.secRes = 0;
     }
-
-    this.rotateSlideShowImageBannerAd().then();
-
-
-   // console.log("Roation Ends");
-  }
-  private decrementCurrentSlideShowIndex():number{
-    if(this.slideShowAdListIndex<=0){
-      this.slideShowAdListIndex=this.slideShowAdList.length-1;
-    }
-    return this.slideShowAdListIndex--;
-  }
-  private getCurrentSlideShowIndex():number{
-    if(this.slideShowAdListIndex>=this.slideShowAdList.length){
-      this.slideShowAdListIndex=0;
-    }
-    return this.slideShowAdListIndex++;
+    this.roundConfig.index.round=0;
+    this.startSlideShowAdRoundRotation().then();
   }
   public stopSlideShowAdRotation(){
-    if((<any>document).getElementById('slidShowVideoAdPmc')!==undefined
-      && (<any>document).getElementById('slidShowVideoAdPmc')!==null){
-      (<any>document).getElementById('slidShowVideoAdPmc').pause();
-    }
-    $('#slidShowVideoAdPmc').hide();
     this.pageData.slideShowAd.video.ready = false;
 
-    this.slideShowAdRotation = false;
+    this.isSlideShowAdRotating = false;
 
     this.showSlideShow();
+    this.rotateSlideShow().then();
     this.initStartAdRotationAfterDelay().then();
 
   }
@@ -432,7 +421,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       this.locationData = result;
     },error=>{
     },()=>{
-      this.initJsFunction();
+      this.initJsFunction().then();
     });
   }
 
@@ -447,15 +436,12 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
 
     },()=>{
 
-      this.initJsFunction();
+      this.initJsFunction().then();
     });
 
   }
-  private initJsFunction(){
+  private async initJsFunction(){
 
-   // (<any>$('#eventImageParentDiv')).attr("data-wow-delay",this.pageConfig.slideShow.duration+'s');
-    console.log("eventImageParentDiv",(<any>$('#eventImageParentDiv')).attr("data-wow-delay"));
-    //return;
     (<any>$('.count')).each(function () {
       (<any>$(this)).prop('Counter',0).animate({
         Counter: $(this).text()
@@ -467,43 +453,17 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
         }
       });
     });
-
-
     (<any>$(".img-check")).click(function(){
       (<any>$(this)).toggleClass("check");
     });
-
     (<any>$('#datepicker')).datepicker({
       uiLibrary: 'bootstrap'
     });
-
-
-
-
-
-
-
     (<any>$('#moar')).on("click", function() {
       var section = document.createElement('section');
       section.className = 'section--purple wow fadeInDown';
       this.parentNode.insertBefore(section, this);
     });
-
-    const slideshowComponentReff = this;
-    /*(<any>$("#slideShowAdDiv")).delay(10000).queue(function(next){
-
-      setInterval(function(){
-
-        }, 5000);
-
-    });*/
-
-   /* setInterval(()=>{
-
-    },10000);*/
-
-
-
 
 
 
@@ -516,35 +476,31 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     if(this.locationData===null) {
       this.locationDefaultValue();
     } else{
-      console.log("this.locationData",this.locationData);
+
       this.pageData.location = this.locationData;
-      console.log(" this.pageData.location", this.pageData.location);
+
       this.pageData.location.locationLogo = this.resourcePath+this.pageData.location.locationLogo;
       this.rotateBackground().then();
-      delay(4000).then(value => {
-        this.rotateSlideShow().then();
-      });
     }
 
     new WOW({
       live: false
     }).init();
-    delay(5000).then(()=>{
-      this.showSlideShowAd();
-    });
+    await delay(5000);
+    this.initSlideShowAd();
   }
 
   private async initStartAdRotationAfterDelay(){
 
     let breakTime;
     if(this.locationData ==null || this.locationData.breakTime==undefined || this.locationData.breakTime==0){
-      breakTime = 5;
+      breakTime = this.defaultValue.breakTime;
     }else{
       breakTime = this.locationData.breakTime;
     }
     await delay(breakTime*1000);
-    this.slideShowAdRotation = true;
-    this.showSlideShowAd();
+    this.isSlideShowAdRotating = true;
+    this.rotateSlideShowAd();
   }
   public openAdUrl(url:string){
     NavigationHelper.openAdUrl(url);

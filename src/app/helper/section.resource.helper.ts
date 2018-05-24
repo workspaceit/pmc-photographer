@@ -38,7 +38,7 @@ export class SectionResourceUtil{
    * */
   public static getRoundWiseSectionResource(advertisements:AdvertisementDetails[],sectionType:string){
 
-    let sectionResources = [[]];
+    let sectionResources = [];
     const maxRoundCount = SectionResourceUtil.getMaxRound(advertisements,sectionType);
     for(let roundCount=0;roundCount<maxRoundCount;roundCount++) {
       let perRoundSection = [] ;

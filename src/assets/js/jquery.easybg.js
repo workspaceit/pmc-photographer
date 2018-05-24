@@ -7,7 +7,7 @@
  *
  */
 (function($)
-{	
+{
 	var methods = {
 		/**
 		 * 初期化処理
@@ -24,11 +24,11 @@
 				}
 				// メンバ変数初期化
 				$this.settings = $.extend(defaults, options);
-				
+
 				// 現在のインデックス
 				$this.workFlg = true;
-				$this.currentIndex = $this.settings.initIndex;
-				
+				$this.index = $this.settings.initIndex;
+
 				// 画像名が設定されていなければ何もしない
 				if($this.settings.images === null)
 				{
@@ -39,7 +39,7 @@
 				{
 					$this.settings.images = [$this.settings.images];
 				}
-				
+
 				// 画像を先読みする
 				var promises = [];
 				$.each($this.settings.images, function()
@@ -82,15 +82,15 @@
 					img.src = imgFileName;
 					promises.push(defer.promise());
 				});
-				
+
 				// 画像の読み込みがすべて完了した時
 				$.when.apply(null, promises).then(function()
 				{
 					methods.log.apply($this, ['全画像の読み込み完了しましたので処理を開始します。']);
 					// 初期画像を表示
-					methods.changeImage.apply($this, [$this.currentIndex]);
+					methods.changeImage.apply($this, [$this.index]);
 					//methods.setImage.apply($this, [$this.currentIndex]);
-					
+
 					var timer = null;
 					timer = setInterval(function()
 					{
@@ -104,30 +104,30 @@
 									{
 										index = Math.floor(Math.random() * $this.settings.images.length);
 									}
-									while($this.settings.images.length != 1 && index == $this.currentIndex);
-									$this.currentIndex = index;
+									while($this.settings.images.length != 1 && index == $this.index);
+									$this.index = index;
 									break;
-									
+
 								case 'normal':
 								default:
-									if(++$this.currentIndex >= $this.settings.images.length)
+									if(++$this.index >= $this.settings.images.length)
 									{
-										$this.currentIndex = 0;
+										$this.index = 0;
 									}
-									index = $this.currentIndex;
+									index = $this.index;
 									break;
 							}
-							
+
 							methods.changeImage.apply($this, [index]);
 						}
 					}, $this.settings.interval);
-					
+
 					// windowからフォーカスが外れた時は処理をしない様にする
 					$(window).blur(function()
 					{
 						methods.stop.apply($this);
 					});
-					
+
 					// windowにフォーカスが戻ってきたら処理を再開
 					$(window).focus(function()
 					{
@@ -139,7 +139,7 @@
 				{
 					methods.error.apply($this, ['画像の読み込みに失敗認め終了します。']);
 				});
-				
+
 				$this.data('easybg', {target : $this});
 			});
 		},
@@ -165,13 +165,13 @@
 				methods.log.apply(this, ['切替中に切替えはできません。']);
 				return;
 			}
-				
+
 			// クローンを作成し、要素の裏側に配置
 			var child1 = methods.makeClone.apply(this);
 			methods.setImage.apply(child1, [methods.getImage.apply(this)]);
 			methods.setZIndex.apply(child1, [methods.getZIndex.apply(this) - 1]);
 			this.prepend(child1);
-			
+
 			// クローンを作成し次の画像を設定し、更にクローンの裏側に配置
 			var child2 = methods.makeClone.apply(this);
 			methods.setImageUrl.apply(child2, [this.settings.images[index]]);
@@ -180,7 +180,7 @@
 
 			// 一旦要素の画像の設定を解除
 			methods.setImage.apply(this, ['none']);
-			
+
 			// 表側のクローンを透明に変更させる
 			var self = this;
 			child1.animate(
@@ -195,7 +195,7 @@
 					child2.empty().remove();
 				}
 			);
-			
+
 			methods.log.apply(this, [index + ':"' + this.settings.images[index] + '"に切替']);
 		},
 		/**
@@ -208,13 +208,13 @@
 			var child = $('<div />');
 			child.attr('style', this.attr('style'));
 			child.attr('class', this.attr('class'));
-			
+
 			// IDは別で設定（デフォルトNULL）
 			child.attr('id', this.settings.cloneClassId);
-			
+
 			// クローンにclassを設定
 			child.addClass(this.settings.cloneClassName);
-			
+
 			// クローンを元要素に被せる
 			child.css({
 				position : 'fixed',
@@ -304,7 +304,7 @@
 			}
 		}
 	};
-	
+
 	// 初期値
 	var defaults = {
 		images : null,
@@ -312,7 +312,7 @@
 		speed : 1000, // 1秒
 		ignoreError : false,
 		changeMode : 'normal', // normal or random
-		
+
 		initIndex : 0,
 		cloneClassId : null,
 		cloneClassName : 'easybgClone',
@@ -334,5 +334,5 @@
 			alert('Method ' +  method + ' does not exist on jquery.easybg');
 		}
 	}
-	
+
 })(jQuery);

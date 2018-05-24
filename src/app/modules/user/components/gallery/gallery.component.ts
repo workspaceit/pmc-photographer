@@ -121,10 +121,13 @@ export class GalleryComponent implements AfterViewInit,OnInit {
 
 
   ngOnInit(): void {
+
     if(this.identifier==null || this.identifier==''){
       this.advertisementConfig.popUpAd.showClosePopUp = true;
     }
-    this.getEventBySlideShowIdentifier();
+    if(this.identifier!=null && this.identifier=='') {
+      this.getEventBySlideShowIdentifier();
+    }
   }
 
   ngAfterViewInit() {
@@ -142,7 +145,6 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       this.fetchEventImage();
 
     } else if(this.preview.popUpId>0){
-
       this.fetchPopUpAdvertisementById();
     } else if(this.preview.galleryId>0) {
       this.fetchGalleryAdvertisementById();
@@ -189,6 +191,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       this.advertisementConfig.gallery.isEndOfAd = true;
       this.advertisementConfig.gallery.selfLoop = true;
       this.advertisements.push(data);
+      this.initGalleryAd([data]);
     });
 
   }
@@ -272,6 +275,7 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       case 'sms':
         popUpTypeReqParam = AdvertisementService.advTypeReqParamenter.POPUP_SMS;
     }
+
     this.advertisementService.getAllBySentSlideShowIdentifierAndType(this.identifier,
       popUpTypeReqParam).subscribe((data)=>{
       this.advertisementConfig.popUpAd.isEndOfAd = true;
@@ -313,9 +317,13 @@ export class GalleryComponent implements AfterViewInit,OnInit {
   private async changesPopupAdRound(){
 
 
+    if(this.popAds.length===0)return;
 
     this.roundWiserPopUpAds = <[SectionResource[]]>SectionResourceUtil.getRoundWiseSectionResource(this.popAds,SECTION_TYPE.BANNER);
+    if(this.roundWiserPopUpAds.length===0)return;
+
     console.log('roundWiserPopUpAds',this.roundWiserPopUpAds);
+
     for(const k in this.roundWiserPopUpAds){
       this.roundWiserPopUpAdsSectionResource = this.roundWiserPopUpAds[k];
       await this.rotatePopUpAd().then();
@@ -323,7 +331,8 @@ export class GalleryComponent implements AfterViewInit,OnInit {
     if(this.advertisementConfig.popUpAd.rotateSwitchedOff){
       return;
     }
-    this.changesPopupAdRound().then();
+
+   this.changesPopupAdRound().then();
   }
   private async rotatePopUpAd(){
     let sectionResources:SectionResource[] = this.roundWiserPopUpAdsSectionResource;
@@ -343,7 +352,6 @@ export class GalleryComponent implements AfterViewInit,OnInit {
 
       if(fileType===FILE_TYPE.IMAGE){
         await this.preparePopUpAdImage(sectionResources[k]);
-        //this.rotatePopUpImages().then();
       } else  if(fileType===FILE_TYPE.VIDEO){
         await this.preparePopUpAdVideo(sectionResources[k]);
       }

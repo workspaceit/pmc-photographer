@@ -45,7 +45,7 @@
           <!-- Wrapper for slides -->
           <div class="carousel-inner" role="listbox">
 
-            <div class="fifix_slideshow" id="{{i}}slideShow" *ngFor="let eventImage of pageData.eventImage;let i = index" style="display: none;" > <!--[ngClass]="(i==1)?'item active left':'item'" -->
+            <div class="fifix_slideshow dev-event-image" id="{{i}}slideShow" *ngFor="let eventImage of pageData.eventImage;let i = index" style="display: none;" > <!--[ngClass]="(i==1)?'item active left':'item'" -->
               <img src="{{eventImagePath}}{{eventImage.image}}" />
             </div>
 
@@ -60,11 +60,11 @@
               <!-- "-->
               <input type="button" class="btn-close-ad" value="X" (click)="stopSlideShowAdRotation()">
               <span class="btn-close-alert fifix_closer">Closing In ({{pageData.slideShowAd.closingCountdown}})</span>
-              <a href="javascript:void(0)" target="_blank" (click)="openAdUrl(pageData.slideShowAd.currentBannerImg.url)" style="display: block;height: 100%; overflow: hidden">
+              <a  *ngIf="pageData.slideShowAd.currentFileType=='IMAGE'" href="javascript:void(0)" target="_blank" (click)="openAdUrl(pageData.slideShowAd.currentBannerImg.url)" style="display: block;height: 100%; overflow: hidden">
                 <img *ngIf="pageData.slideShowAd.currentFileType=='IMAGE'" id="slidShowAdPmcBanner" style="height: 100%;     margin: 0 auto; width: auto"  src="{{pageData.slideShowAd.currentBannerImg.path}}" >
               </a>
 
-              <video *ngIf="pageData.slideShowAd.video.ready"  class="video" id="slidShowVideoAdPmc"  muted style="width: 100%;" >
+              <video *ngIf="pageData.slideShowAd.video.ready"   class="video" id="slidShowVideoAdPmc"   style="width: 100%;" >
                 <source
                   *ngIf="pageData.slideShowAd.video.ready"
                   src="{{pageData.slideShowAd.video.link}}" type="{{pageData.slideShowAd.video.mimeType}}"
