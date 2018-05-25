@@ -357,6 +357,8 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
   }
 
   private async startSlideShowAdRoundRotation(){
+
+    if(!this.isSlideShowAdRotating)return false;
     (<any>$("#eventImageDiv")).fadeOut(500);
      await delay(500);
     (<any>$("#slideShowAdDiv")).show();
