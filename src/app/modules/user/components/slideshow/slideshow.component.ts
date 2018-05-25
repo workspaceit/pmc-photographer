@@ -236,16 +236,20 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
       this.pageData.slideShowAd.video.ready = false;
       this.pageData.slideShowAd.currentFileType = "IMAGE";
     }
-
+    return true;
   }
   private initSlideShowAd(){
     if(this.slideShowAdList.length===0)return;
 
     this.roundWiseSectionResource = SectionResourceUtil.getRoundWiseSectionResource(this.slideShowAdList,"TOP_BANNER");
-    this.rotateSlideShowAd();
+    this.rotateSlideShowAd().then();
   }
-  private rotateSlideShowAd(){
+  private async rotateSlideShowAd(){
     this.initClosingCountdown().then();
+    (<any>$("#eventImageDiv")).fadeOut(500);
+     await delay(500);
+    (<any>$("#slideShowAdDiv")).show();
+
     this.startSlideShowAdRoundRotation().then();
   }
   private async rotateSlideShow(){
@@ -354,14 +358,13 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     this.pageData.slideShowAd.currentBannerImg.path = this.resourcePath+fileName;
     this.pageData.slideShowAd.currentBannerImg.url = url;
     await delay(this.defaultValue.bannerImageAdDelay);
+    return true;
   }
 
   private async startSlideShowAdRoundRotation(){
 
     if(!this.isSlideShowAdRotating)return false;
-    (<any>$("#eventImageDiv")).fadeOut(500);
-     await delay(500);
-    (<any>$("#slideShowAdDiv")).show();
+
     if(this.roundWiseSectionResource.length==0)return;
 
     this.pageData.slideShowAd.currentFileType="VIDEO";
@@ -503,7 +506,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     }
     await delay(breakTime*1000);
     this.isSlideShowAdRotating = true;
-    this.rotateSlideShowAd();
+    this.rotateSlideShowAd().then();
   }
   public openAdUrl(url:string){
     NavigationHelper.openAdUrl(url);
