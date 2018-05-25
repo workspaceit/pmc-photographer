@@ -17,7 +17,7 @@
           <h2 class="wow bounceInLeft"   data-wow-delay="2s">
             {{pageData.location.name}}
           </h2>
-          <h3 class="wow bounceInLeft"   data-wow-delay="2s">
+          <h3 class="wow bounceInLeft fifix_location_font"   data-wow-delay="2s">
             <span>{{pageData.location.address}}</span><br>
             <span >
               {{pageData.location.city.name}}
@@ -61,7 +61,7 @@
               <input type="button" class="btn-close-ad" value="X" (click)="stopSlideShowAdRotation()">
               <span class="btn-close-alert fifix_closer">Closing In ({{pageData.slideShowAd.closingCountdown}})</span>
               <a  *ngIf="pageData.slideShowAd.currentFileType=='IMAGE'" href="javascript:void(0)" target="_blank" (click)="openAdUrl(pageData.slideShowAd.currentBannerImg.url)" style="display: block;height: 100%; overflow: hidden">
-                <img *ngIf="pageData.slideShowAd.currentFileType=='IMAGE'" id="slidShowAdPmcBanner" style="height: 100%;     margin: 0 auto; width: auto"  src="{{pageData.slideShowAd.currentBannerImg.path}}" >
+                <img *ngIf="pageData.slideShowAd.currentFileType=='IMAGE'" id="slidShowAdPmcBanner"  src="{{pageData.slideShowAd.currentBannerImg.path}}" >
               </a>
 
               <video *ngIf="pageData.slideShowAd.video.ready"   class="video" id="slidShowVideoAdPmc"   style="width: 100%;" >

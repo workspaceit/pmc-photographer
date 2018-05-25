@@ -2532,3 +2532,36 @@ input:checked + .slider:before {
     height: 400px;
   }
 }
+.fifix_location_font{
+  font-size: 15px;
+}
+.slidShowAdPmcBanner{
+  height: 100%;
+  margin: 0 auto;
+  width: auto
+}
+#slidShowAdPmcBanner {
+  margin: 0 auto;
+  height: 100%;
+  width: auto;
+}
+@media screen and (max-width: 1365px) {
+  .fifix_slideShowAdDiv #slidShowAdPmcBanner{
+    width: 100% !important;
+    height: auto;
+    margin: 0 auto;
+  }
+  .dev-event-image img {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+}
+@media screen and (max-width: 767px){
+  .swiper-left{
+    height: 530px !important;
+  }
+  .swiper-right{
+    top: 490px !important;
+  }
+}
