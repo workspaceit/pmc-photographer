@@ -93,7 +93,9 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal fade modal-video modal-noborder" id="popUpModal" tabindex="-1" role="dialog" aria-labelledby="popUpModalLabel">
+  <div class="modal fade modal-video modal-noborder"
+       *ngIf="advertisementOnPage.popUpAd.showPopUpModal"
+       id="popUpModal" tabindex="-1" role="dialog" aria-labelledby="popUpModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <!--<div class="modal-header">-->

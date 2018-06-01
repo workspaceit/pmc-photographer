@@ -86,7 +86,8 @@ export class GalleryComponent implements AfterViewInit,OnInit {
       images:[],
       currentImage:"",
       currentFileType:"",
-      currentUrl:""
+      currentUrl:"",
+      showPopUpModal:true
     },
     gallery:{
       logo:{path:"",url:""},
@@ -116,7 +117,9 @@ export class GalleryComponent implements AfterViewInit,OnInit {
 
     this.preview.galleryId = (galleryIdStr===null||galleryIdStr==='')?0:Number(galleryIdStr);
     this.preview.popUpId = (popUpIdStr===null||popUpIdStr==='')?0:Number(popUpIdStr);
-
+    if(this.preview.galleryId>0) {
+      this.advertisementOnPage.popUpAd.showPopUpModal = false;
+    }
   }
 
 
@@ -190,7 +193,6 @@ export class GalleryComponent implements AfterViewInit,OnInit {
     this.advertisementService.getById(this.preview.galleryId).subscribe((data)=>{
       this.advertisementConfig.gallery.isEndOfAd = true;
       this.advertisementConfig.gallery.selfLoop = true;
-      this.advertisements.push(data);
       this.initGalleryAd([data]);
     });
 

@@ -42,7 +42,7 @@ export class AdBannerComponent implements OnInit {
     this.rotateGalleryAdBanner().then();
   }
   private async rotateGalleryAdBanner(){
-
+    if(this.rotationalBanners.length===0)return;
     for(const k in this.rotationalBanners) {
       const banners:any[] = this.rotationalBanners[k].images;
 
