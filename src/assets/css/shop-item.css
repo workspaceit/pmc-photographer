@@ -779,16 +779,16 @@ input:checked + .slider:before {
   font-size: 8px !important;
 }
 #show-previous-image{
-  background: rgba(73, 48, 167, 0.73);
-  margin-left: -90px;
+  background: rgba(73, 48, 167, 0.53);
+  margin-left: -31px;
   height: 57px;
   width: 60px;
   border: 0px;
   font-size: 30px;
 }
 #show-next-image{
-  background: rgba(73, 48, 167, 0.73);
-  margin-right: -90px;
+  background: rgba(73, 48, 167, 0.53);
+  margin-right: -31px;
   height: 57px;
   width: 60px;
   color: #fff !important;
@@ -834,6 +834,10 @@ input:checked + .slider:before {
 }
 .modal-gallery .modal-dialog{
   margin: 8% auto;
+}
+.modal-faltoo{
+  max-width: 1000px;
+  width: auto;
 }
 .modal{
   background:rgba(114, 70, 160, 0.38) !important;
@@ -1701,8 +1705,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a68c2ce0', e
    right: 0;
    bottom: 0;
    left: 0;
-   width: 80%;
-   height: 80%;
+   width: 90%;
+   height: 90%;
    background-color: transparent;
    border-radius: 3px;
 }
@@ -2297,7 +2301,15 @@ color: #fff;
             left: 0px;
         }
         .modal-gallery .modal-footer{
-          display: none;
+          display: block;
+          top: 25%;
+        }
+
+        .fifix_location_font{
+          font-size: 15px !important;
+        }
+        .breadcrumb{
+          margin-bottom: 35px;
         }
 
     }
@@ -2533,7 +2545,7 @@ input:checked + .slider:before {
   }
 }
 .fifix_location_font{
-  font-size: 15px;
+  font-size: 18px;
 }
 .slidShowAdPmcBanner{
   height: 100%;
