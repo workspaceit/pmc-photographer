@@ -37,6 +37,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     eventAndLocationFetched : false,
     slideShow:{duration:1}
   };
+
   defaultValue={
     breakTime:2,
     fadeInTransition:500,
@@ -499,7 +500,7 @@ export class SlideshowComponent implements  AfterViewInit,OnInit,DoCheck  {
     new WOW({
       live: false
     }).init();
-    await delay(5000);
+    await delay(8000);
     this.initSlideShowAd();
   }
 

@@ -6,18 +6,18 @@
          src="{{resourcePath}}{{bgImg.image}}"
          style="position:  absolute;width: 100%;height: 100%;display:none;">
 
-    <div class="swiper-left wow slideInDown" >
+    <div class="swiper-left wow slideInDown" data-wow-duration="3s">
       <div class="swiper_top" style="height: 50%; width: 100%; padding-bottom: 10%; position: relative;     border-bottom: 1px solid #fff;">
         <div class="center-flex" style="    position: absolute; bottom: 10%; text-align: center;">
           <img  src="{{pageData.location.locationLogo}}"
-                style="width: 61%;height: 50%"
+                style="width: 61%;height: 50%;"
                 class="wow bounceInDown"
-                data-wow-duration="1s"  data-wow-delay="1s">
+                data-wow-duration="3s"  data-wow-delay="5s">
 
-          <h2 class="wow bounceInLeft"   data-wow-delay="2s">
+          <h2 class="wow slideInLeft" data-wow-duration="1s"   data-wow-delay="5s">
             {{pageData.location.name}}
           </h2>
-          <h3 class="wow bounceInLeft fifix_location_font"   data-wow-delay="2s">
+          <h3 class="wow slideInLeft fifix_location_font"  data-wow-duration="3s"  data-wow-delay="5s">
             <span>{{pageData.location.address}}</span><br>
             <span >
               {{pageData.location.city.name}}
@@ -30,16 +30,16 @@
         </div>
       </div>
       <div class="swiper_bottom text-center" style="height: 50%; width: 100%; padding-top: 10%;  position: relative">
-        <div class="event-ad wow bounceInUp hidden-xs" data-wow-delay="4s" style=" align-items: self-start;   position: absolute; top: 10%; text-align: center; height: 100%;">
+        <div class="event-ad wow bounceInUp hidden-xs" data-wow-duration="3s" data-wow-delay="5s" style=" align-items: self-start;   position: absolute; top: 10%; text-align: center; height: 100%;">
           <!--<img onerror="this.src='assets/images/event-default.png'" src="{{pageData.event.eventPhoto}}" />-->
           <img onerror="this.src='assets/images/event-default.png'" src="{{pageData.event.eventPhoto}}" style="width: 100%; display: block; max-height: 100%;">
         </div>
-        <img class="wow bounceInUp visible-xs hidden-lg hidden-md hidden-sm" data-wow-delay="4s" onerror="this.src='assets/images/event-default.png'" style="height: 90%; margin: 0 auto;" src="{{pageData.event.eventPhoto}}"/>
+        <img class="wow bounceInUp visible-xs hidden-lg hidden-md hidden-sm" data-wow-duration="3s" data-wow-delay="5s" onerror="this.src='assets/images/event-default.png'" style="height: 90%; margin: 0 auto;" src="{{pageData.event.eventPhoto}}"/>
       </div>
     </div>
     <div class="swiper-right">
 
-      <div id="eventImageParentDiv" class="center-swiper"  >  <!--  data-wow-delay="1s"-->
+      <div id="eventImageParentDiv" class="center-swiper"  >  <!--  data-wow-delay="5s"-->
         <div id="eventImageDiv" class="carousel slide cstm-carousel-slide " > <!-- data-interval="1000"  data-ride="carousel" ->
 
           <!-- Wrapper for slides -->
