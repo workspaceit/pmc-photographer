@@ -110,6 +110,9 @@ footer {
 .navbar-inverse {
     background-color:transparent;
 }
+.no-margin{
+  margin: 0px;
+}
 
 .sidepanel{
   width: 195px;

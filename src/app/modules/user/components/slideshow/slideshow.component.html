@@ -7,17 +7,20 @@
          style="position:  absolute;width: 100%;height: 100%;display:none;">
 
     <div class="swiper-left wow slideInDown" data-wow-duration="3s">
-      <div class="swiper_top" style="height: 50%; width: 100%; padding-bottom: 10%; position: relative;     border-bottom: 1px solid #fff;">
-        <div class="center-flex" style="    position: absolute; bottom: 10%; text-align: center;">
+      <div class="swiper_top" style="height: 43%; width: 100%; padding-bottom: 0%; position: relative; ">
+        <div class="" style="position: absolute; bottom: 0px; text-align: center;">
           <img  src="{{pageData.location.locationLogo}}"
-                style="width: 61%;height: 50%;"
+                style="width: 100%; display: block; max-height: 100%;"
                 class="wow bounceInDown"
                 data-wow-duration="3s"  data-wow-delay="5s">
-
-          <h2 class="wow slideInLeft" data-wow-duration="1s"   data-wow-delay="5s">
+        </div>
+      </div>
+      <div class="" style="height: 14%; width: 100%; position: relative;text-align: center;">
+        <div style="position: relative;top: 50%;transform: translateY(-50%);">
+          <h2 class="wow slideInLeft no-margin" data-wow-duration="1s"   data-wow-delay="5s">
             {{pageData.location.name}}
           </h2>
-          <h3 class="wow slideInLeft fifix_location_font"  data-wow-duration="3s"  data-wow-delay="5s">
+          <h3 class="wow slideInLeft fifix_location_font no-margin"  data-wow-duration="3s"  data-wow-delay="5s">
             <span>{{pageData.location.address}}</span><br>
             <span >
               {{pageData.location.city.name}}
@@ -29,8 +32,8 @@
           </h3>
         </div>
       </div>
-      <div class="swiper_bottom text-center" style="height: 50%; width: 100%; padding-top: 10%;  position: relative">
-        <div class="event-ad wow bounceInUp hidden-xs" data-wow-duration="3s" data-wow-delay="5s" style=" align-items: self-start;   position: absolute; top: 10%; text-align: center; height: 100%;">
+      <div class="swiper_bottom text-center" style="height: 43%; width: 100%; padding-top: 0%;  position: relative">
+        <div class="event-ad wow bounceInUp hidden-xs" data-wow-duration="3s" data-wow-delay="5s" style=" align-items: self-start;   position: absolute; top: 0; text-align: center; height: 100%;padding: 0px;">
           <!--<img onerror="this.src='assets/images/event-default.png'" src="{{pageData.event.eventPhoto}}" />-->
           <img onerror="this.src='assets/images/event-default.png'" src="{{pageData.event.eventPhoto}}" style="width: 100%; display: block; max-height: 100%;">
         </div>
